@@ -1,0 +1,44 @@
+# Build artifacts
+build/
+dist/
+out/
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+# KiCad
+*.kicad_prl
+*.sch-bak
+*.kicad_pcb-bak
+fp-info-cache
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+
+# Logs
+*.log
+logs/

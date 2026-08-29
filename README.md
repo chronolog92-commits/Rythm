@@ -51,11 +51,12 @@ RHYTHM ist ein selbstgebautes Audio-Interface / Digitaler Vorverstärker (AVR) m
 - [ ] Prototypenplan: Breadboard / Protoboard vs. eigene PCB
 - [ ] Budget-Schätzung und Bestellliste für Bauteile
 
-## Repo-Struktur (geplant)
+## Repo-Struktur
 
 ```
 rhythm/
 ├── README.md
+├── .gitignore
 ├── docs/
 │   ├── requirements.md
 │   ├── hardware/

@@ -12,8 +12,8 @@
 #include "main.h"
 
 /* ---------- LED ---------- */
-#define BSP_LED_PORT      GPIOC
-#define BSP_LED_PIN       GPIO_PIN_13   /* Onboard-LED (PC13), Phase-1-Boot-Blink */
+#define BSP_LED_PORT      GPIOB
+#define BSP_LED_PIN       GPIO_PIN_7    /* NUCLEO-F767ZI: LD2 blau, aktiv high (UM1974). */
 
 /* ---------- TOSLINK ---------- */
 /* Eingang: PLR135/T → GPIO → SW-S/PDIF-Decoder (AN5073) */

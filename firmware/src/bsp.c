@@ -13,11 +13,14 @@ static UART_HandleTypeDef huart_dbg;
 
 void bsp_init(void)
 {
-    __HAL_RCC_GPIOC_CLK_ENABLE();
+    /* HAL_Delay needs the 1 ms SysTick timebase before peripheral init. */
+    HAL_Init();
+
+    __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOD_CLK_ENABLE();
     __HAL_RCC_USART2_CLK_ENABLE();
 
-    /* LED: PC13 als Output */
+    /* NUCLEO-F767ZI: blaue LED LD2 an PB7, nicht USER-Taster PC13. */
     GPIO_InitTypeDef led = {0};
     led.Pin   = BSP_LED_PIN;
     led.Mode  = GPIO_MODE_OUTPUT_PP;
@@ -35,6 +38,12 @@ void bsp_init(void)
     huart_dbg.Init.HwFlowCtl    = UART_HWCONTROL_NONE;
     huart_dbg.Init.OverSampling = UART_OVERSAMPLING_16;
     HAL_UART_Init(&huart_dbg);
+}
+
+/* Override the startup file's weak default handler for the HAL timebase. */
+void SysTick_Handler(void)
+{
+    HAL_IncTick();
 }
 
 void bsp_toggle_led(void)

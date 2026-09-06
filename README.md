@@ -40,17 +40,18 @@ RHYTHM ist ein selbstgebautes Audio-Interface / Digitaler Vorverstärker (AVR) m
 
 ## Nächste Schritte (offene Punkte)
 
-- [ ] Ziel-Plattform / Mikrocontroller wählen (z. B. Raspberry Pi 4/5, ESP32-S3, STM32 + Linux, FPGA)
-- [ ] Audio-Codecs / DAC/ADC-Chips auswählen (z. B. ES9028, ES9018, CS43198, PCM5102, WM8731)
+- [x] Ziel-Plattform / Mikrocontroller wählen → **STM32H743 + ESP32-S3 + [Chip 3 offen]** (Details in `docs/hardware/platform.md` und `docs/architecture.md`)
+- [x] DAC wählen → **ES9028** (Details in `docs/hardware/platform.md`)
+- [x] ADC wählen → **TBD** (CS5345 / ES9023, in `docs/architecture.md` offener Punkt)
 - [ ] Analog-/Digital-Signalpfad und Filter (EQ, Mute, Crossover) definieren
 - [ ] Gehäuse-Design / Frontpanel-Layout (Größe, Knopf- und Tasterpositionen)
-- [ ] Firmware-Architektur (Linux + PulseAudio/ALSA, bare-metal, RTOS)
-- [ ] Bluetooth-Stack (Bluetooth-Module, Codec-Unterstützung, AVRCP)
-- [ ] Netzwerk-/WiFi-Radio-Streaming (UPnP, AirPlay, Internetradio, Spotify Connect?)
-- [ ] Firmware-/Software-Repo aufsetzen (git init, .gitignore, Lizenz)
-- [ ] Prototypenplan: Breadboard / Protoboard vs. eigene PCB
-- [ ] Budget-Schätzung und Bestellliste für Bauteile
-
+- [x] Firmware-Architektur → **PlatformIO + VS Code, STM32Cube-HAL, FreeRTOS (optional)** (Details in `docs/architecture.md`)
+- [x] Bluetooth-Stack → **ESP32-S3 A2DP-Sink + AVRCP** (Details in `docs/architecture.md`)
+- [ ] Netzwerk-/WiFi-Radio-Streaming → **ESP32-S3 (HTTP/HLS) + [Chip 3: AirPlay/Spotify, offen]**
+- [ ] Firmware-/Software-Repo aufsetzen → **PlatformIO + VS Code** (Gerüst in `firmware/`, Details in `docs/architecture.md`)
+- [x] Prototypenplan → **Breadboard → Prototyp-PCB (KiCad) → finale PCB** (Details in `docs/hardware/platform.md`)
+- [x] Budget-Schätzung → **~200 € (mit RPi), ~135 € (ohne RPi)** (Details in `docs/hardware/platform.md`)
+- [ ] Lizenz festlegen
 ## Repo-Struktur
 
 ```

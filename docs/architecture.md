@@ -208,15 +208,28 @@ Chip 3 wird ergänzt, wenn der Audio-Pfad stabil ist.
 
 ## Offene Punkte
 
-1. [ ] ADC-Modell finalisieren (CS5345 vs. ES9023)
+### System / Architektur
+1. [ ] ADC-Modell finalisieren (CS5345 für Phase 1, ES9023 für Ziel-PCB – bestätigt?)
 2. [ ] Chip 3 – Optionen weiter recherchieren
 3. [ ] ESP32-S3 Firmware-Stack (ESP-IDF vs. Arduino)
 4. [ ] Analog-Signalpfad (Op-Amps, Filter, Pegelanpassung)
-5. [ ] Pin-Map für NUCLEO-F767ZI (final)
-6. [ ] S/PDIF-Decoder-Implementierung (Software, AN5073)
-7. [ ] Mixing-Engine (Routing-Matrix 5×5, digitale Gain)
-8. [ ] EQ-Engine (7 Biquad, float, 48 kHz)
-9. [ ] Encoder-Polling (Timer-Input-Capture, De-Bounce)
-10. [ ] Firmware-Gerüst (PlatformIO + VS Code)
-11. [ ] Breadboard-Aufbau (Stufe für Stufe)
-12. [ ] BOM mit Bestelllinks
+
+### Hardware – Signalpfad & Clocking
+→ Detailliert in [`docs/hardware/signal-path.md`](hardware/signal-path.md)
+5. [ ] Pin-Map für NUCLEO-F767ZI (final): I2S1/2/3 (SD, SCK, WS, MCLK), I2C1, UART2, GPIO (S/PDIF RX/TX, MUX, Encoder, Taster, LEDs)
+6. [ ] MCLK-Verfügbarkeit auf F767ZI abgleichen (I2S2_MCLK: PA7? I2S3_MCLK: PB15?)
+7. [ ] ESP32-S3 I2S-Slave-Pins (DevKitC-1) abgleichen
+8. [ ] S/PDIF GPIO-Pins (RX + TX) + Interrupt-Priorität abgleichen
+9. [ ] Analog-MUX-Modell (DG5081 3:1, 2x für L/R) – Datasheet prüfen
+10. [ ] Op-Amp-Auswahl für analoge Voreinstufe (OPA1612? NE5532?)
+11. [ ] Kopfhörer-DAC (Phase 1: ES9028 #1, Ziel-PCB: eigener DAC) – bestätigt?
+12. [ ] Stromversorgung Phase 2: 1x oder 2x 3.3V-LDO (digital + analog)?
+
+### Firmware / Implementierung
+13. [ ] S/PDIF-Decoder-Implementierung (Software, AN5073)
+14. [ ] Mixing-Engine (Routing-Matrix 5×5, digitale Gain)
+15. [ ] EQ-Engine (7 Biquad, float, 48 kHz)
+16. [ ] Encoder-Polling (Timer-Input-Capture, De-Bounce)
+17. [ ] Firmware-Gerüst (PlatformIO + VS Code) – **DONE 2026-09-06** (Boot-Skelett, kompiliert)
+18. [ ] Breadboard-Aufbau (Stufe für Stufe, siehe signal-path.md §6)
+19. [ ] BOM mit Bestelllinks

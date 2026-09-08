@@ -1,0 +1,2984 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "hermes-agent",
+  "elements": [
+    {
+      "type": "rectangle",
+      "id": "darkbg",
+      "x": -40,
+      "y": -40,
+      "width": 3540,
+      "height": 1940,
+      "backgroundColor": "#1e1e2e",
+      "fillStyle": "solid",
+      "strokeColor": "transparent",
+      "strokeWidth": 0,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "rectangle",
+      "id": "z_analog",
+      "x": 20,
+      "y": 160,
+      "width": 1380,
+      "height": 1130,
+      "backgroundColor": "#1a2536",
+      "fillStyle": "solid",
+      "strokeColor": "#555555",
+      "strokeWidth": 1,
+      "roundness": {
+        "type": 3
+      },
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "rectangle",
+      "id": "z_digital",
+      "x": 1440,
+      "y": 160,
+      "width": 1180,
+      "height": 1130,
+      "backgroundColor": "#1a2536",
+      "fillStyle": "solid",
+      "strokeColor": "#555555",
+      "strokeWidth": 1,
+      "roundness": {
+        "type": 3
+      },
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "rectangle",
+      "id": "z_dac",
+      "x": 2660,
+      "y": 160,
+      "width": 800,
+      "height": 1130,
+      "backgroundColor": "#1a2536",
+      "fillStyle": "solid",
+      "strokeColor": "#555555",
+      "strokeWidth": 1,
+      "roundness": {
+        "type": 3
+      },
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "rectangle",
+      "id": "z_power",
+      "x": 20,
+      "y": 1350,
+      "width": 3440,
+      "height": 260,
+      "backgroundColor": "#1a2536",
+      "fillStyle": "solid",
+      "strokeColor": "#555555",
+      "strokeWidth": 1,
+      "roundness": {
+        "type": 3
+      },
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "arrow",
+      "id": "a_src1_buf1",
+      "x": 300,
+      "y": 650,
+      "width": 80,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          80,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "src1",
+        "fixedPoint": [
+          1.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "buf1",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_src2_buf2",
+      "x": 300,
+      "y": 790,
+      "width": 80,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          80,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "src2",
+        "fixedPoint": [
+          1.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "buf2",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_src3_buf3",
+      "x": 300,
+      "y": 930,
+      "width": 80,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          80,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "src3",
+        "fixedPoint": [
+          1.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "buf3",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_buf1_mux",
+      "x": 640,
+      "y": 650,
+      "width": 120,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          120,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "buf1",
+        "fixedPoint": [
+          1.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "mux",
+        "fixedPoint": [
+          0.0,
+          0.15
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_buf2_mux",
+      "x": 640,
+      "y": 790,
+      "width": 120,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          120,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "buf2",
+        "fixedPoint": [
+          1.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "mux",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_buf3_mux",
+      "x": 640,
+      "y": 930,
+      "width": 120,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          120,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "buf3",
+        "fixedPoint": [
+          1.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "mux",
+        "fixedPoint": [
+          0.0,
+          0.85
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_mux_adc",
+      "x": 1020,
+      "y": 920,
+      "width": 80,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          80,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "mux",
+        "fixedPoint": [
+          1.0,
+          0.825
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "adc",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_adc_i2s2",
+      "x": 1360,
+      "y": 900,
+      "width": 120,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          120,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 3,
+      "startBinding": {
+        "elementId": "adc",
+        "fixedPoint": [
+          1.0,
+          0.35714285714285715
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "stm32",
+        "fixedPoint": [
+          0.0,
+          0.46774193548387094
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_adc_i2c1",
+      "x": 1230,
+      "y": 990,
+      "width": 250,
+      "height": 70,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          70
+        ],
+        [
+          250,
+          70
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22d3ee",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "startBinding": {
+        "elementId": "adc",
+        "fixedPoint": [
+          0.5,
+          1.0
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "stm32",
+        "fixedPoint": [
+          0.0,
+          0.7258064516129032
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_toslink_rx_plr",
+      "x": 300,
+      "y": 1175,
+      "width": 80,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          80,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "toslink_rx",
+        "fixedPoint": [
+          1.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "plr135",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_plr_stm32",
+      "x": 660,
+      "y": 1175,
+      "width": 820,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          820,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "plr135",
+        "fixedPoint": [
+          1.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "stm32",
+        "fixedPoint": [
+          0.0,
+          0.9112903225806451
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_stm32_esp32",
+      "x": 1560,
+      "y": 610,
+      "width": 0,
+      "height": 230,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -230
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 3,
+      "startBinding": {
+        "elementId": "stm32",
+        "fixedPoint": [
+          0.13333333333333333,
+          0.0
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "esp32",
+        "fixedPoint": [
+          0.13333333333333333,
+          1.0
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_stm32_uart_esp",
+      "x": 1850,
+      "y": 610,
+      "width": 0,
+      "height": 230,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -230
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "stm32",
+        "fixedPoint": [
+          0.6166666666666667,
+          0.0
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "esp32",
+        "fixedPoint": [
+          0.6166666666666667,
+          1.0
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_stm32_chip3",
+      "x": 2020,
+      "y": 610,
+      "width": 350,
+      "height": 230,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -70
+        ],
+        [
+          350,
+          -70
+        ],
+        [
+          350,
+          -230
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#ef4444",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "startBinding": {
+        "elementId": "stm32",
+        "fixedPoint": [
+          0.9,
+          0.0
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "chip3",
+        "fixedPoint": [
+          0.5,
+          1.0
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_stm32_dac1",
+      "x": 2080,
+      "y": 690,
+      "width": 620,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          620,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 3,
+      "startBinding": {
+        "elementId": "stm32",
+        "fixedPoint": [
+          1.0,
+          0.12903225806451613
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "dac1",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_stm32_dac2",
+      "x": 2080,
+      "y": 960,
+      "width": 620,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          620,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 3,
+      "startBinding": {
+        "elementId": "stm32",
+        "fixedPoint": [
+          1.0,
+          0.5645161290322581
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "dac2",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_stm32_i2c_dac",
+      "x": 2080,
+      "y": 1070,
+      "width": 770,
+      "height": 50,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          770,
+          0
+        ],
+        [
+          770,
+          -50
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22d3ee",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "startBinding": {
+        "elementId": "stm32",
+        "fixedPoint": [
+          1.0,
+          0.7419354838709677
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "dac2",
+        "fixedPoint": [
+          0.5,
+          1.0
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_stm32_gpio_mux",
+      "x": 1480,
+      "y": 670,
+      "width": 590,
+      "height": 180,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -60,
+          0
+        ],
+        [
+          -60,
+          -180
+        ],
+        [
+          -590,
+          -180
+        ],
+        [
+          -590,
+          -80
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "strokeStyle": "dotted",
+      "startBinding": {
+        "elementId": "stm32",
+        "fixedPoint": [
+          0.0,
+          0.0967741935483871
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "mux",
+        "fixedPoint": [
+          0.5,
+          0.0
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_dac1_out_stereo",
+      "x": 3000,
+      "y": 690,
+      "width": 140,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          140,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "dac1",
+        "fixedPoint": [
+          1.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "out_stereo",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_dac2_out_aux",
+      "x": 3000,
+      "y": 960,
+      "width": 140,
+      "height": 60,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0
+        ],
+        [
+          60,
+          60
+        ],
+        [
+          140,
+          60
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "dac2",
+        "fixedPoint": [
+          1.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "out_aux",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_dac1_out_hp",
+      "x": 3000,
+      "y": 730,
+      "width": 140,
+      "height": 125,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          40,
+          0
+        ],
+        [
+          40,
+          125
+        ],
+        [
+          140,
+          125
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "dac1",
+        "fixedPoint": [
+          1.0,
+          0.8333333333333334
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "out_hp",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_stm32_toslink_tx",
+      "x": 2080,
+      "y": 1175,
+      "width": 620,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          620,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "stm32",
+        "fixedPoint": [
+          1.0,
+          0.9112903225806451
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "toslink_tx",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_psu5_ldo",
+      "x": 340,
+      "y": 1500,
+      "width": 120,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          120,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "psu_5v",
+        "fixedPoint": [
+          1.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "psu_3v3_dig",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "arrow",
+      "id": "a_ldo_ana",
+      "x": 760,
+      "y": 1500,
+      "width": 120,
+      "height": 0,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          120,
+          0
+        ]
+      ],
+      "endArrowhead": "arrow",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "startBinding": {
+        "elementId": "psu_3v3_dig",
+        "fixedPoint": [
+          1.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "endBinding": {
+        "elementId": "psu_3v3_ana",
+        "fixedPoint": [
+          0.0,
+          0.5
+        ],
+        "focus": 0,
+        "gap": 0
+      },
+      "roughness": 0,
+      "roundness": null,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "src1",
+      "x": 60,
+      "y": 600,
+      "width": 240,
+      "height": 100,
+      "backgroundColor": "#1e3a5f",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_src1",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_src1",
+      "x": 80,
+      "y": 625.0,
+      "width": 200,
+      "height": 50.0,
+      "text": "Stereo 1 (Cinch\nL/R)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "src1",
+      "originalText": "Stereo 1 (Cinch L/R)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "src2",
+      "x": 60,
+      "y": 740,
+      "width": 240,
+      "height": 100,
+      "backgroundColor": "#1e3a5f",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_src2",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_src2",
+      "x": 80,
+      "y": 765.0,
+      "width": 200,
+      "height": 50.0,
+      "text": "Stereo 2 (Cinch\nL/R)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "src2",
+      "originalText": "Stereo 2 (Cinch L/R)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "src3",
+      "x": 60,
+      "y": 880,
+      "width": 240,
+      "height": 100,
+      "backgroundColor": "#1e3a5f",
+      "fillStyle": "solid",
+      "strokeColor": "#4a9eed",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_src3",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_src3",
+      "x": 80,
+      "y": 917.5,
+      "width": 200,
+      "height": 25.0,
+      "text": "AUX (Cinch L/R)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "src3",
+      "originalText": "AUX (Cinch L/R)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "buf1",
+      "x": 380,
+      "y": 600,
+      "width": 260,
+      "height": 100,
+      "backgroundColor": "#2d1b69",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_buf1",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_buf1",
+      "x": 400,
+      "y": 625.0,
+      "width": 220,
+      "height": 50.0,
+      "text": "Op-Amp Buffer\n(OPA1612)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "buf1",
+      "originalText": "Op-Amp Buffer (OPA1612)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "buf2",
+      "x": 380,
+      "y": 740,
+      "width": 260,
+      "height": 100,
+      "backgroundColor": "#2d1b69",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_buf2",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_buf2",
+      "x": 400,
+      "y": 765.0,
+      "width": 220,
+      "height": 50.0,
+      "text": "Op-Amp Buffer\n(OPA1612)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "buf2",
+      "originalText": "Op-Amp Buffer (OPA1612)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "buf3",
+      "x": 380,
+      "y": 880,
+      "width": 260,
+      "height": 100,
+      "backgroundColor": "#2d1b69",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_buf3",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_buf3",
+      "x": 400,
+      "y": 905.0,
+      "width": 220,
+      "height": 50.0,
+      "text": "Op-Amp Buffer\n(OPA1612)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "buf3",
+      "originalText": "Op-Amp Buffer (OPA1612)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "mux",
+      "x": 760,
+      "y": 590,
+      "width": 260,
+      "height": 400,
+      "backgroundColor": "#2d1b69",
+      "fillStyle": "solid",
+      "strokeColor": "#8b5cf6",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_mux",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_mux",
+      "x": 780,
+      "y": 752.5,
+      "width": 220,
+      "height": 75.0,
+      "text": "Analog-MUX\n(DG5081) 3:1, L/R\ngetrennt",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "mux",
+      "originalText": "Analog-MUX (DG5081) 3:1, L/R getrennt",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "adc",
+      "x": 1100,
+      "y": 850,
+      "width": 260,
+      "height": 140,
+      "backgroundColor": "#1a4d2e",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_adc",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_adc",
+      "x": 1120,
+      "y": 895.0,
+      "width": 220,
+      "height": 50.0,
+      "text": "ADC (CS5345 →\nES9023 Ziel-PCB)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "adc",
+      "originalText": "ADC (CS5345 → ES9023 Ziel-PCB)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "toslink_rx",
+      "x": 60,
+      "y": 1120,
+      "width": 240,
+      "height": 110,
+      "backgroundColor": "#5c3d1a",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_toslink_rx",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_toslink_rx",
+      "x": 80,
+      "y": 1150.0,
+      "width": 200,
+      "height": 50.0,
+      "text": "TOSLINK RX\n(optisch)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "toslink_rx",
+      "originalText": "TOSLINK RX (optisch)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "plr135",
+      "x": 380,
+      "y": 1120,
+      "width": 280,
+      "height": 110,
+      "backgroundColor": "#5c3d1a",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_plr135",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_plr135",
+      "x": 400,
+      "y": 1150.0,
+      "width": 240,
+      "height": 50.0,
+      "text": "PLR135/T\n(TOSLINK-Empfänger)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "plr135",
+      "originalText": "PLR135/T (TOSLINK-Empfänger)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "esp32",
+      "x": 1480,
+      "y": 240,
+      "width": 600,
+      "height": 140,
+      "backgroundColor": "#5c3d1a",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_esp32",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_esp32",
+      "x": 1500,
+      "y": 285.0,
+      "width": 560,
+      "height": 50.0,
+      "text": "ESP32-S3 (DevKitC-1) I2S-Slave · BT A2DP +\nWiFi",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "esp32",
+      "originalText": "ESP32-S3 (DevKitC-1) I2S-Slave · BT A2DP + WiFi",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "chip3",
+      "x": 2160,
+      "y": 240,
+      "width": 420,
+      "height": 140,
+      "backgroundColor": "#5c1a1a",
+      "fillStyle": "solid",
+      "strokeColor": "#ef4444",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_chip3",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_chip3",
+      "x": 2180,
+      "y": 285.0,
+      "width": 380,
+      "height": 50.0,
+      "text": "Chip 3 (offen – RPi Zero 2 W\n/ USB-Audio)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "chip3",
+      "originalText": "Chip 3 (offen – RPi Zero 2 W / USB-Audio)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "stm32",
+      "x": 1480,
+      "y": 610,
+      "width": 600,
+      "height": 620,
+      "backgroundColor": "#1a4d4d",
+      "fillStyle": "solid",
+      "strokeColor": "#22d3ee",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_stm32",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_stm32",
+      "x": 1500,
+      "y": 882.5,
+      "width": 560,
+      "height": 75.0,
+      "text": "STM32 (F767ZI → H743ZI Ziel-PCB) I2S-Master\n· EQ · Mixing · S/PDIF-Decoder ·\nClock-Generator (LRCLK/BCLK/MCLK)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "stm32",
+      "originalText": "STM32 (F767ZI → H743ZI Ziel-PCB) I2S-Master · EQ · Mixing · S/PDIF-Decoder · Clock-Generator (LRCLK/BCLK/MCLK)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "dac1",
+      "x": 2700,
+      "y": 630,
+      "width": 300,
+      "height": 120,
+      "backgroundColor": "#1a4d2e",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_dac1",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_dac1",
+      "x": 2720,
+      "y": 665.0,
+      "width": 260,
+      "height": 50.0,
+      "text": "ES9028 #1 (Stereo)\nI2S-Slave",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "dac1",
+      "originalText": "ES9028 #1 (Stereo) I2S-Slave",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "dac2",
+      "x": 2700,
+      "y": 900,
+      "width": 300,
+      "height": 120,
+      "backgroundColor": "#1a4d2e",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_dac2",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_dac2",
+      "x": 2720,
+      "y": 935.0,
+      "width": 260,
+      "height": 50.0,
+      "text": "ES9028 #2 (AUX)\nI2S-Slave",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "dac2",
+      "originalText": "ES9028 #2 (AUX) I2S-Slave",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "out_stereo",
+      "x": 3140,
+      "y": 630,
+      "width": 280,
+      "height": 120,
+      "backgroundColor": "#1a4d2e",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_out_stereo",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_out_stereo",
+      "x": 3160,
+      "y": 665.0,
+      "width": 240,
+      "height": 50.0,
+      "text": "Stereo-Ausgang\n(Cinch) via Op-Amp",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "out_stereo",
+      "originalText": "Stereo-Ausgang (Cinch) via Op-Amp",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "out_hp",
+      "x": 3140,
+      "y": 790,
+      "width": 280,
+      "height": 130,
+      "backgroundColor": "#1a4d2e",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_out_hp",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_out_hp",
+      "x": 3160,
+      "y": 817.5,
+      "width": 240,
+      "height": 75.0,
+      "text": "Kopfhörer-Ausgang\n(Klinke) via\nOPA1612-Stufe",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "out_hp",
+      "originalText": "Kopfhörer-Ausgang (Klinke) via OPA1612-Stufe",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "out_aux",
+      "x": 3140,
+      "y": 960,
+      "width": 280,
+      "height": 120,
+      "backgroundColor": "#1a4d2e",
+      "fillStyle": "solid",
+      "strokeColor": "#22c55e",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_out_aux",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_out_aux",
+      "x": 3160,
+      "y": 995.0,
+      "width": 240,
+      "height": 50.0,
+      "text": "AUX-Ausgang\n(Cinch) via Op-Amp",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "out_aux",
+      "originalText": "AUX-Ausgang (Cinch) via Op-Amp",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "toslink_tx",
+      "x": 2700,
+      "y": 1120,
+      "width": 300,
+      "height": 110,
+      "backgroundColor": "#5c3d1a",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_toslink_tx",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_toslink_tx",
+      "x": 2720,
+      "y": 1150.0,
+      "width": 260,
+      "height": 50.0,
+      "text": "TOSLINK TX (optisch)\n+ LED-Treiber",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "toslink_tx",
+      "originalText": "TOSLINK TX (optisch) + LED-Treiber",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "psu_5v",
+      "x": 60,
+      "y": 1440,
+      "width": 280,
+      "height": 120,
+      "backgroundColor": "#5c3d1a",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_psu_5v",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_psu_5v",
+      "x": 80,
+      "y": 1475.0,
+      "width": 240,
+      "height": 50.0,
+      "text": "5V / 3A externes\nNetzteil",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "psu_5v",
+      "originalText": "5V / 3A externes Netzteil",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "psu_3v3_dig",
+      "x": 460,
+      "y": 1440,
+      "width": 300,
+      "height": 120,
+      "backgroundColor": "#5c3d1a",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_psu_3v3_dig",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_psu_3v3_dig",
+      "x": 480,
+      "y": 1475.0,
+      "width": 260,
+      "height": 50.0,
+      "text": "3.3V LDO (digital)\nAMS1117",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "psu_3v3_dig",
+      "originalText": "3.3V LDO (digital) AMS1117",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "rectangle",
+      "id": "psu_3v3_ana",
+      "x": 880,
+      "y": 1440,
+      "width": 340,
+      "height": 120,
+      "backgroundColor": "#5c3d1a",
+      "fillStyle": "solid",
+      "strokeColor": "#f59e0b",
+      "strokeWidth": 2,
+      "roundness": {
+        "type": 3
+      },
+      "boundElements": [
+        {
+          "id": "t_psu_3v3_ana",
+          "type": "text"
+        }
+      ],
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1,
+      "roughness": 0
+    },
+    {
+      "type": "text",
+      "id": "t_psu_3v3_ana",
+      "x": 900,
+      "y": 1475.0,
+      "width": 300,
+      "height": 50.0,
+      "text": "3.3V LDO (analog) –\ngetrennt (Ziel-PCB)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "psu_3v3_ana",
+      "originalText": "3.3V LDO (analog) – getrennt (Ziel-PCB)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_title",
+      "x": 40,
+      "y": 20,
+      "text": "RHYTHM – Hardware Block Diagramm (Prototyp Phase 1/2)",
+      "fontSize": 32,
+      "fontFamily": 2,
+      "strokeColor": "#e5e5e5",
+      "originalText": "RHYTHM – Hardware Block Diagramm (Prototyp Phase 1/2)",
+      "autoResize": false,
+      "width": 3300,
+      "height": 40.0,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_subtitle",
+      "x": 40,
+      "y": 85,
+      "text": "Referenz: signal-path.md · Abweichungen zur Ziel-PCB als Annotation",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#a0a0a0",
+      "originalText": "Referenz: signal-path.md · Abweichungen zur Ziel-PCB als Annotation",
+      "autoResize": false,
+      "width": 3200,
+      "height": 25.0,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_z_analog",
+      "x": 50,
+      "y": 180,
+      "text": "Analog (Eingänge)",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "strokeColor": "#a0a0a0",
+      "originalText": "Analog (Eingänge)",
+      "autoResize": false,
+      "width": 1200,
+      "height": 30.0,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_z_digital",
+      "x": 1470,
+      "y": 180,
+      "text": "Digital (Kommunikation & Control)",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "strokeColor": "#a0a0a0",
+      "originalText": "Digital (Kommunikation & Control)",
+      "autoResize": false,
+      "width": 1100,
+      "height": 30.0,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_z_dac",
+      "x": 2690,
+      "y": 180,
+      "text": "DAC / Ausgänge",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "strokeColor": "#a0a0a0",
+      "originalText": "DAC / Ausgänge",
+      "autoResize": false,
+      "width": 720,
+      "height": 30.0,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_z_power",
+      "x": 50,
+      "y": 1370,
+      "text": "Stromversorgung",
+      "fontSize": 24,
+      "fontFamily": 2,
+      "strokeColor": "#a0a0a0",
+      "originalText": "Stromversorgung",
+      "autoResize": false,
+      "width": 900,
+      "height": 30.0,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_psu_note",
+      "x": 1320,
+      "y": 1440,
+      "text": "Phase 1/2 (Breadboard): ein 3.3V-Netz, A/D-Trennung vernachlässigt. Ziel-PCB: 2x LDO + Star Ground.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#a0a0a0",
+      "originalText": "Phase 1/2 (Breadboard): ein 3.3V-Netz, A/D-Trennung vernachlässigt. Ziel-PCB: 2x LDO + Star Ground.",
+      "autoResize": false,
+      "width": 2000,
+      "height": 27.5,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_a_adc_i2s2",
+      "x": 1090,
+      "y": 760,
+      "width": 340,
+      "height": 50.0,
+      "text": "I2S2 (RX): SDO, SCK, WS,\nMCLK",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#22c55e",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "I2S2 (RX): SDO, SCK, WS, MCLK",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_a_adc_i2c1",
+      "x": 1100,
+      "y": 1080,
+      "width": 330,
+      "height": 25.0,
+      "text": "I2C1 (SDA, SCL)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#22d3ee",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "I2C1 (SDA, SCL)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_a_plr_stm32",
+      "x": 720,
+      "y": 1200,
+      "width": 690,
+      "height": 25.0,
+      "text": "GPIO (3.3V TTL, Interrupt) → SW-S/PDIF-Decoder",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#f59e0b",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "GPIO (3.3V TTL, Interrupt) → SW-S/PDIF-Decoder",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_a_stm32_esp32",
+      "x": 1580,
+      "y": 410,
+      "width": 240,
+      "height": 50.0,
+      "text": "I2S3 (TX→Slave):\nSD, SCK, WS, MCLK",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#22c55e",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "I2S3 (TX→Slave): SD, SCK, WS, MCLK",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_a_stm32_uart_esp",
+      "x": 1870,
+      "y": 395,
+      "width": 240,
+      "height": 100.0,
+      "text": "UART\n(115200/921600):\nStatus, AVRCP,\nQuellwechsel",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#4a9eed",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "UART (115200/921600): Status, AVRCP, Quellwechsel",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_a_stm32_chip3",
+      "x": 2130,
+      "y": 550,
+      "width": 460,
+      "height": 25.0,
+      "text": "USB-Audio / UART / I2S (offen)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#ef4444",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "USB-Audio / UART / I2S (offen)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_a_stm32_dac1",
+      "x": 2150,
+      "y": 605,
+      "width": 490,
+      "height": 25.0,
+      "text": "I2S1 (TX→Slave): SD, SCK, WS, MCLK",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#22c55e",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "I2S1 (TX→Slave): SD, SCK, WS, MCLK",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_a_stm32_dac2",
+      "x": 2150,
+      "y": 845,
+      "width": 490,
+      "height": 50.0,
+      "text": "I2S1 (TX→Slave): SD, SCK, WS, MCLK\n(parallel zu #1)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#22c55e",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "I2S1 (TX→Slave): SD, SCK, WS, MCLK (parallel zu #1)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_a_stm32_i2c_dac",
+      "x": 2160,
+      "y": 995,
+      "width": 490,
+      "height": 50.0,
+      "text": "I2C1 (optional): Mute, Soft-Reset\n(ES9028)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#22d3ee",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "I2C1 (optional): Mute, Soft-Reset (ES9028)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_a_stm32_gpio_mux",
+      "x": 910,
+      "y": 405,
+      "width": 470,
+      "height": 25.0,
+      "text": "GPIO x2 (MUX-Channel-Auswahl)",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#4a9eed",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "GPIO x2 (MUX-Channel-Auswahl)",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_a_stm32_toslink_tx",
+      "x": 2150,
+      "y": 1100,
+      "width": 490,
+      "height": 50.0,
+      "text": "GPIO (Timer-gesteuert) →\nS/PDIF-Encoder → LED-Treiber",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#f59e0b",
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "originalText": "GPIO (Timer-gesteuert) → S/PDIF-Encoder → LED-Treiber",
+      "autoResize": false,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_clock_note",
+      "x": 60,
+      "y": 1670,
+      "text": "Clock-Verantwortlichkeiten: LRCLK 48kHz, BCLK 1.536MHz, MCLK 12.288MHz – alle vom STM32 generiert. ESP32-S3: kein MCLK nötig.",
+      "fontSize": 22,
+      "fontFamily": 2,
+      "strokeColor": "#a0a0a0",
+      "originalText": "Clock-Verantwortlichkeiten: LRCLK 48kHz, BCLK 1.536MHz, MCLK 12.288MHz – alle vom STM32 generiert. ESP32-S3: kein MCLK nötig.",
+      "autoResize": false,
+      "width": 3300,
+      "height": 27.5,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    },
+    {
+      "type": "text",
+      "id": "t_legend",
+      "x": 60,
+      "y": 1780,
+      "text": "Legende: I2S = Audio-Bus (grün) · I2C = Codec-Config (cyan, gestrichelt) · UART = Control/Status (blau) · GPIO = Digital (blau, gepunktet) · S/PDIF = TOSLINK (amber) · Strom = amber · Offene Punkte = rot, gestrichelt",
+      "fontSize": 20,
+      "fontFamily": 2,
+      "strokeColor": "#a0a0a0",
+      "originalText": "Legende: I2S = Audio-Bus (grün) · I2C = Codec-Config (cyan, gestrichelt) · UART = Control/Status (blau) · GPIO = Digital (blau, gepunktet) · S/PDIF = TOSLINK (amber) · Strom = amber · Offene Punkte = rot, gestrichelt",
+      "autoResize": false,
+      "width": 3300,
+      "height": 25.0,
+      "lineHeight": 1.25,
+      "angle": 0,
+      "opacity": 100,
+      "isDeleted": false,
+      "groupIds": [],
+      "seed": 1,
+      "version": 1,
+      "versionNonce": 1
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#1e1e2e",
+    "gridSize": null
+  }
+}

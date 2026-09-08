@@ -21,6 +21,10 @@
 
 ## 1. I2S-Bus-Topologie
 
+![RHYTHM-Hardware-Blockdiagramm: Audio-Signalpfad, I2S-Topologie, Chip-3/ESP32-S3, Stromversorgung](block-diagram.svg)
+
+> Vektorquelle: [`block-diagram.excalidraw`](block-diagram.excalidraw) (in Excalidraw editierbar).
+
 ### 1.1 Rollen
 
 | Gerät | Rolle | Richtung |

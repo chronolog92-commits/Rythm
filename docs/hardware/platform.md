@@ -8,8 +8,8 @@
 | Thema | Entscheidung | Begründung |
 |-------|-------------|------------|
 | MCU (EQ/Mixing) | STM32H743 | Deterministisch, I2S, DMA, Timer-Encoder, S/PDIF via GPIO |
-| Dev-Board (Start) | NUCLEO-F767ZI (vorhanden) | Cortex-M7 @ 216 MHz, 1MB RAM, 2MB Flash, I2S, ST-Link |
-| Dev-Board (Später) | NUCLEO-H743ZI2 | Gleiche Familie (H7), 480 MHz, mehr Reserve, Pin-ähnlich |
+| Dev-Board (aktuell) | NUCLEO-H743ZI2 (neu, Dev-Board) | Cortex-M7 @ 480 MHz, 1MB RAM, 2MB Flash, I2S, ST-Link |
+| Dev-Board (zuvor) | NUCLEO-F767ZI (vorhanden) | Cortex-M7 @ 216 MHz, 1MB RAM, 2MB Flash, I2S, ST-Link – als Fallback |
 | BT-Sink + Web-Radio | ESP32-S3 (DevKitC-1) | A2DP-Sink + AVRCP + WiFi nativ, I2S-Output |
 | DAC | ES9028Q2M (x2) | 32-bit / 768 kHz, Hyperstream II, LQFP48, I2S + I2C + SLIMbus, ~15 €, Stereodac mit 4-Kanal-D/A (2 Kanäle frei für Kopfhörer/Gain) |
 | ADC | TBD (CS5345 / ES9023) | Analog-Quellen digitalisieren, für EQ + digitale Ausgänge |
@@ -40,7 +40,7 @@
                     └──────────────────────────────────────────────┘
 
  ┌─────────────────────────────────────────────────────────────────────┐
- │  CHIP 1: STM32H743 (NUCLEO-F767ZI → NUCLEO-H743ZI)                  │
+ │  CHIP 1: STM32H743 (NUCLEO-H743ZI, Dev-Board; zuvor F767ZI)           │
  │                                                                     │
  │  Aufgaben:                                                          │
  │  • 7-Band-Parametrik-EQ (7 Biquad, float, deterministisch)           │
@@ -163,7 +163,7 @@
 ### Zu klären (offen für DAC)
 
 1. [ ] I2C-Adresse der 2x ES9028Q2M finalisieren (Default-Address im Datasheet prüfen).
-2. [ ] MCLK-Pin auf F767ZI abgleichen (I2S_MCLK, s. `signal-path.md` §2).
+2. [ ] MCLK-Pin auf H743ZI abgleichen (I2S_MCLK, s. `signal-path.md` §2 – für H743 neu prüfen).
 3. [ ] Kopfhörer-Ausgang: eigene Gain-Stufe vom 3. Kanal-Paar des ES9028Q2M
     (statt separatem 3. Chip) – als Ziel-PCB-Option bestätigt?
 
@@ -187,7 +187,8 @@ AUX         ──┘   (I2S)       │  • Mixing (5→5)             │  ├
 
 | Bauteil | Stück | Preis (ca.) |
 |---------|-------|-------------|
-| NUCLEO-F767ZI (vorhanden) | 1 | 0 € |
+| NUCLEO-H743ZI2 (aktuell) | 1 | 0 € |
+| NUCLEO-F767ZI (zuvor, Fallback) | 1 | 0 € |
 | ESP32-S3-DevKitC-1 (16MB Flash, 8MB PSRAM) | 1 | ~15 € |
 | RPi Zero 2 W (falls Chip 3 = Option A) | 1 | ~15 € |
 | ES9028Q2M DAC (I2S, 32-bit/768 kHz, LQFP48) | 2 | ~30 € |
@@ -210,7 +211,7 @@ AUX         ──┘   (I2S)       │  • Mixing (5→5)             │  ├
 2. [ ] Chip 3-Optionen weiter recherchieren (während der Entwicklung)
 3. [ ] ESP32-S3 Firmware-Stack wählen (ESP-IDF vs. Arduino)
 4. [ ] Analog-Signalpfad ausarbeiten (Op-Amps, Filter, Pegel)
-5. [ ] Pin-Map für NUCLEO-F767ZI erstellen (I2S, I2C, SPI, GPIO, Timer)
+5. [ ] Pin-Map für NUCLEO-H743ZI erstellen (I2S, I2C, SPI, GPIO, Timer)
 6. [ ] Firmware-Gerüst aufsetzen (PlatformIO + VS Code)
 7. [ ] Breadboard-Aufbau planen (Stufe für Stufe)
 8. [ ] Erste BOM mit Bestelllinks erstellen

@@ -9,7 +9,7 @@ RHYTHM ist ein 3-Chip-System:
 
 | Chip | Rolle | Board |
 |------|-------|-------|
-| STM32H743 | Audio-DSP, Mixing, UI | NUCLEO-F767ZI → NUCLEO-H743ZI |
+| STM32H743 | Audio-DSP, Mixing, UI | NUCLEO-H743ZI (aktuell; zuvor NUCLEO-F767ZI) |
 | ESP32-S3 | BT-Sink, Web-Radio | ESP32-S3-DevKitC-1 |
 | [OFFEN] | Streaming (AirPlay, Spotify) | TBD |
 
@@ -77,7 +77,7 @@ Streaming ──→ [Chip 3] ──→ [I2S/USB] ──────────�
 - SPI (Display, optional)
 - UART (Kommunikation mit ESP32-S3)
 
-### Peripherie-Nutzung (NUCLEO-F767ZI)
+### Peripherie-Nutzung (NUCLEO-H743ZI)
 | Peripherie | Nutzung |
 |------------|---------|
 | I2S2 (oder I2S3) | I2S-Master zu DAC/ADC |
@@ -96,7 +96,7 @@ Streaming ──→ [Chip 3] ──→ [I2S/USB] ──────────�
 | GPIO | Taster, LEDs, S/PDIF TX/RX |
 | DMA1/2 | I2S-Audio-Transfer (Double-Buffer) |
 
-> **Hinweis:** Pin-Map ist vorläufig und muss mit dem NUCLEO-F767ZI-Pinout abgeglichen werden.
+> **Hinweis:** Pin-Map ist vorläufig und muss mit dem NUCLEO-H743ZI-Pinout abgeglichen werden. (Die frühere F767-Pin-Map gilt nicht mehr ohne Boardtest – F7 und H7 haben unterschiedliche Pinouts.)
 
 ### Firmware-Stack
 - PlatformIO + VS Code
@@ -119,7 +119,7 @@ Streaming ──→ [Chip 3] ──→ [I2S/USB] ──────────�
 | I2S-DMA (Übertragungssteuerung) | ~1% |
 | **Gesamt** | **~12–15% von 216 MHz** |
 
-> Sehr komfortabel. Der F767ZI (216 MHz) reicht mit großem Vorrat.
+> Sehr komfortabel. Der H743 (480 MHz) reicht mit großem Vorrat (zuvor F767ZI, 216 MHz – ebenfalls ausreichend).
 
 ## Chip-2: ESP32-S3 (BT-Sink + Web-Radio)
 
@@ -219,8 +219,8 @@ Chip 3 wird ergänzt, wenn der Audio-Pfad stabil ist.
 
 ### Hardware – Signalpfad & Clocking
 → Detailliert in [`docs/hardware/signal-path.md`](hardware/signal-path.md)
-5. [ ] Pin-Map für NUCLEO-F767ZI (final): I2S1/2/3 (SD, SCK, WS, MCLK), I2C1, UART2, GPIO (S/PDIF RX/TX, MUX, Encoder, Taster, LEDs)
-6. [ ] MCLK-Verfügbarkeit auf F767ZI abgleichen (I2S2_MCLK: PA7? I2S3_MCLK: PB15?)
+5. [ ] Pin-Map für NUCLEO-H743ZI (final): I2S1/2/3 (SD, SCK, WS, MCLK), I2C1, UART2, GPIO (S/PDIF RX/TX, MUX, Encoder, Taster, LEDs)
+6. [ ] MCLK-Verfügbarkeit auf H743ZI abgleichen (I2S2_MCLK: PA7? I2S3_MCLK: PB15? – für H743 neu prüfen)
 7. [ ] ESP32-S3 I2S-Slave-Pins (DevKitC-1) abgleichen
 8. [ ] S/PDIF GPIO-Pins (RX + TX) + Interrupt-Priorität abgleichen
 9. [ ] Analog-MUX-Modell (DG5081 3:1, 2x für L/R) – Datasheet prüfen

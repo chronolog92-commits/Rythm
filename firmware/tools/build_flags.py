@@ -1,4 +1,4 @@
-"""Keep the linker ABI and C library consistent with the compile flags."""
+"""Keep the linker ABI and C library consistent with the F767 compile flags."""
 Import("env")
 env.Append(LINKFLAGS=[
     "-mfpu=fpv5-d16",

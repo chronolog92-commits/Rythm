@@ -2,8 +2,10 @@
  * RHYTHM – Board Support Package (BSP)
  * Zentrale Pin-Map und Low-Level-Initialisierung.
  *
- * Pin-Map ist VORLÄUFIG und muss mit dem NUCLEO-F767ZI-Pinout abgeglichen werden.
+ * Pin-Map ist VORLÄUFIG und muss mit dem NUCLEO-H743ZI-Pinout abgeglichen werden.
  * Quelle: docs/architecture.md (Peripherie-Nutzung).
+ * (Vor der H7-Umstellung galt der F767-Pinout PC13/LED5; die LED-Pins müssen
+ *  für die H743 neu verifiziert werden – Boardtest erforderlich.)
  */
 
 #ifndef RHYTHM_BSP_H

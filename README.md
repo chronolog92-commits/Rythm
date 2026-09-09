@@ -40,7 +40,7 @@ RHYTHM ist ein selbstgebautes Audio-Interface / Digitaler Vorverstärker (AVR) m
 
 ## Nächste Schritte (offene Punkte)
 
-- [x] Ziel-Plattform / Mikrocontroller wählen → **STM32H743 + ESP32-S3 + [Chip 3 offen]** (Details in `docs/hardware/platform.md` und `docs/architecture.md`)
+- [x] Ziel-Plattform / Mikrocontroller wählen → **STM32H743 (final) + ESP32-S3 + [Chip 3 offen]** — Dev-Board: NUCLEO-H753ZI (vorhanden). Details in `docs/hardware/platform.md` und `docs/architecture.md`
 - [x] DAC wählen → **ES9028Q2M** (32-bit / 768 kHz, I2S + I2C, LQFP-48; Details in `docs/hardware/platform.md` § „DAC-Spezifikation")
 - [x] ADC wählen → **TBD** (CS5345 / ES9023, in `docs/architecture.md` offener Punkt)
 - [ ] Analog-/Digital-Signalpfad und Filter (EQ, Mute, Crossover) definieren

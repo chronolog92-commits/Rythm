@@ -7,9 +7,8 @@
 
 | Thema | Entscheidung | Begründung |
 |-------|-------------|------------|
-| MCU (EQ/Mixing) | STM32H743 | Deterministisch, I2S, DMA, Timer-Encoder, S/PDIF via GPIO |
-| Dev-Board (aktuell) | NUCLEO-H743ZI2 (neu, Dev-Board) | Cortex-M7 @ 480 MHz, 1MB RAM, 2MB Flash, I2S, ST-Link |
-| Dev-Board (zuvor) | NUCLEO-F767ZI (vorhanden) | Cortex-M7 @ 216 MHz, 1MB RAM, 2MB Flash, I2S, ST-Link – als Fallback |
+| MCU (EQ/Mixing) | STM32H743 (final) | Deterministisch, I2S, DMA, Timer-Encoder, S/PDIF via GPIO |
+| Dev-Board (aktuell) | NUCLEO-H753ZI (STM32H753, vorhanden) | Cortex-M7 @ 400 MHz, 1MB RAM, 2MB Flash, I2S, ST-Link – Dev-Board bis zur finalen HW |
 | BT-Sink + Web-Radio | ESP32-S3 (DevKitC-1) | A2DP-Sink + AVRCP + WiFi nativ, I2S-Output |
 | DAC | ES9028Q2M (x2) | 32-bit / 768 kHz, Hyperstream II, LQFP48, I2S + I2C + SLIMbus, ~15 €, Stereodac mit 4-Kanal-D/A (2 Kanäle frei für Kopfhörer/Gain) |
 | ADC | TBD (CS5345 / ES9023) | Analog-Quellen digitalisieren, für EQ + digitale Ausgänge |
@@ -40,7 +39,7 @@
                     └──────────────────────────────────────────────┘
 
  ┌─────────────────────────────────────────────────────────────────────┐
- │  CHIP 1: STM32H743 (NUCLEO-H743ZI, Dev-Board; zuvor F767ZI)           │
+ │  CHIP 1: STM32H743 (final) – Dev-Board NUCLEO-H753ZI                  │
  │                                                                     │
  │  Aufgaben:                                                          │
  │  • 7-Band-Parametrik-EQ (7 Biquad, float, deterministisch)           │
@@ -187,8 +186,7 @@ AUX         ──┘   (I2S)       │  • Mixing (5→5)             │  ├
 
 | Bauteil | Stück | Preis (ca.) |
 |---------|-------|-------------|
-| NUCLEO-H743ZI2 (aktuell) | 1 | 0 € |
-| NUCLEO-F767ZI (zuvor, Fallback) | 1 | 0 € |
+| NUCLEO-H753ZI (aktuell, Dev) | 1 | 0 € |
 | ESP32-S3-DevKitC-1 (16MB Flash, 8MB PSRAM) | 1 | ~15 € |
 | RPi Zero 2 W (falls Chip 3 = Option A) | 1 | ~15 € |
 | ES9028Q2M DAC (I2S, 32-bit/768 kHz, LQFP48) | 2 | ~30 € |

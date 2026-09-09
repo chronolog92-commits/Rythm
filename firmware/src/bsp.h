@@ -2,10 +2,10 @@
  * RHYTHM – Board Support Package (BSP)
  * Zentrale Pin-Map und Low-Level-Initialisierung.
  *
- * Pin-Map ist VORLÄUFIG und muss mit dem NUCLEO-H743ZI-Pinout abgeglichen werden.
+ * Pin-Map ist VORLÄUFIG und muss mit dem NUCLEO-H753ZI-Pinout abgeglichen werden.
  * Quelle: docs/architecture.md (Peripherie-Nutzung).
  * (Vor der H7-Umstellung galt der F767-Pinout PC13/LED5; die LED-Pins müssen
- *  für die H743 neu verifiziert werden – Boardtest erforderlich.)
+ *  für die H7 neu verifiziert werden – Boardtest erforderlich.)
  */
 
 #ifndef RHYTHM_BSP_H
@@ -15,7 +15,7 @@
 
 /* ---------- LED ---------- */
 #define BSP_LED_PORT      GPIOB
-#define BSP_LED_PIN       GPIO_PIN_7    /* NUCLEO-F767ZI: LD2 blau, aktiv high (UM1974). */
+#define BSP_LED_PIN       GPIO_PIN_7    /* NUCLEO-H753ZI / H743ZI: LD2 blau, aktiv high. */
 
 /* ---------- TOSLINK ---------- */
 /* Eingang: PLR135/T → GPIO → SW-S/PDIF-Decoder (AN5073) */

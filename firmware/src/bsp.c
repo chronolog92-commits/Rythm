@@ -20,7 +20,7 @@ void bsp_init(void)
     __HAL_RCC_GPIOD_CLK_ENABLE();
     __HAL_RCC_USART2_CLK_ENABLE();
 
-    /* NUCLEO-F767ZI: blaue LED LD2 an PB7, nicht USER-Taster PC13. */
+    /* Blaue LED LD2 an PB7 (NUCLEO-H753ZI / H743ZI identisch), nicht USER-Taster PC13. */
     GPIO_InitTypeDef led = {0};
     led.Pin   = BSP_LED_PIN;
     led.Mode  = GPIO_MODE_OUTPUT_PP;

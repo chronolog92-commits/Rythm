@@ -1,6 +1,6 @@
 /**
  * RHYTHM – Main
- * STM32H743 (NUCLEO-H743ZI als Dev-Board)
+ * STM32H753 (NUCLEO-H753ZI als Dev-Board; final STM32H743)
  *
  * Phase 1 (Breadboard): Blink-Loop auf blauer LED LD2 (PB7) + UART-Debug.
  * Audio-Stack (I2S/DMA, EQ, Mixing) kommt in den folgenden Phasen.

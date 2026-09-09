@@ -32,24 +32,24 @@
 | STM32 (F767ZI) | **I2S-Master** (Clock-Generator) | Takte + Audio-Data |
 | ESP32-S3 (DevKitC-1) | **I2S-Slave** (2. Peripherie: I2S0/1 als Slave) | Audio-Data → STM32 |
 | ADC (CS5345 / ES9023) | **I2S-Slave** | Audio-Data → STM32 |
-| ES9028 x2 (DAC) | **I2S-Slave** | Audio-Data ← STM32 |
+| ES9028Q2M x2 (DAC) | **I2S-Slave** | Audio-Data ← STM32 |
 
 > **Warum STM32 als Master?**
 > - Der STM32 ist das Deterministik-Zentrum (EQ, Mixing, S/PDIF-Decoder).
 > - Ein Master kann mehrere Slave-Busse betreiben (I2S2 für ADC, I2S3 für ESP32-S3,
->   I2S1 für die 2x ES9028).
+>   I2S1 für die 2x ES9028Q2M).
 > - ESP32-S3 als Slave: ESP-IDF unterstützt I2S-Slave-Modus nativ (i2s_std_mode,
 >   `i2s_slot_mode` + `i2s_clk_config`).
-> - ADC/DAC als Slave: CS5345, ES9023, ES9028 sind I2S-Slave-fähig (BCLK/LRCLK
+> - ADC/DAC als Slave: CS5345, ES9023, ES9028Q2M sind I2S-Slave-fähig (BCLK/LRCLK
 >   extern, MCLK optional).
 
 ### 1.2 Busse (3x I2S)
 
 ```
 STM32 (F767ZI)
-├── I2S1 ──→ [ES9028 #1 (Stereo)] ──→ Op-Amp → Stereo-Ausgang
-│       └──→ [ES9028 #2 (AUX)] ──→ Op-Amp → AUX-Ausgang
-│           (Kopfhörer: vom selben ES9028 #1 über Op-Amp-Stufe,
+├── I2S1 ──→ [ES9028Q2M #1 (Stereo)] ──→ Op-Amp → Stereo-Ausgang
+│       └──→ [ES9028Q2M #2 (AUX)] ──→ Op-Amp → AUX-Ausgang
+│           (Kopfhörer: vom selben ES9028Q2M #1 über Op-Amp-Stufe,
 │            oder eigener DAC – siehe Abschnitt 1.3)
 │
 ├── I2S2 ──→ [ADC (CS5345/ES9023)] ← analoge Quellen (Stereo 1, 2, AUX)
@@ -58,7 +58,7 @@ STM32 (F767ZI)
 ```
 
 > **Warum 3x I2S?**
-> - I2S1: **Ausgangs-Bus** (DACs). 2x ES9028 hängen parallel an I2S1 (beide Slave,
+> - I2S1: **Ausgangs-Bus** (DACs). 2x ES9028Q2M hängen parallel an I2S1 (beide Slave,
 >   gleiche Takte).
 > - I2S2: **Eingangs-Bus** (ADC). 1x ADC (Stereo). Die 3 analogen Quellen
 >   (Stereo 1, Stereo 2, AUX) werden **vor dem ADC** analog gemischt/geschaltet
@@ -71,7 +71,7 @@ STM32 (F767ZI)
 > BCLK/LRCLK). Das spart eine I2S-Peripherie, aber:
 > - CS5345/ES9023 als I2S-Slave im **Receive-Modus** (ADC → MCU) brauchen BCLK/LRCLK
 >   von außen → OK.
-> - ES9028 als **Transmit-Modus** (MCU → DAC) brauchen BCLK/LRCLK von außen → OK.
+> - ES9028Q2M als **Transmit-Modus** (MCU → DAC) brauchen BCLK/LRCLK von außen → OK.
 > - **Aber:** ADC und DAC auf demselben Bus = gemeinsame Takte, aber **getrennte
 >   Data-Lines** (ADC-DOUT → STM32, STM32-DOUT → DAC-DIN). Das ist machbar,
 >   aber der STM32 muss I2S **Full-Duplex** betreiben (1x I2S-Peripherie,
@@ -82,11 +82,12 @@ STM32 (F767ZI)
 
 ### 1.3 Kopfhörer-Ausgang
 
-- **Phase 1/2:** Kopfhörer-Ausgang geht vom **ES9028 #1** (Stereo-DAC) über
+- **Phase 1/2:** Kopfhörer-Ausgang geht vom **ES9028Q2M #1** (Stereo-DAC) über
   eine **zusätzliche Op-Amp-Stufe** (z.B. OPA1612, niederohmig, für 32 Ω)
   auf die Klinke. Kein separater DAC.
-- **Ziel-PCB:** Optionaler **dritter ES9028** (oder dedizierter Kopfhörer-DAC,
-  z.B. ES9012) für sauberere Trennung (Kopfhörer = eigene Gain-Stufe,
+- **Ziel-PCB:** Optionaler **dritter ES9028Q2M** (oder die frei liegenden Kanäle
+  des ES9028Q2M #1 für eine eigene Kopfhörer-Gain-Stufe, oder dedizierter
+  Kopfhörer-DAC z.B. ES9012) für sauberere Trennung (Kopfhörer = eigene Gain-Stufe,
   kein Cross-Talk mit Stereo/AUX).
 
 ### 1.4 I2C-Bus (Codec-Konfiguration)
@@ -94,7 +95,7 @@ STM32 (F767ZI)
 | Bus | Master | Slave | Zweck |
 |-----|--------|-------|-------|
 | I2C1 (F767ZI) | STM32 | ADC (CS5345/ES9023) | Gain, Mute, Sample-Rate, Power-Down |
-| I2C1 (F767ZI) | STM32 | ES9028 (optional) | Mute, Soft-Reset (ES9028 hat I2C-Interface) |
+| I2C1 (F767ZI) | STM32 | ES9028Q2M (optional) | Mute, Soft-Reset (ES9028Q2M hat I2C-Interface) |
 
 > ESP32-S3 hat **kein I2C** zum STM32 (Kommunikation läuft über UART).
 > I2C ist ein **einseitiger Konfigurations-Bus** (STM32 → Codec), kein Audio-Bus.
@@ -112,12 +113,12 @@ STM32 (F767ZI)
 │       └── MCLK  = 48 kHz × 256 = 12.288 MHz (für ADC/DAC, falls benötigt)
 │
 └── I2S-Master-Output
-    ├── I2S1 → ES9028 x2 (BCLK, LRCLK, MCLK)
+    ├── I2S1 → ES9028Q2M x2 (BCLK, LRCLK, MCLK)
     ├── I2S2 → ADC (BCLK, LRCLK, MCLK)
     └── I2S3 → ESP32-S3 (BCLK, LRCLK, MCLK)
 ```
 
-> **MCLK:** ES9028 und CS5345/ES9023 arbeiten mit MCLK = 256 × fs (oder 384 × fs).
+> **MCLK:** ES9028Q2M und CS5345/ES9023 arbeiten mit MCLK = 256 × fs (oder 384 × fs).
 > Bei 48 kHz: MCLK = 12.288 MHz. Der STM32 kann MCLK über den I2S-Peripheral
 > (I2S_MCLK_EN) ausgeben. F767ZI: I2S_MCLK ist auf **PA7** (I2S2_MCLK) bzw.
 > **PB15** (I2S3_MCLK) verfügbar – muss in der Pin-Map abgeglichen werden.
@@ -126,9 +127,9 @@ STM32 (F767ZI)
 
 | Takt | Generator | Empfänger |
 |------|-----------|-----------|
-| LRCLK (48 kHz) | STM32 (I2S-Master) | ADC, ESP32-S3, ES9028 x2 |
-| BCLK (1.536 MHz) | STM32 (I2S-Master) | ADC, ESP32-S3, ES9028 x2 |
-| MCLK (12.288 MHz) | STM32 (I2S-Master) | ADC, ES9028 x2 (ESP32-S3: optional, nicht nötig) |
+| LRCLK (48 kHz) | STM32 (I2S-Master) | ADC, ESP32-S3, ES9028Q2M x2 |
+| BCLK (1.536 MHz) | STM32 (I2S-Master) | ADC, ESP32-S3, ES9028Q2M x2 |
+| MCLK (12.288 MHz) | STM32 (I2S-Master) | ADC, ES9028Q2M x2 (ESP32-S3: optional, nicht nötig) |
 | SYSCLK (216 MHz) | STM32 (HSE 8 MHz → PLL) | Intern (CPU, Peripherie) |
 
 > **ESP32-S3 als I2S-Slave:** ESP-IDF `i2s_std_mode` unterstützt Slave-Modus
@@ -262,12 +263,12 @@ TOSLINK-Ausgang (optisch)
 |------|--------|-------------|-----------|
 | 5 V / 3 A | externes 5V-Netzteil (USB-C / DC-Jack) | Alle | Hauptspannung |
 | 3.3 V | LDO / Buck vom 5 V | STM32, ESP32-S3, PLR135/T, Op-Amps, MUX, LEDs | Digital-Logik |
-| 3.3 V (analog) | **Separater LDO** (oder 3.3 V mit analogem Decoupling) | ADC, ES9028, analoge Op-Amps | **Analog-Netz, getrennt vom Digital-3.3V** |
+| 3.3 V (analog) | **Separater LDO** (oder 3.3 V mit analogem Decoupling) | ADC, ES9028Q2M, analoge Op-Amps | **Analog-Netz, getrennt vom Digital-3.3V** |
 | 1.2 V (optional) | LDO vom 3.3 V | ESP32-S3 (core, falls benötigt) | ESP32-S3: 3.3 V reicht (kein 1.2 V nötig für DevKitC) |
 
 > **Analog/Digital-Trennung:**
 > - **Digital-3.3V:** STM32, ESP32-S3, PLR135/T, MUX, LEDs.
-> - **Analog-3.3V:** ADC, ES9028, analoge Op-Amps.
+> - **Analog-3.3V:** ADC, ES9028Q2M, analoge Op-Amps.
 > - **Getrennte Decoupling** (100 nF + 10 µF pro Netz), **getrennte GND-Pfade**
 >   (analog GND und digital GND, verbunden an einem Punkt: Star Ground).
 > - **Für Phase 1/2 (Breadboard/Protoboard):** Ein 5V-Netzteil → 3.3V-LDO
@@ -284,7 +285,7 @@ TOSLINK-Ausgang (optisch)
 | STM32 (F767ZI) | 100 nF + 10 µF an VDD/VSS, 10 µF an VDDA/VSSA (analog) |
 | ESP32-S3 (DevKitC-1) | 100 nF + 10 µF an 3V3 (DevKitC hat eigenes Decoupling, prüfen) |
 | ADC (CS5345/ES9023) | 100 nF + 10 µF an AVDD/DVDD, 10 µF an AVSS/DVSS |
-| ES9028 x2 | 100 nF + 10 µF an AVDD/DVDD, 10 µF an AVSS/DVSS |
+| ES9028Q2M x2 | 100 nF + 10 µF an AVDD/DVDD, 10 µF an AVSS/DVSS |
 | PLR135/T | 100 nF an VCC |
 | Op-Amps (OPA1612 / NE5532) | 100 nF + 10 µF an V+ / V- |
 | MUX (DG5081) | 100 nF an VCC |
@@ -296,7 +297,7 @@ TOSLINK-Ausgang (optisch)
 | STM32 (F767ZI, 216 MHz) | ~80 mA (aktiv, I2S+DMA+Interrupts) |
 | ESP32-S3 (DevKitC-1, WiFi+BT aktiv) | ~180 mA (WiFi-Scan), ~80 mA (BT-only) |
 | ADC (CS5345) | ~5 mA |
-| ES9028 x2 | ~2 × 3 mA = 6 mA |
+| ES9028Q2M x2 | ~2 × 3 mA = 6 mA |
 | Op-Amps (4x) | ~4 × 2 mA = 8 mA |
 | MUX (DG5081) | ~0.5 mA |
 | PLR135/T | ~1 mA |
@@ -314,7 +315,7 @@ TOSLINK-Ausgang (optisch)
 
 | Stufe | Inhalt | Validierung |
 |-------|--------|-------------|
-| 1 | STM32 (F767ZI) + ES9028 x2 + 5V-Netzteil | I2S-Master → DAC → analoger Output (Testsignal: Sinus 1 kHz) |
+| 1 | STM32 (F767ZI) + ES9028Q2M x2 + 5V-Netzteil | I2S-Master → DAC → analoger Output (Testsignal: Sinus 1 kHz) |
 | 2 | + ESP32-S3 (BT + WiFi) | A2DP-Sink → I2S-Slave → DAC (BT-Musik aus Handy) |
 | 3 | + ADC (CS5345) + 1x analoge Quelle (Stereo 1) | Analog → ADC → I2S → STM32 → DAC (Loopback) |
 | 4 | + S/PDIF-Eingang (PLR135/T + CD-Player) | TOSLINK → SW-Decoder → DAC |
@@ -326,7 +327,7 @@ TOSLINK-Ausgang (optisch)
 > **Breadboard-Abweichungen vom Ziel-Zustand:**
 > - Analog/Digital-Trennung: **nicht umgesetzt** (ein 3.3V-Netz).
 > - MUX: **DIP-Schalter** (manuell) statt DG5081 (für Phase 1).
-> - Kopfhörer-Ausgang: **direkt vom ES9028 #1** (keine separate Op-Amp-Stufe).
+> - Kopfhörer-Ausgang: **direkt vom ES9028Q2M #1** (keine separate Op-Amp-Stufe).
 > - ESP32-S3: **USB-Debug-Kabel** an Laptop (UART-Debug), I2S per Jumper.
 
 ### Phase 2: Erste Prototyp-PCB (KiCad)
@@ -355,7 +356,7 @@ TOSLINK-Ausgang (optisch)
 | Layer | 4-Layer (Top, GND1, GND2, Bottom), analoger GND-Pour |
 | I2S-Topologie | **2x I2S** (Full-Duplex I2S1 für ADC+DAC, I2S2 für ESP32-S3) |
 | ADC | **3x ES9023** (alle Quellen gleichzeitig, kein Mux) |
-| DAC | 3x ES9028 (Stereo, AUX, Kopfhörer) |
+| DAC | 3x ES9028Q2M (Stereo, AUX, Kopfhörer) |
 | Analog/Digital | 2x 3.3V-LDOs (digital + analog), Star Ground, separater analoger GND-Pour |
 | Gehäuse | Aluminium- oder Stahl-Gehäuse (TBD) |
 | Gehäuse-Befestigung | PCB mit M3-Schrauben, Gehäusesockel mit GND-Kontakten |
@@ -378,7 +379,7 @@ TOSLINK-Ausgang (optisch)
 3. [ ] **ADC-Modell finalisieren** (CS5345 für Phase 1, ES9023 für Ziel-PCB – bestätigt?)
 4. [ ] **Analog-MUX-Modell** (DG5081 3:1? 2x für L/R? – Datasheet prüfen)
 5. [ ] **Op-Amp-Auswahl** für analoge Voreinstufe (OPA1612? NE5532? – Pegel + Impedanz)
-6. [ ] **Kopfhörer-DAC** (Phase 1: ES9028 #1, Ziel-PCB: eigener DAC – bestätigt?)
+6. [ ] **Kopfhörer-DAC** (Phase 1: ES9028Q2M #1, Ziel-PCB: eigener DAC / 3. Kanal-Paar – bestätigt?)
 7. [ ] **ESP32-S3 I2S-Slave-Pins** (DevKitC-1: welche Pins für I2S-Slave? – Datasheet prüfen)
 8. [ ] **S/PDIF GPIO-Pins** (RX + TX, Interrupt-Priorität – abgleichen mit F767ZI-Pinout)
 9. [ ] **Stromversorgung: 1x oder 2x 3.3V-LDO für Phase 2?** (Budget vs. Qualität)

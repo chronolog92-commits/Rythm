@@ -41,7 +41,7 @@ RHYTHM ist ein selbstgebautes Audio-Interface / Digitaler Vorverstärker (AVR) m
 ## Nächste Schritte (offene Punkte)
 
 - [x] Ziel-Plattform / Mikrocontroller wählen → **STM32H743 + ESP32-S3 + [Chip 3 offen]** (Details in `docs/hardware/platform.md` und `docs/architecture.md`)
-- [x] DAC wählen → **ES9028** (Details in `docs/hardware/platform.md`)
+- [x] DAC wählen → **ES9028Q2M** (32-bit / 768 kHz, I2S + I2C, LQFP-48; Details in `docs/hardware/platform.md` § „DAC-Spezifikation")
 - [x] ADC wählen → **TBD** (CS5345 / ES9023, in `docs/architecture.md` offener Punkt)
 - [ ] Analog-/Digital-Signalpfad und Filter (EQ, Mute, Crossover) definieren
 - [ ] Gehäuse-Design / Frontpanel-Layout (Größe, Knopf- und Tasterpositionen)
@@ -50,7 +50,7 @@ RHYTHM ist ein selbstgebautes Audio-Interface / Digitaler Vorverstärker (AVR) m
 - [ ] Netzwerk-/WiFi-Radio-Streaming → **ESP32-S3 (HTTP/HLS) + [Chip 3: AirPlay/Spotify, offen]**
 - [ ] Firmware-/Software-Repo aufsetzen → **PlatformIO + VS Code** (Gerüst in `firmware/`, Details in `docs/architecture.md`)
 - [x] Prototypenplan → **Breadboard → Prototyp-PCB (KiCad) → finale PCB** (Details in `docs/hardware/platform.md`)
-- [x] Budget-Schätzung → **~200 € (mit RPi), ~135 € (ohne RPi)** (Details in `docs/hardware/platform.md`)
+- [x] Budget-Schätzung → **~200 € (mit RPi), ~130 € (ohne RPi)** (Details in `docs/hardware/platform.md`)
 - [ ] Lizenz festlegen
 ## Repo-Struktur
 

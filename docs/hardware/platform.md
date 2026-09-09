@@ -11,7 +11,7 @@
 | Dev-Board (Start) | NUCLEO-F767ZI (vorhanden) | Cortex-M7 @ 216 MHz, 1MB RAM, 2MB Flash, I2S, ST-Link |
 | Dev-Board (Später) | NUCLEO-H743ZI2 | Gleiche Familie (H7), 480 MHz, mehr Reserve, Pin-ähnlich |
 | BT-Sink + Web-Radio | ESP32-S3 (DevKitC-1) | A2DP-Sink + AVRCP + WiFi nativ, I2S-Output |
-| DAC | ES9028 | 32-bit / 384 kHz, I2S, ~10 €, Mittelweg |
+| DAC | ES9028Q2M (x2) | 32-bit / 768 kHz, Hyperstream II, LQFP48, I2S + I2C + SLIMbus, ~15 €, Stereodac mit 4-Kanal-D/A (2 Kanäle frei für Kopfhörer/Gain) |
 | ADC | TBD (CS5345 / ES9023) | Analog-Quellen digitalisieren, für EQ + digitale Ausgänge |
 | TOSLINK-Empfang | PLR135/T | 3.3V, ~3 €, S/PDIF-Decoder in Software (AN5073) |
 | Firmware-Toolchain | PlatformIO + VS Code | Kombinierbar mit STM32Cube (HW-Interfaces) |
@@ -95,7 +95,7 @@
  │  • Stereo 2 (analog) → I2S → STM32H743                             │
  │  • AUX (analog)    → I2S → STM32H743                               │
  │                                                                     │
- │  DAC (ES9028, 2x)                                                  │
+ │  DAC (ES9028Q2M, 2x)                                                │
  │  • I2S Input ← STM32H743                                           │
  │  • Analog-Output → Stereo / AUX / Kopfhörer (via Op-Amp)            │
  │                                                                     │
@@ -115,6 +115,57 @@
  │  • GPIO / PWM auf STM32H743                                         │
  └─────────────────────────────────────────────────────────────────────┘
 ```
+
+## DAC-Spezifikation (ES9028Q2M)
+
+> Finaler DAC für alle analogen Ausgänge. **2 Stück** für Phase 1/2 (Stereo + AUX),
+> optional **3. Stück** auf der Ziel-PCB für den Kopfhörer-Ausgang (eigene Gain-Stufe).
+
+### Teilenummer & Datenblatt
+
+| Feld | Wert |
+|------|------|
+| Bezeichnung | **ES9028Q2M** (ESS / Atheros, „Sabre 32") |
+| Typ | 32-Bit Stereo Low-Power Audio DAC |
+| Architektur | Hyperstream II, 4-Kanal-D/A (2 Kanäle → L/R, 2 Kanäle frei für Gain/Kopfhörer) |
+| Auflösung | 32-bit (native), Dither/Noise-Reduction intern |
+| Raten | bis **768 kHz** (I2S); typischer Betrieb 48 kHz |
+| Schnittstellen | **I2S** (Master- oder Slave), **I2C** (Konfiguration), **SLIMbus** (optional) |
+| Gehäuse | **LQFP-48** (7×7 mm, 0.5 mm Pitch) |
+| Versorgung | 3.3 V (DVDD/AVDD), analoges Decoupling empfohlen |
+| Strom (typ.) | ~3 mA pro Kanal-Paar (low-power Modus) |
+| Preis (ca.) | ~15 €/Stück |
+| Datenblatt | [ES9028Q2M Datasheet (ES, v0.41)](https://www.esstech.com/wp-content/uploads/2022/09/ES9028Q2M-Datasheet-v0.41.pdf) |
+
+### Warum ES9028Q2M (statt „ES9028" generisch)
+
+- **32-bit / 768 kHz** – deutlich mehr Reserve als 384 kHz; 48 kHz-Betrieb liegt
+  mit großem Vorrat im Spektrum, MCLK = 256×fs (12.288 MHz) wird sauber erzeugt.
+- **I2S-Slave-fähig** – passt direkt zur Topologie „STM32 = einziger I2S-Master".
+- **I2C-Interface** – Mute, Soft-Reset, MCLK-Konfiguration, Power-Down per Register
+  (wird in `signal-path.md` §1.4 als I2C1-Adresse verdrahtet).
+- **4-Kanal-D/A im Chip** – ein Chip reicht für **L + R**, die beiden zusätzlichen
+  Kanäle lassen sich für eine **getrennte Kopfhörer-Gain-Stufe** oder für
+  **Differential/Single-End-Umschaltung** nutzen, ohne dritten Chip.
+- **Low-Power** – passt ins 5 V/3 A-Budget (2–3 Chips ≈ 6–9 mA).
+
+### Anbindung im RHYTHM
+
+- **I2S1 (STM32, Master)** → beide ES9028Q2M als **Slave** (BCLK/LRCLK/MCLK von außen).
+- **I2C1 (STM32)** → Konfiguration (Mute, Soft-Reset) – beide DACs am selben Bus
+  mit unterschiedlicher I2C-Adresse (7-bit, per Pin-Strapping/Default-Address).
+- **Analog-Output** → Op-Amp-Puffer (OPA1612) → Stereo-Cinch / AUX-Cinch / Kopfhörer-Klinke.
+- **MCLK:** 12.288 MHz @ 48 kHz (256×fs). Vom STM32-I2S-Peripheral (`I2S_MCLK_EN`)
+  auf den MCLK-Pin (Pin-Map, s. `signal-path.md` §2).
+- **Decoupling:** 100 nF + 10 µF an AVDD/DVDD, 10 µF an AVSS/DVSS (analoges Netz,
+  getrennt vom Digital-3.3V, s. `signal-path.md` §5).
+
+### Zu klären (offen für DAC)
+
+1. [ ] I2C-Adresse der 2x ES9028Q2M finalisieren (Default-Address im Datasheet prüfen).
+2. [ ] MCLK-Pin auf F767ZI abgleichen (I2S_MCLK, s. `signal-path.md` §2).
+3. [ ] Kopfhörer-Ausgang: eigene Gain-Stufe vom 3. Kanal-Paar des ES9028Q2M
+    (statt separatem 3. Chip) – als Ziel-PCB-Option bestätigt?
 
 ## Signalfluss (Audio)
 
@@ -139,7 +190,7 @@ AUX         ──┘   (I2S)       │  • Mixing (5→5)             │  ├
 | NUCLEO-F767ZI (vorhanden) | 1 | 0 € |
 | ESP32-S3-DevKitC-1 (16MB Flash, 8MB PSRAM) | 1 | ~15 € |
 | RPi Zero 2 W (falls Chip 3 = Option A) | 1 | ~15 € |
-| ES9028 DAC (I2S, 32-bit/384 kHz) | 2 | ~20 € |
+| ES9028Q2M DAC (I2S, 32-bit/768 kHz, LQFP48) | 2 | ~30 € |
 | ADC (CS5345 oder ES9023) | 2 | ~20 € |
 | PLR135/T (TOSLINK-Empfänger) | 1 | ~3 € |
 | TOSLINK-LED + Treiber | 1 | ~5 € |
@@ -148,9 +199,9 @@ AUX         ──┘   (I2S)       │  • Mixing (5→5)             │  ├
 | Op-Amps (analog Signalpfad) | 4 | ~10 € |
 | Protoboard / Breadboard | 1 | ~15 € |
 | Kabel, Jumper, Netzteil (5V 3A) | 1 | ~20 € |
-| **Summe (ohne RPi)** | | **~120 €** |
-| **Summe (mit RPi Zero 2 W)** | | **~135 €** |
-| **Reserve (Unvorhergesehenes)** | | **~65 €** |
+| **Summe (ohne RPi)** | | **~130 €** |
+| **Summe (mit RPi Zero 2 W)** | | **~145 €** |
+| **Reserve (Unvorhergesehenes)** | | **~55 €** |
 | **Gesamt (mit RPi, im Budget)** | | **~200 €** |
 
 ## Nächste Schritte

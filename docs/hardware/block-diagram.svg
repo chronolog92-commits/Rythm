@@ -69,9 +69,9 @@
 <rect x="924.0" y="402.0" width="360.0" height="372.0" rx="4.8" fill="#1a4d4d" stroke="#22d3ee" stroke-width="1.2"/>
 <text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="middle"><tspan x="1104.0" y="577.5">STM32 (F767ZI → H743ZI Ziel-PCB) I2S-Master</tspan><tspan x="1104.0" y="592.5">· EQ · Mixing · S/PDIF-Decoder ·</tspan><tspan x="1104.0" y="607.5">Clock-Generator (LRCLK/BCLK/MCLK)</tspan></text>
 <rect x="1656.0" y="414.0" width="180.0" height="72.0" rx="4.8" fill="#1a4d2e" stroke="#22c55e" stroke-width="1.2"/>
-<text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="middle"><tspan x="1746.0" y="447.0">ES9028 #1 (Stereo)</tspan><tspan x="1746.0" y="462.0">I2S-Slave</tspan></text>
+<text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="middle"><tspan x="1746.0" y="447.0">ES9039 #1 (Stereo)</tspan><tspan x="1746.0" y="462.0">I2S-Slave</tspan></text>
 <rect x="1656.0" y="576.0" width="180.0" height="72.0" rx="4.8" fill="#1a4d2e" stroke="#22c55e" stroke-width="1.2"/>
-<text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="middle"><tspan x="1746.0" y="609.0">ES9028 #2 (AUX)</tspan><tspan x="1746.0" y="624.0">I2S-Slave</tspan></text>
+<text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="middle"><tspan x="1746.0" y="609.0">ES9039 #2 (AUX)</tspan><tspan x="1746.0" y="624.0">I2S-Slave</tspan></text>
 <rect x="1920.0" y="414.0" width="168.0" height="72.0" rx="4.8" fill="#1a4d2e" stroke="#22c55e" stroke-width="1.2"/>
 <text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="middle"><tspan x="2004.0" y="447.0">Stereo-Ausgang</tspan><tspan x="2004.0" y="462.0">(Cinch) via Op-Amp</tspan></text>
 <rect x="1920.0" y="510.0" width="168.0" height="78.0" rx="4.8" fill="#1a4d2e" stroke="#22c55e" stroke-width="1.2"/>
@@ -101,7 +101,7 @@
 <text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="start"><tspan x="1314.0" y="378.0">USB-Audio / UART / I2S (offen)</tspan></text>
 <text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="start"><tspan x="1326.0" y="411.0">I2S1 (TX→Slave): SD, SCK, WS, MCLK</tspan></text>
 <text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="start"><tspan x="1326.0" y="555.0">I2S1 (TX→Slave): SD, SCK, WS, MCLK</tspan><tspan x="1326.0" y="570.0">(parallel zu #1)</tspan></text>
-<text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="start"><tspan x="1332.0" y="645.0">I2C1 (optional): Mute, Soft-Reset</tspan><tspan x="1332.0" y="660.0">(ES9028)</tspan></text>
+<text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="start"><tspan x="1332.0" y="645.0">I2C1: Register-Konfiguration</tspan><tspan x="1332.0" y="660.0">(ES9039Q2M)</tspan></text>
 <text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="start"><tspan x="582.0" y="291.0">GPIO x2 (MUX-Channel-Auswahl)</tspan></text>
 <text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="12.0" fill="#e4e4e7" text-anchor="start"><tspan x="1326.0" y="708.0">GPIO (Timer-gesteuert) →</tspan><tspan x="1326.0" y="723.0">S/PDIF-Encoder → LED-Treiber</tspan></text>
 <text font-family="'Cascadia Code','Consolas','Menlo',monospace" font-size="13.2" fill="#e4e4e7" text-anchor="start"><tspan x="72.0" y="1051.2">Clock-Verantwortlichkeiten: LRCLK 48kHz, BCLK 1.536MHz, MCLK 12.288MHz – alle vom STM32 generiert. ESP32-S3: kein MCLK nötig.</tspan></text>

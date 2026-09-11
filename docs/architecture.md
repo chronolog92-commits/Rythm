@@ -45,7 +45,7 @@ Streaming ──→ [Chip 3] ──→ [I2S/USB] ──────────�
                                          │
                                          ▼ I2S (48 kHz, 32-bit, stereo)
                                   ┌─────────────┐
-                                  │  ES9028Q2M x2  │
+                                  │  ES9039Q2M x2 │
                                   │  (DAC)      │
                                   └──────┬──────┘
                                          │
@@ -183,10 +183,10 @@ Chip 3 wird ergänzt, wenn der Audio-Pfad stabil ist.
 - I2C-Konfiguration
 
 ### DAC (digital → analog)
-- **ES9028Q2M** (32-bit, 768 kHz, I2S + I2C, Hyperstream II, LQFP-48, ~15 €) x2
+- **ES9039Q2M** (32-bit, 768 kHz, DSD512, I2S + I2C + SPI, LQFP-48, ~25 €) x2
 - I2S-Input ← STM32H743 (I2S1, beide als Slave)
-- I2C-Input ← STM32H743 (I2C1, Mute/Soft-Reset)
-- 4-Kanal-D/A pro Chip: 2 Kanäle → L/R, 2 Kanäle frei (Kopfhörer-Gain / Differential)
+- I2C-Input ← STM32H743 (I2C1, Register-Konfiguration: Input-Modus, Mute)
+- 2-Kanal-D/A pro Chip: L/R, getrennte Gain-Stufen für Kopfhörer optional
 - Analog-Output → Op-Amp → Stereo / AUX / Kopfhörer
 - Details: [`docs/hardware/platform.md`](hardware/platform.md) § „DAC-Spezifikation"
 
@@ -225,7 +225,7 @@ Chip 3 wird ergänzt, wenn der Audio-Pfad stabil ist.
 8. [ ] S/PDIF GPIO-Pins (RX + TX) + Interrupt-Priorität abgleichen
 9. [ ] Analog-MUX-Modell (DG5081 3:1, 2x für L/R) – Datasheet prüfen
 10. [ ] Op-Amp-Auswahl für analoge Voreinstufe (OPA1612? NE5532?)
-11. [ ] Kopfhörer-DAC (Phase 1: ES9028Q2M #1, Ziel-PCB: eigener DAC / 3. Kanal-Paar) – bestätigt?
+11. [ ] Kopfhörer-DAC (Phase 1: ES9039Q2M #1, Ziel-PCB: eigener DAC) – bestätigt?
 12. [ ] Stromversorgung Phase 2: 1x oder 2x 3.3V-LDO (digital + analog)?
 
 ### Firmware / Implementierung

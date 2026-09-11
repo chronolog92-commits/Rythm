@@ -52,7 +52,7 @@
 ## Offene Punkte
 
 - [ ] Ziel-Plattform / Mikrocontroller wählen (Raspberry Pi 4/5, ESP32-S3, STM32 + Linux, FPGA)
-- [ ] Audio-Codecs / DAC/ADC-Chips auswählen (ES9028, ES9018, CS43198, PCM5102, WM8731)
+- [x] Audio-Codecs / DAC/ADC-Chips auswählen → **ES9039Q2M** (DAC), **CS5345** (ADC Phase 1) / **ES9023** (ADC Ziel-PCB)
 - [ ] Analog-/Digital-Signalpfad und Filter (EQ, Mute, Crossover) definieren
 - [ ] Gehäuse-Design / Frontpanel-Layout
 - [ ] Firmware-Architektur (Linux + PulseAudio/ALSA, bare-metal, RTOS)

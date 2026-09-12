@@ -1,73 +1,88 @@
 # RHYTHM – Custom Audio Interface
 
-RHYTHM ist ein selbstgebautes Audio-Interface / Digitaler Vorverstärker (AVR) mit digitalen und analogen Ein-/Ausgängen, 7-Band-Parametrik-EQ über Drehknöpfe, großem Volume-Regler und beleuchteten Output-Tasten.
+> Stand: 2026-09-12 · Architekturentwurf, kein Nachweis einer bereits implementierten Audio-Pipeline.
+
+RHYTHM ist ein selbstgebautes Audio-Interface / digitaler Vorverstärker mit **7 Stereo-Eingängen und 5 Stereo-Ausgängen**, 7-Band-Parametrik-EQ, großem Volume-Regler und beleuchteten Output-Tasten.
 
 ## Projektziele
 
-- Zentrale Schnittstelle für mehrere Audioquellen (WiFi Radio, Bluetooth, SPDIF, 2x Stereo, AUX)
-- Flexible Ausgabe an mehrere Endpunkte (Stereo, AUX, Kopfhörer, SPDIF, Bluetooth)
-- Musikalisches, haptisches Bedienkonzept: einrastende Quellwahltaster, Drehknöpfe für EQ/Volume, beleuchtete Output-Buttons
-- Modularer Aufbau, um später neue Quellen/Ausgaben ergänzen zu können
+- Alle sieben Quellen gleichzeitig erfassbar, digital über eine **7×5-Stereo-Routingmatrix** auf fünf unabhängig bedienbare Ziele verteilen.
+- Lokale Verarbeitung mit 48 kHz, Float32-DSP und 32-Bit-Audio-Slots. Wortbreite ist nicht gleich effektive Wandlerauflösung.
+- Analoge Quellen ohne Eingangsmultiplexer: **1× ES9842PRO für Stereo 1 und Stereo 2**, **1× ES9822PRO für AUX**.
+- Haptische Bedienung: sieben Quellwahltasten, sieben EQ-Drehknöpfe, ein Volume-Regler, fünf beleuchtete Output-Tasten.
 
-## Anforderungen
+## Eingänge (7 Stereoquellen / 14 Audiokanäle)
 
-### Eingänge (5 Quellen)
-1. WiFi Radio (z. B. internetradio / Netzwerkstream)
-2. Bluetooth (A2DP / AVRCP)
-3. SPDIF (digitales Eingangsformat, z. B. von CD-Player / Receiver)
-4. Stereo 1 (analog, Cinch / Klinke)
-5. Stereo 2 (analog, Cinch / Klinke)
-6. AUX (zusätzlicher analoger Eingang, Cinch / Klinke)
+1. Stereo 1 – analog, ES9842PRO Kanäle 1/2.
+2. Stereo 2 – analog, ES9842PRO Kanäle 3/4.
+3. AUX – analog, ES9822PRO Kanäle 1/2.
+4. TOSLINK – optischer S/PDIF-Eingang, Empfänger → STM32-SPDIFRX → Taktratenanpassung.
+5. Bluetooth – A2DP-Sink; Classic-Bluetooth-fähiges Modul/Host noch auszuwählen.
+6. WiFi – Netzwerkstream, ESP32-S3; eigener Audiostream, nicht mit BT vorab umgeschaltet.
+7. **USB – neu: Stereo-Audio vom PC an RHYTHM als USB-Audio-Device.** Kein USB-Host, kein USB-Stick-Player; Class-Version/Deskriptoren noch festzulegen.
 
-### Ausgänge (5 Ziele)
-1. Stereo (analog, Cinch / Klinke)
-2. AUX (analog, Cinch / Klinke)
-3. Kopfhörer (Klinke + Großstecker-Adapter)
-4. SPDIF (digitaler Ausgang)
-5. Bluetooth (A2DP-Sink / Audio-Streaming)
+## Ausgänge (5 Stereoziele / 10 Audiokanäle)
 
-### Bedienelemente
-- **7-Band-EQ**: 7 Drehknöpfe (z. B. 60 Hz, 150 Hz, 400 Hz, 1 kHz, 2.5 kHz, 6 kHz, 12 kHz)
-- **Volume**: 1 großer Drehknopf für Gesamtlautstärke
-- **Quellwahl**: einrastende Schalter/Taster für die 5 analogen/digitalen Quellen (WiFi Radio, BT, SPDIF, Stereo1, Stereo2, AUX)
-- **Output-Buttons**: beleuchtete Tasten für jede Ausgabe; Leuchtdiode zeigt an, ob die Ausgabe aktiv ist
+1. Stereo – ES9039Q2M #1 → Line-Ausgangsstufe.
+2. AUX – ES9039Q2M #2 → Line-Ausgangsstufe.
+3. Kopfhörer – eigener DAC-Pfad (ES9039Q2M #3 als Planungsansatz) → geeigneter Kopfhörerverstärker.
+4. TOSLINK – STM32-SAI im S/PDIF-TX-Modus → optisches Sendemodul.
+5. Bluetooth – A2DP-Source → BT-Lautsprecher/Kopfhörer; separates Modul/Host noch offen.
 
-## Erster Projektstand
+Ein vom Stereo-DAC abgezweigter Kopfhörerverstärker erlaubt keinen unabhängigen Kopfhörermix und erfüllt deshalb nicht die vollständige 7×5-Zielarchitektur.
 
-- Projektname festgelegt: **RHYTHM**
-- Grundlegende I/O- und Bedienanforderungen dokumentiert
-- Repo-Struktur initiiert
+## Plattform und Machbarkeit
 
-## Nächste Schritte (offene Punkte)
+- Entwicklung: vorhandenes **NUCLEO-H753ZI / STM32H753ZI**, CPU-Ziel 400 MHz.
+- Ziel-MCU weiterhin **STM32H743**; genaue Bestellnummer, Package und Board-Pinmux noch freizugeben.
+- Audio: SAI/TDM plus SPI/I²S, DMA, SPDIFRX und USB-Device statt der alten vereinfachten Drei-I²S-Bus-Planung.
+- **ESP32-S3 hat kein Bluetooth Classic und kann weder A2DP-Sink noch A2DP-Source übernehmen.** Er bleibt WiFi-Kandidat; die BT-Hardware ist offen.
+- Optionaler Streaming-Host (z. B. Raspberry Pi Zero 2 W) bleibt offen und erweitert die WiFi-Quelle, nicht die Zahl der Eingänge.
+- Plattform grundsätzlich plausibel, aber noch nicht als komplettes 7×5-System nachgewiesen: Pinmux, DMA, Clock-Domänen, USB, Funkmodule und Echtzeitlast müssen getestet werden.
+- Bei der Prüfung wurde außerdem ein widersprüchlicher aktueller PLL1-Entwurf gefunden; Details im [Controller-Check](docs/hardware/controller-capacity.md). Firmware und Boardzustand wurden bei dieser Dokumentationsänderung nicht verändert.
 
-- [x] Ziel-Plattform / Mikrocontroller wählen → **STM32H743 (final) + ESP32-S3 + [Chip 3 offen]** — Dev-Board: NUCLEO-H753ZI (vorhanden). Details in `docs/hardware/platform.md` und `docs/architecture.md`
-- [x] DAC wählen → **ES9039Q2M** (32-bit / 768 kHz, DSD512, I2S + I2C + SPI, LQFP-48; Details in `docs/hardware/platform.md` § „DAC-Spezifikation")
-- [x] ADC wählen → **TBD** (CS5345 / ES9023, in `docs/architecture.md` offener Punkt)
-- [ ] Analog-/Digital-Signalpfad und Filter (EQ, Mute, Crossover) definieren
-- [ ] Gehäuse-Design / Frontpanel-Layout (Größe, Knopf- und Tasterpositionen)
-- [x] Firmware-Architektur → **PlatformIO + VS Code, STM32Cube-HAL, FreeRTOS (optional)** (Details in `docs/architecture.md`)
-- [x] Bluetooth-Stack → **ESP32-S3 A2DP-Sink + AVRCP** (Details in `docs/architecture.md`)
-- [ ] Netzwerk-/WiFi-Radio-Streaming → **ESP32-S3 (HTTP/HLS) + [Chip 3: AirPlay/Spotify, offen]**
-- [ ] Firmware-/Software-Repo aufsetzen → **PlatformIO + VS Code** (Gerüst in `firmware/`, Details in `docs/architecture.md`)
-- [x] Prototypenplan → **Breadboard → Prototyp-PCB (KiCad) → finale PCB** (Details in `docs/hardware/platform.md`)
-- [x] Budget-Schätzung → **~200 € (mit RPi), ~130 € (ohne RPi)** (Details in `docs/hardware/platform.md`)
-- [ ] Lizenz festlegen
+## Dokumentation
+
+- [Anforderungen](docs/requirements.md)
+- [Systemarchitektur](docs/architecture.md)
+- [Plattform, Wandler und BOM-Status](docs/hardware/platform.md)
+- [Signalpfad und Clocking](docs/hardware/signal-path.md)
+- [Controller-Kapazität und Freigabekriterien](docs/hardware/controller-capacity.md)
+- [Firmware / Build](firmware/README.md)
+
+![RHYTHM Hardware-Blockschaltbild](docs/hardware/block-diagram.svg)
+
+[Editierbare Excalidraw-Quelle](docs/hardware/block-diagram.excalidraw)
+
+## Entwicklungsstand / nächste Schritte
+
+- [x] ADC-Auswahl: ES9842PRO + ES9822PRO; kein analoger Quell-MUX.
+- [x] USB als siebten Stereo-Eingang aufgenommen.
+- [x] DAC-Familie: ES9039Q2M; dritter DAC-Pfad für unabhängige Kopfhörerausgabe eingeplant.
+- [x] Toolchain: PlatformIO + VS Code, STM32Cube-HAL; FreeRTOS optional.
+- [ ] CPU-Clock-Konfiguration korrigieren und am Board nachweisen (separate Firmwareänderung).
+- [ ] Vollständige SAI/I²S/USB/SPDIFRX-Pinmap und DMA-Zuordnung für H753ZI und finales H743-Package.
+- [ ] BT-Sink- und BT-Source-Hardware sowie Codec-/Clocking-Verhalten auswählen.
+- [ ] ADC-/DAC-Frontend, Versorgung, Kopfhörerverstärker, USB-Anschluss und Schutzbeschaltung dimensionieren.
+- [ ] USB-Audio, Taktratenanpassung, 7×5-Mixer und 7-Band-EQ implementieren und gemeinsam testen.
+- [ ] BOM mit aktuellen Händlerpreisen erstellen; alte Gesamtsummen gelten nicht mehr.
+- [ ] Gehäuse, Frontpanel und Lizenz festlegen.
+
+## Budget
+
+Ziel weiterhin 150–200 € ideal, 500 € Obergrenze. Für zwei PRO-ADCs, drei unabhängige analoge Ausgangspfade, USB und separate BT-Funktionen liegt noch keine belastbare Gesamt-BOM vor. Siehe [Plattform](docs/hardware/platform.md); keine Budgeteinhaltung zugesichert.
+
 ## Repo-Struktur
 
-```
+```text
 rhythm/
 ├── README.md
-├── .gitignore
-├── docs/
-│   ├── requirements.md
-│   ├── hardware/
-│   ├── firmware/
-│   └── mechanical/
-├── firmware/
-├── pcb/
+├── docs/              # Anforderungen, Architektur, Hardware
+├── firmware/          # H753-Entwicklung, Build, Tests
+├── pcb/               # KiCad-Entwürfe; noch kein 7×5-Freigabenachweis
 └── mechanical/
 ```
 
 ## Lizenz
 
-(Offen – TBD)
+Offen – TBD. Bestehende Drittanbieter-Lizenzen unter `firmware/vendor_h753/` bleiben gültig und unverändert.

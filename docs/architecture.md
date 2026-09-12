@@ -1,238 +1,143 @@
 # RHYTHM – Systemarchitektur
 
-> Stand: 2026-08-29
-> Status: Entwurf, weiter zu verfeinern
+> Stand: 2026-09-12 · Zielarchitektur für **7 Stereo-Eingänge und 5 unabhängig routbare Stereo-Ausgänge**.
+> Dokumentierter Entwurf, keine vollständige Hardware-/Firmwarefreigabe. Die alte „3× I²S genügt“-Topologie wird ersetzt.
 
-## Überblick
+## 1. Entscheidungen und Systemrollen
 
-RHYTHM ist ein 3-Chip-System:
+| Baugruppe | Rolle | Status |
+|-----------|-------|--------|
+| STM32H743 | Lokaler Audio-DSP, 7×5-Routing, EQ, UI, USB-Audio-Device | Ziel-MCU unverändert; konkrete Pinbelegung offen |
+| NUCLEO-H753ZI / STM32H753ZI | Aktuelle Entwicklung | 400 MHz CPU-Ziel; Clock-Befund beachten |
+| ES9842PRO, 1 Stück | Stereo 1 und Stereo 2 gemeinsam digitalisieren | Nutzerentscheidung: vier getrennte Wandlungskanäle |
+| ES9822PRO, 1 Stück | AUX digitalisieren | Nutzerentscheidung: zwei Wandlungskanäle |
+| ESP32-S3 | WiFi-/Netzwerkstream dekodieren, Stereo-PCM liefern | Kein A2DP: S3 unterstützt kein Bluetooth Classic |
+| Classic-BT-Sink | BT-Eingang, AVRCP nach Stack-/Modulauswahl | Hardware/Host noch offen, eigener Audiopfad |
+| Classic-BT-Source | BT-Ausgang | Hardware/Host noch offen, unabhängig vom Eingang |
+| Optionaler Streaming-Host | AirPlay/Spotify/UPnP innerhalb der WiFi-Quelle | Bewusst offen, RPi Zero 2 W nur Option |
 
-| Chip | Rolle | Board |
-|------|-------|-------|
-| STM32H743 (final) | Audio-DSP, Mixing, UI | Dev: NUCLEO-H753ZI (vorhanden); final H743; zuvor NUCLEO-F767ZI |
-| ESP32-S3 | BT-Sink, Web-Radio | ESP32-S3-DevKitC-1 |
-| [OFFEN] | Streaming (AirPlay, Spotify) | TBD |
+Keine feste „3-Chip-Garantie“: Für gleichzeitiges BT RX/TX kann zusätzliche Funkhardware nötig sein. Ein Host darf mehrere Rollen nur übernehmen, wenn unabhängige Audioströme, Profile und Busse nachgewiesen sind.
 
-## Audio-Signalpfad
+## 2. Hardware-Blockschaltbild
 
-```
-                    ANALOG                          DIGITAL
-                    ──────                          ───────
-Stereo 1 (Cinch) ──→ [Op-Amp] ──→ [ADC] ──┐
-Stereo 2 (Cinch) ──→ [Op-Amp] ──→ [ADC] ──┤
-AUX      (Cinch) ──→ [Op-Amp] ──→ [ADC] ──┤
-                                         │
-TOSLINK-Eingang ──→ [PLR135/T] ──→ [SW-S/PDIF-Decoder] ──┤
-                                         │
-BT-Eingang ──→ [ESP32-S3 A2DP-Sink] ──→ [I2S] ──────────┤
-                                         │
-WiFi-Radio ──→ [ESP32-S3 WiFi] ──→ [I2S] ───────────────┤
-                                         │
-Streaming ──→ [Chip 3] ──→ [I2S/USB] ──────────────────┘
-                                         │
-                                         ▼
-                                  ┌─────────────┐
-                                  │  STM32H743  │
-                                  │             │
-                                  │ • 7-Band-   │
-                                  │   Parametrik│
-                                  │   EQ        │
-                                  │ • Mixing    │
-                                  │   (5→5)     │
-                                  │ • Volume    │
-                                  │ • Mute      │
-                                  └──────┬──────┘
-                                         │
-                                         ▼ I2S (48 kHz, 32-bit, stereo)
-                                  ┌─────────────┐
-                                  │  ES9039Q2M x2 │
-                                  │  (DAC)      │
-                                  └──────┬──────┘
-                                         │
-                    ┌────────────────────┼────────────────────┐
-                    │                    │                    │
-                    ▼                    ▼                    ▼
-              [Op-Amp]             [Op-Amp]             [Op-Amp]
-              Stereo Out           AUX Out            Kopfhörer Out
-              (Cinch)              (Cinch)            (Klinke)
+![RHYTHM Hardware-Blockschaltbild](hardware/block-diagram.svg)
 
-              TOSLINK-Ausgang: GPIO (STM32H743) → [LED-Treiber] → [TOSLINK-LED]
-              BT-Ausgang:    [Chip 3] → A2DP-Source → BT-Lautsprecher
+[Editierbare Excalidraw-Quelle](hardware/block-diagram.excalidraw) · [Signalpfad/Clocking](hardware/signal-path.md)
+
+```text
+Stereo 1 L/R -- Frontend -- ES9842PRO CH1/2 --+
+Stereo 2 L/R -- Frontend -- ES9842PRO CH3/4 --+-- TDM4 ----+
+AUX L/R ------ Frontend -- ES9822PRO CH1/2 ------ I2S -----+
+TOSLINK ------ Empfaenger -- SPDIFRX -- ASRC/Puffer -------+
+BT ----------- Classic-BT Sink (offen) -- PCM/Rate-Matching +
+WiFi --------- ESP32-S3 -- PCM/Rate-Matching --------------+--> STM32
+PC USB ------- USB Audio DEVICE -- Feedback/Puffer -------+    48 kHz
+                                                              Float32
+                                                              7x5 Stereo
+                                                              EQ/Gain/Mute
+                                                                  |
+       +---------------------+---------------------+---------------+---+
+       |                     |                     |               |   |
+ ES9039Q2M #1          ES9039Q2M #2          ES9039Q2M #3      SAI SPDIF  BT Source
+ Line-Stufe            Line-Stufe            KH-Verstaerker   TX-Modul  (offen)
+ Stereo Out            AUX Out               Kopfhoerer       TOSLINK  BT Out
 ```
 
-## Chip-1: STM32H743 (Audio-DSP + UI)
+**Kein analoger Eingangsmultiplexer:** Beide Stereo-Eingänge und AUX werden gleichzeitig erfasst. Die Quellwahl geschieht ausschließlich digital im Mixer.
 
-### Aufgaben
-- 7-Band-Parametrik-EQ (7 Biquad-Filter, float, 48 kHz stereo)
-- Mixing / Mischpult (5 Quellen → 5 Ziele, Routing-Matrix)
-- Lautstärke (digitale Gain-Stufe)
-- Mute (pro Ausgang)
-- Encoder-Polling (8x: 7 EQ + 1 Volume, Timer-Input-Capture)
-- Taster-Polling (Quellwahl 6x, Output 5x)
-- LED-Steuerung (5 Output + Status, GPIO/PWM)
-- I2S-Master (48 kHz, 32-bit, stereo, DMA-Double-Buffer)
-- S/PDIF-Empfang (TOSLINK → PLR135/T → GPIO → SW-Decoder, AN5073)
-- S/PDIF-Übertragung (GPIO-Timing → TOSLINK-LED)
-- I2C (ADC-Konfiguration)
-- SPI (Display, optional)
-- UART (Kommunikation mit ESP32-S3)
+## 3. Lokale Audio-Pipeline
 
-### Peripherie-Nutzung (NUCLEO-H753ZI, Dev)
-| Peripherie | Nutzung |
-|------------|---------|
-| I2S2 (oder I2S3) | I2S-Master zu DAC/ADC |
-| I2C1 | ADC-Konfiguration |
-| SPI1 | Display (optional) |
-| UART2 | ESP32-S3 Kommunikation |
-| UART3 | Debug / Chip 3 |
-| Timer2 | Encoder 1 (EQ 60 Hz) |
-| Timer3 | Encoder 2 (EQ 150 Hz) |
-| Timer4 | Encoder 3 (EQ 400 Hz) |
-| Timer5 | Encoder 4 (EQ 1 kHz) |
-| Timer6 | Encoder 5 (EQ 2.5 kHz) |
-| Timer7 | Encoder 6 (EQ 6 kHz) |
-| TIM8_CH1 | Encoder 7 (EQ 12 kHz) |
-| TIM9 | Encoder 8 (Volume) |
-| GPIO | Taster, LEDs, S/PDIF TX/RX |
-| DMA1/2 | I2S-Audio-Transfer (Double-Buffer) |
+- Sieben Stereo-Quellen = 14 Eingangskanäle; fünf Stereo-Ziele = 10 Ausgangskanäle.
+- Lokale Sample-Rate 48 kHz, Float32-DSP, 32-Bit-Slots auf den seriellen PCM-Verbindungen.
+- 7×5-Stereo-Routingmatrix (L/R gepaart), individuelle Gain-/Mute-Werte, definierter Summen-Headroom.
+- 7-Band-Parametrik-EQ; Zuordnung der Bedienregler zu globaler/Quell-/Ziel-Ebene noch festlegen.
+- Blockverarbeitung mit DMA-Ping-Pong, als Rechenbeispiel 48 Frames pro Block. Keine Speicherallokation oder Netzwerk-/USB-Warteschleifen im Echtzeitpfad.
+- Netzwerk-/BT-Dekodierung im Frontend/Host; STM32 erhält PCM, nicht unbudgetierte Codec-Dekodierung zusätzlich zum DSP.
+- DSP-Puffer aus DMA-erreichbarem RAM, Cache-Policy und Speicherbarrieren explizit behandeln; SAI4/BDMA hat andere Speichergrenzen als DMA1/2.
 
-> **Hinweis:** Pin-Map ist vorläufig und muss mit dem NUCLEO-H753ZI-Pinout abgeglichen werden. Die finale Pin-Map richtet sich am NUCLEO-H743ZI (finaler H7-Teil) aus – H753 und H743 sind beide Cortex-M7 der STM32H7xx-Familie, haben aber unterschiedliche Pinouts.
+## 4. Analoge Eingänge
 
-### Firmware-Stack
-- PlatformIO + VS Code
-- STM32Cube-HAL (für I2S, DMA, Timer, I2C, SPI, UART)
-- FreeRTOS (optional, für Encoder-Polling + UI-Task)
-- Biquad-EQ-Engine (float, 7 Biquad, 48 kHz)
-- Mixing-Engine (5×5 Routing-Matrix, digitale Gain)
-- S/PDIF-Decoder (Software, AN5073)
-- S/PDIF-Encoder (GPIO-Timing)
+| Quelle | ADC | Kanalzuordnung | Digitaler Transport |
+|--------|-----|---------------|---------------------|
+| Stereo 1 | ES9842PRO | CH1=L, CH2=R | TDM4 RX, Slots 0/1 |
+| Stereo 2 | Derselbe ES9842PRO | CH3=L, CH4=R | Derselbe TDM4 RX, Slots 2/3 |
+| AUX | ES9822PRO | CH1=L, CH2=R | Separate Stereo-I²S-RX-Leitung |
 
-### CPU-Budget (48 kHz, stereo, float)
-| Aufgabe | CPU-Aufwand (ca.) |
-|---------|-------------------|
-| 7 Biquad-EQ | ~2% (130k MAC/s von ~200 MFLOPS) |
-| Mixing (5→5) | ~1% |
-| Volume / Mute | <0.1% |
-| S/PDIF-Decoder | ~5% (bit-banging, GPIO-Interrupt) |
-| Encoder-Polling | ~2% |
-| Taster / LEDs | ~1% |
-| I2S-DMA (Übertragungssteuerung) | ~1% |
-| **Gesamt** | **~12–15% (H7-Familie, Cortex-M7)** |
+Beide ADCs als Audio-Slaves; MCLK/BCLK/Frame-Clock aus der lokalen Audio-Taktquelle. I²C oder SPI für Register-Konfiguration, eigene konfliktfreie Adressen bzw. Chip-Selects. Eingangstreiber, Pegel, Common-Mode, Referenzen und Versorgung nach den konkreten ADC-Datenblättern auslegen.
 
-> Sehr komfortabel. Die H7-Familie (H753 @ 400 MHz im Dev-Board, H743 @ 480 MHz final) reicht mit großem Vorrat.
+Die TDM-Daisy-Chain-Fähigkeit der ADCs bietet eine spätere Busoptimierung, ist aber nicht als bereits getestete gemeinsame Datenleitung eingeplant.
 
-## Chip-2: ESP32-S3 (BT-Sink + Web-Radio)
-
-### Aufgaben
-- A2DP-Sink (BT-Empfang von Handy/Laptop, SBC/MP3/AAC)
-- AVRCP (Play/Pause, Next/Prev, Track-Info, Volume)
-- WiFi-Client (Internetradio / HTTP-Streams / HLS)
-- I2S-Output → STM32H743 (48 kHz, 32-bit, stereo)
-- UART → STM32H743 (Kontroll-Signale: Quellstatus, AVRCP-Events, Track-Info)
-
-### Firmware-Stack
-- TBD: ESP-IDF vs. Arduino-Framework
-- ESP32-S3 I2S-Peripherie (2x I2S, Full-Duplex)
-- ESP32-S3 Bluetooth-Stack (BR/EDR, A2DP-Sink, AVRCP)
-- WiFi-Stack (STA-Modus, HTTP-Client, TLS für HTTPS-Streams)
-
-### Schnittstelle zu STM32H743
-| Schnittstelle | Richtung | Daten |
-|---------------|----------|-------|
-| I2S (BCLK, LRCLK, DOUT) | ESP32-S3 → STM32H743 | Audio-Data (48 kHz, 32-bit, stereo) |
-| UART (TX/RX) | bidirektional | Kontroll-Signale, Status, AVRCP-Events |
-| GPIO (INT) | ESP32-S3 → STM32H743 | IRQ (Quellwechsel, BT-Verbindung) |
-
-## Chip-3: [OFFEN] – Streaming-Host
-
-### Anforderungen
-- AirPlay 2 (shairport-sync oder äquivalent)
-- Spotify Connect (Raspotify oder äquivalent)
-- UPnP/DLNA (optional)
-- BT-A2DP-Source (RHYTHM → BT-Lautsprecher)
-- I2S / USB-Audio-Output → STM32H743
-
-### Option A: Raspberry Pi Zero 2 W (~15 €)
-- Broadcom BCM2703B0 (Cortex-A53, 1 GHz)
-- 512 MB RAM, 16 GB eMMC (oder microSD)
-- WiFi 802.11 b/g/n, BT 4.2
-- I2S-Header, USB-OTG, GPIO
-- Vorinstallierbar: Raspberry Pi OS Lite 64-bit
-- Software: PulseAudio + shairport-sync + Raspotify
-- BT-A2DP-Source via PulseAudio / BlueZ
-- **Vorteile:** Günstig, Linux nativ, AirPlay/Spotify/UPnP alle verfügbar, BT-Source
-- **Nachteile:** Zusätzlicher Chip, Linux-Stack (nicht deterministisch, aber nur für Streaming)
-
-### Option B: [zu prüfen]
-- ESP32-S3 mit AirPlay-Server (begrenzt, kein AAC-Dekodierung)
-- STM32MP1 (Linux auf MCU, teurer, komplexer)
-- Dediziertes Streaming-Modul (z.B. RPi Pico W + Custom-Stack)
-- USB-Audio-Interface (z.B. Creative Sound Blaster) als Blackbox
-
-### Entscheidung
-**Bewusst aufgeschoben.** Während der Entwicklung weitere Optionen prüfen.
-Erste Priorität: ESP32-S3 (BT + Web-Radio) + STM32H743 (EQ + Mixing) zum Laufen bringen.
-Chip 3 wird ergänzt, wenn der Audio-Pfad stabil ist.
-
-## Peripherie
-
-### ADC (analog → digital)
-- TBD: CS5345 (24-bit, 192 kHz, I2S, ~8 €) oder ES9023 (32-bit, 384 kHz, I2S, ~12 €)
-- 3x analoge Quellen (Stereo 1, Stereo 2, AUX)
-- I2S-Output → STM32H743
-- I2C-Konfiguration
-
-### DAC (digital → analog)
-- **ES9039Q2M** (32-bit, 768 kHz, DSD512, I2S + I2C + SPI, LQFP-48, ~25 €) x2
-- I2S-Input ← STM32H743 (I2S1, beide als Slave)
-- I2C-Input ← STM32H743 (I2C1, Register-Konfiguration: Input-Modus, Mute)
-- 2-Kanal-D/A pro Chip: L/R, getrennte Gain-Stufen für Kopfhörer optional
-- Analog-Output → Op-Amp → Stereo / AUX / Kopfhörer
-- Details: [`docs/hardware/platform.md`](hardware/platform.md) § „DAC-Spezifikation"
+## 5. Digitale Eingänge und Clock-Domänen
 
 ### TOSLINK
-- Eingang: PLR135/T (3.3V, ~3 €) → GPIO → SW-S/PDIF-Decoder
-- Ausgang: GPIO → LED-Treiber → TOSLINK-LED
 
-### Encoder
-- 8x EC11 (oder ähnlich), A/B + Push
-- Timer-Input-Capture auf STM32H743
-- Auflösung: 24–32 Schritte/Umdrehung
+Optischer Empfänger (bisher PLR135/T) → **STM32-SPDIFRX** → DMA → Entpackung/Statusprüfung → ASRC oder äquivalente adaptive Taktratenanpassung → 48-kHz-DSP-Puffer.
 
-### Taster
-- Quellwahl: 6x einrastende Schalter (WiFi, BT, SPDIF, Stereo 1, Stereo 2, AUX)
-- Output-Buttons: 5x Taster (Stereo, AUX, Kopfhörer, SPDIF, BT)
-- GPIO auf STM32H743
+SPDIFRX ist eine echte MCU-Peripherie, kein GPIO-Softwaredecoder. Es führt nicht automatisch eine ASRC aus. Auch ein externer 48-kHz-Sender driftet gegenüber der lokalen Clock. Andere Eingangs-Sampleraten werden erst nach Festlegung und Test des SRC-Bereichs freigegeben.
 
-### LEDs
-- 5x Output-LEDs (je 1 pro Ausgang, aktiv/inaktiv)
-- Status-LEDs (Power, BT-Verbindung, WiFi-Verbindung, Signal)
-- GPIO / PWM auf STM32H743
+### Bluetooth
 
-## Offene Punkte
+- Eingang: Handy/PC → **A2DP-Sink** → PCM zum STM32.
+- Ausgang: PCM vom STM32 → **A2DP-Source** → BT-Lautsprecher/Kopfhörer.
+- Getrennte logische und physische Audiopfade reservieren. Gleichzeitiger Betrieb und konkrete Codecs/Profile erst nach Modulauswahl garantieren.
+- ESP32-S3 ist dafür ungeeignet: BLE ersetzt Bluetooth Classic/A2DP nicht.
+- Ein als Slave getakteter I²S-Port löst nicht automatisch den Drift der Funkquelle; Frontend braucht elastische Puffer und Rate-Matching. BT-Latenz separat behandeln.
 
-### System / Architektur
-1. [ ] ADC-Modell finalisieren (CS5345 für Phase 1, ES9023 für Ziel-PCB – bestätigt?)
-2. [ ] Chip 3 – Optionen weiter recherchieren
-3. [ ] ESP32-S3 Firmware-Stack (ESP-IDF vs. Arduino)
-4. [ ] Analog-Signalpfad (Op-Amps, Filter, Pegelanpassung)
+### WiFi
 
-### Hardware – Signalpfad & Clocking
-→ Detailliert in [`docs/hardware/signal-path.md`](hardware/signal-path.md)
-5. [ ] Pin-Map für NUCLEO-H753ZI (Dev) + NUCLEO-H743ZI (final): I2S1/2/3 (SD, SCK, WS, MCLK), I2C1, UART2, GPIO (S/PDIF RX/TX, MUX, Encoder, Taster, LEDs)
-6. [ ] MCLK-Verfügbarkeit auf H753ZI (Dev) / H743ZI (final) abgleichen (I2S2_MCLK: PA7? I2S3_MCLK: PB15? – je Board prüfen)
-7. [ ] ESP32-S3 I2S-Slave-Pins (DevKitC-1) abgleichen
-8. [ ] S/PDIF GPIO-Pins (RX + TX) + Interrupt-Priorität abgleichen
-9. [ ] Analog-MUX-Modell (DG5081 3:1, 2x für L/R) – Datasheet prüfen
-10. [ ] Op-Amp-Auswahl für analoge Voreinstufe (OPA1612? NE5532?)
-11. [ ] Kopfhörer-DAC (Phase 1: ES9039Q2M #1, Ziel-PCB: eigener DAC) – bestätigt?
-12. [ ] Stromversorgung Phase 2: 1x oder 2x 3.3V-LDO (digital + analog)?
+ESP32-S3 dekodiert Netzwerkstream und liefert einen **eigenständigen** Stereo-PCM-Strom. BT und WiFi dürfen nicht vor dem STM32 auf eine einzige Stereo-Datenleitung umgeschaltet oder gemischt werden, wenn sie unabhängig in der 7×5-Matrix verfügbar bleiben sollen.
 
-### Firmware / Implementierung
-13. [ ] S/PDIF-Decoder-Implementierung (Software, AN5073)
-14. [ ] Mixing-Engine (Routing-Matrix 5×5, digitale Gain)
-15. [ ] EQ-Engine (7 Biquad, float, 48 kHz)
-16. [ ] Encoder-Polling (Timer-Input-Capture, De-Bounce)
-17. [ ] Firmware-Gerüst (PlatformIO + VS Code) – **DONE 2026-09-06** (Boot-Skelett, kompiliert)
-18. [ ] Breadboard-Aufbau (Stufe für Stufe, siehe signal-path.md §6)
-19. [ ] BOM mit Bestelllinks
+Optionaler Streaming-Host ersetzt/erweitert diese Netzwerkfunktion, ist kein achter Eingang. UART/SPI für Status/Steuerung gesondert von Audio planen; benötigte Streamingformate und Resamplerleistung noch testen.
+
+### USB – neuer siebter Eingang
+
+**PC als USB-Host → STM32 als USB-Audio-Device → lokaler Stereo-DSP-Eingang.** Initial 48 kHz. USB-OUT bedeutet aus Hostsicht „zum Gerät“ und ist hier Audio-Eingang.
+
+- Dedizierter MCU-USB-Port; ST-Link-Debug-USB ist kein frei nutzbarer Audioanschluss der Ziel-MCU.
+- Ein Stereo-Playback-Stream passt bei 48 kHz in USB Full Speed. UAC-Version, Wortbreiten, Hostkompatibilität und Deskriptoren sind noch festzulegen.
+- Asynchrones Playback mit explizitem Feedback als Planungsansatz; Feedback aus tatsächlichem Audioverbrauch ableiten und Hostverhalten testen.
+- Korrekte USB-48-MHz-Taktquelle, D+/D−, VBUS-Erkennung und ESD-Schutz vorsehen.
+- Kein USB-Host, USB-Stick-Player oder USB-Aufnahmeausgang vereinbart.
+
+## 6. Unabhängige Ausgänge
+
+- Stereo: ES9039Q2M #1 mit eigenem Stereo-PCM → Line-Ausgang.
+- AUX: ES9039Q2M #2 mit eigenem Stereo-PCM → Line-Ausgang.
+- Kopfhörer: eigener DAC-Pfad, **ES9039Q2M #3 eingeplant**, danach dedizierter Kopfhörerverstärker; Leistung/Impedanz/Schutz offen.
+- TOSLINK: **SAI im S/PDIF-TX-Modus**, DMA, optisches Sendemodul passend zum elektrischen Ausgang; keine selbstgebaute IR-LED als ungeprüfter TOSLINK-Ersatz.
+- BT: eigener Stereo-PCM-Ausgang an Classic-BT-A2DP-Source-Modul/Host (offen).
+
+Getrennte DAC-Datenleitungen erlauben getrennte Mixe; gemeinsame Takte sind zulässig. Zwei DACs und ein analog abgezweigter Kopfhörerausgang wären nur eine reduzierte Demonstration, nicht die vollständige Zielarchitektur.
+
+## 7. Controller und Schnittstellenbudget
+
+Die alte Pauschalannahme „drei I²S-Ports reichen“ war nicht ausreichend: Vierkanal-ADC, getrennte BT/WiFi-Eingänge, unabhängige Ausgangsmixe und asynchrone Quellen verlangen einen konkreten SAI/TDM-/SPI-I²S-Plan.
+
+**Prüfergebnis und Ressourcenbelegung:** [controller-capacity.md](hardware/controller-capacity.md).
+
+Bewertung: H753/H743 sind grundsätzlich plausible Kandidaten für 48-kHz-7×5-Audio; endgültige Freigabe erfordert Package-Pinmux, DMA-/RAM-Zuordnung, Clocking, ausgewählte Funkmodule und einen realen Worst-Case-Test. Keine erfundenen CPU-Prozentwerte und kein Boot-/Build-Erfolg als Audio-Nachweis.
+
+Zusätzlicher aktueller Blocker: Der vorgefundene `firmware/src/board_clock.c`-Entwurf enthält PLL1 M=4, N=100, P=2 bei HSI=64 MHz; das ergibt rechnerisch 800 MHz, nicht 400 MHz. Die Firmware bleibt bei dieser Dokuänderung unangetastet. Details und Abgrenzung im Kapazitätsbericht.
+
+## 8. Bedienung / Firmware-Schichten
+
+- Acht Encoder (7 EQ + Volume), sieben Quelltasten, fünf Output-Tasten plus LEDs.
+- GPIO-Scanning/Entprellung statt einer unvalidierten Zuordnung jedes Encoders zu einem eigenen Timer; TIM6/7 sind keine Quadratur-Encoder-Timer.
+- Schichten: Clock/BSP → SAI/I²S/SPDIFRX/USB/DMA → PCM-Puffer/SRC → Mixer/EQ/Gain → UI/Control.
+- I²C/SPI für ADC/DAC-Initialisierung, UART/SPI für Frontend-Status; RTOS optional, DSP bleibt deterministisch.
+- Vorhandene Firmware ist Boot-/Clock-Entwicklung. SAI-, SPDIFRX-, USB-Audio- und vollständige DSP-Treiber sind noch zu ergänzen; keine implizite Umsetzung durch diese Dokuänderung.
+
+## 9. Freigabekriterien / nächste Schritte
+
+1. CPU-/Bus-Clock-Konfiguration korrigieren und am vorhandenen Board prüfen; separate Firmwarefreigabe.
+2. Pinmux auf tatsächlichem H753ZI-Board und finalem H743-Package inklusive Debug, USB, SAI/I²S, UI und DMA festlegen.
+3. ADC-/DAC-MCLK und Slot-/Frame-Konfiguration aus Datenblättern ableiten; USB- und Audio-Clocks nicht verwechseln.
+4. BT-Sink/Source-Lösung wählen, WiFi-PCM und unabhängige gleichzeitige Streams testen.
+5. USB-Feedback und TOSLINK-/BT-/WiFi-Rate-Matching implementieren; keine bloßen Sample-Drops als Qualitätslösung.
+6. Alle sieben Stereoquellen mit identifizierbaren Signalen erfassen und alle fünf Ziele unabhängig prüfen; EQ-Volllast, Pufferdrift, Latenz und Aussetzer messen.
+7. Frontends, Versorgung, Kopfhörerverstärker, Gehäuse und BOM ausarbeiten; KiCad-Schaltpläne/Layouts danach separat abgleichen.
+
+## Quellen
+
+- ADC-Datenblätter und Status: [platform.md](hardware/platform.md).
+- STM32-/Espressif-Quellen und Rechenmodell: [Controller-Kapazität](hardware/controller-capacity.md).

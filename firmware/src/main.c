@@ -8,6 +8,7 @@
 
 #include "main.h"
 #include "bsp.h"
+#include "periodic.h"
 #include <stdio.h>
 
 int main(void)
@@ -16,15 +17,20 @@ int main(void)
 
     printf("RHYTHM firmware started (phase: boot)\r\n");
 
-    uint32_t ticks = 0;
+    /* Gelbe LED (PE1) alle 10 s toggeln.
+     * Zeitbasiert über HAL_GetTick()/periodic_due() statt Delay-Aufrufe zu
+     * zaehlen: so akkumuliert sich keine Schleifen-Quantisierung mehr und die
+     * 10-s-Sollperiode bleibt stabil (kein Drift). bsp_delay_ms(1) dient nur
+     * als kurzes Polling, damit der Tick-Treiber zeitnah reagiert. */
+    uint32_t last_led_ms = HAL_GetTick();
     while (1)
     {
-        ticks++;
-        if ((ticks % 200) == 0)
+        const uint32_t now = HAL_GetTick();
+        if (periodic_due(now, &last_led_ms, 10000U))
         {
             bsp_toggle_led();
         }
-        bsp_delay_ms(10);
+        bsp_delay_ms(1);
     }
 
     return 0;

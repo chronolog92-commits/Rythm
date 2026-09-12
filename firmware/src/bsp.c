@@ -1,10 +1,13 @@
 /**
  * RHYTHM – BSP Implementation
- * Phase 1: minimale Initialisierung (RCC, GPIO, SysTick-Delay, UART-Debug).
+ * Phase 1: minimale Initialisierung (Clock, GPIO, SysTick-Delay, UART-Debug).
  * I2S/DMA, Timer-Encoder, I2C, S/PDIF folgen in späteren Phasen.
  */
 
 #include "bsp.h"
+
+#include "stm32h7xx_hal.h"
+#include "board_clock.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -16,7 +19,14 @@ void bsp_init(void)
     /* HAL_Delay needs the 1 ms SysTick timebase before peripheral init. */
     HAL_Init();
 
+    /* System-Clock auf 400 MHz (VOS1, HSI-PLL1). MUSS vor der Peripherie-Init
+     * laufen, damit GPIO/UART mit dem finalen Takt konfiguriert werden. Bei
+     * Fehlschlag bleibt der Chip sicher auf HSI 64 MHz. */
+    const int clock_ok = board_clock_init();
+    (void)clock_ok; /* Fehler wird in g_board_clock_error kodiert */
+
     __HAL_RCC_GPIOB_CLK_ENABLE();
+    __HAL_RCC_GPIOE_CLK_ENABLE();   /* PE1: gelbe User-LED LD2 (USER_LED2), aktiv-high. */
     __HAL_RCC_GPIOD_CLK_ENABLE();
     __HAL_RCC_USART2_CLK_ENABLE();
 

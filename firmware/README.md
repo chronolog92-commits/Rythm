@@ -7,6 +7,29 @@ notwendig. Der Build ist jetzt für **STM32H753** (NUCLEO-H753ZI) — das aktuel
 und einzige Dev-Board (vorhanden). Der finale H7-Teil bleibt **STM32H743**;
 bis das Ziel-Hardware da ist, entwickelt man ausschließlich auf dem H753ZI.
 
+## Audio-Zielarchitektur (Stand 2026-09-12)
+
+Die Projektdokumentation plant jetzt **7 Stereo-Eingänge und 5 unabhängige Stereo-Ausgänge**:
+Stereo 1/2 über **1× ES9842PRO**, AUX über **1× ES9822PRO**, zusätzlich TOSLINK,
+BT, WiFi und **USB-Audio vom PC (STM32 als Device)**. Kein analoger Quell-MUX.
+Ausgänge: Stereo, AUX, Kopfhörer (drei getrennte DAC-Pfade), TOSLINK und BT.
+
+Das ist eine Zielanforderung, **nicht der Funktionsumfang dieses Boot-/Clock-Gerüsts**.
+SAI/TDM, SPDIFRX, SAI-S/PDIF-TX, USB-Device-Audio/Feedback, SRC, Mixer/EQ und
+vollständige DMA-/Cache-Behandlung müssen noch implementiert und getestet werden.
+ESP32-S3 ist nur WiFi-Kandidat; A2DP-Sink/-Source benötigen Classic-BT-Hardware.
+
+**Clock-Blocker:** Der bei der Architekturprüfung vorgefundene PLL1-Entwurf in
+`src/board_clock.c` nutzt HSI 64 MHz mit M=4, N=100 und P=2. Das ergibt rechnerisch
+800 MHz statt 400 MHz; CPU-/Bus-/VCO-Grenzen sind vor weiterer Audiofreigabe zu
+korrigieren und zu verifizieren. Es erfolgte in dieser Dokumentationsänderung
+keine Firmwareänderung und kein Flashen. Ein erfolgreicher Build wäre hierfür
+kein Hardware-Nachweis. Siehe [Clock-Warnhinweis](docs/clock-verification.md).
+
+Details: [Architektur](../docs/architecture.md),
+[Signalpfad](../docs/hardware/signal-path.md),
+[Controller-Kapazitätsprüfung](../docs/hardware/controller-capacity.md).
+
 ## Boards & Environments
 
 | Environment | Board | MCU | Zweck |
@@ -29,7 +52,14 @@ Extern erforderlich: Python und PlatformIO Core. PlatformIO installiert die in
 ist Internetzugriff erforderlich; die Compiler-/C-Laufzeitbibliotheken werden
 nicht als Projektquellen eingecheckt. Getestet unter Windows.
 
-Aus diesem Ordner (Standard = aktuelles H753-Dev-Board):
+Das VS Code-Projekt ist im Repository-Root `rhythm/` geöffnet; PlatformIO
+verwendet `rhythm/firmware/` als Projekt- und Quellverzeichnis:
+
+```text
+platformio.projectDir = ${workspaceFolder}/firmware
+```
+
+Build-Befehle laufen deshalb weiterhin aus `rhythm/firmware/`:
 
 ```text
 pio run -e nucleo-h753zi
@@ -43,8 +73,8 @@ pio run -t clean -e nucleo-h753zi -e nucleo-h753zi-debug
 pio run -e nucleo-h753zi -e nucleo-h753zi-debug
 ```
 
-ELF/BIN entstehen unter `.pio/build/<environment>/`. `.pio/` wird nicht
-versioniert und kann nach dem Build gelöscht werden.
+ELF/BIN entstehen unter `rhythm/firmware/.pio/build/<environment>/`.
+`.pio/` wird nicht versioniert und kann nach dem Build gelöscht werden.
 
 ## Inhalt
 

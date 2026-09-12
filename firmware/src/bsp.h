@@ -14,8 +14,13 @@
 #include "main.h"
 
 /* ---------- LED ---------- */
-#define BSP_LED_PORT      GPIOB
-#define BSP_LED_PIN       GPIO_PIN_7    /* NUCLEO-H753ZI / H743ZI: LD2 blau, aktiv high. */
+/* MB1364-DevBoard (H753ZI): User-LEDs über NPN-Treiber, aktiv-high.
+ *   LD1 grün  = PA5 (ARD_D13_LED)
+ *   LD2 gelb  = PE1 (USER_LED2)  <- aktuell angesteuert
+ *   LD3 rot   = PB14 (USER_LED3) */
+#define BSP_LED_PORT      GPIOE
+#define BSP_LED_PIN       GPIO_PIN_1    /* MB1364: LD2 gelb (USER_LED2), aktiv-high. */
+
 
 /* ---------- TOSLINK ---------- */
 /* Eingang: PLR135/T → GPIO → SW-S/PDIF-Decoder (AN5073) */

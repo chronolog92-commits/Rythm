@@ -1,385 +1,153 @@
 # RHYTHM – Hardware-Signalpfad & Clocking
 
-> Stand: 2026-09-07
-> Status: Entwurf
-> Referenz-Zustand: **Prototyp Phase 1/2** (NUCLEO-F767ZI + ESP32-S3-DevKitC + Dev-Boards).
-> Die finale PCB wird diese Topologie 1:1 übernehmen; Abweichungen werden dort als „Ziel-PCB" markiert.
-> Oberliegendes Dokument: [`docs/architecture.md`](../architecture.md) (System-Überblick).
+> Stand: 2026-09-12 · Zielentwurf: **7 Stereo-Eingänge → 5 unabhängige Stereo-Ausgänge**.
+> Dev: NUCLEO-H753ZI, final STM32H743. Pinmux, Registersetup, Clocks und Vollbetrieb noch nicht hardware-verifiziert.
+> Oberliegend: [Architektur](../architecture.md) · [Kapazitätsprüfung](controller-capacity.md).
 
-## 0. Grundsätze
+## 1. Blockschaltbild und Grundsätze
 
-1. **Eine Clock-Domäne, ein Master.** Alle Audio-Teile laufen auf 48 kHz / 32-bit / stereo.
-   Die I2S-Takte (MCLK, BCLK, LRCLK) stammen von **einem einzigen Master** (STM32).
-2. **Audio-Bus ≠ Control-Bus.** I2S trägt nur Audio. Alles andere (Status, AVRCP,
-   Quellwechsel) läuft über UART. Ein I2C-Bus für Codec-Konfiguration bleibt
-   parallel erhalten (nur ADC-Konfiguration; DAC braucht keine Konfiguration).
-3. **Kein Sample-Rate-Negotiation auf dem I2S-Bus.** Wer eine andere Rate braucht,
-   sample-rate-konvertiert selbst (nur relevant, wenn Chip 3 eine andere Rate liefert;
-   für Phase 1/2: alle Quellen laufen auf 48 kHz).
-4. **Protektor-Pegel für S/PDIF** – der PLR135/T liefert ein 3.3V-TTL-Signal,
-   das direkt an ein GPIO des STM32 angeschlossen wird (AN5073).
+![RHYTHM Hardware-Blockschaltbild](block-diagram.svg)
 
-## 1. I2S-Bus-Topologie
+[Editierbare Quelle](block-diagram.excalidraw)
 
-![RHYTHM-Hardware-Blockdiagramm: Audio-Signalpfad, I2S-Topologie, Chip-3/ESP32-S3, Stromversorgung](block-diagram.svg)
+1. **Sechs analoge Kanäle gleichzeitig:** 1× ES9842PRO für Stereo 1/2 und 1× ES9822PRO für AUX. Kein analoger Quell-MUX, keine MUX-Steuer-GPIOs.
+2. **Audio ≠ Steuerung:** PCM über SAI/TDM/I²S bzw. USB/SPDIFRX; Codec-Konfiguration über I²C/SPI, Frontend-Status gesondert über UART/SPI.
+3. **Eine lokale Audio-Domäne, mehrere fremde Quellen:** 48-kHz-DSP-Takt für lokale ADC-/DAC-Verbindungen; externe TOSLINK-/BT-/Netzwerk-Takte müssen angepasst werden.
+4. **Getrennte Daten für getrennte Mixe:** Geteilte BCLK/LRCLK sind möglich, parallele identische DAC-Datenleitungen liefern aber denselben Mix.
+5. **USB ist ein eigener PC-Eingang:** MCU als Device, nicht Host. Der ST-Link-Anschluss ist kein USB-Audio-Port.
+6. Der STM32 übernimmt Audio-Bus-Taktführung; die präzise physische Audio-Referenz (externer Oszillator/geeigneter PLL-Pfad) ist vor Hardwarefreigabe festzulegen. HSI-CPU-Takt ist kein Qualitätsnachweis für Audio-Clocks.
 
-> Vektorquelle: [`block-diagram.excalidraw`](block-diagram.excalidraw) (in Excalidraw editierbar).
+## 2. Vollständige Transportliste
 
-### 1.1 Rollen
+Richtung aus Sicht des STM32. Logische Schnittstellen, noch keine verbindliche Pinmap.
 
-| Gerät | Rolle | Richtung |
-|-------|-------|----------|
-| STM32 (F767ZI) | **I2S-Master** (Clock-Generator) | Takte + Audio-Data |
-| ESP32-S3 (DevKitC-1) | **I2S-Slave** (2. Peripherie: I2S0/1 als Slave) | Audio-Data → STM32 |
-| ADC (CS5345 / ES9023) | **I2S-Slave** | Audio-Data → STM32 |
-| ES9039Q2M x2 (DAC) | **I2S-Slave** | Audio-Data ← STM32 |
+| Pfad | Kanäle | Transport | Takt-/Pufferbehandlung |
+|------|--------|-----------|-----------------------|
+| Stereo 1 + Stereo 2, ES9842PRO | 4 RX | Eine TDM4-Datenleitung → SAI | Lokale Audio-Domäne, ADC Slave |
+| AUX, ES9822PRO | 2 RX | Separate Stereo-I²S-Datenleitung → SAI/I²S | Lokale Audio-Domäne, ADC Slave |
+| TOSLINK Eingang | 2 RX | Empfänger → SPDIFRX → DMA | Fremde Clock, ASRC/adaptives SRC erforderlich |
+| Bluetooth Eingang | 2 RX | Classic-BT-Sink (offen) → eigene PCM-Leitung | Modul muss Taktführung/Rate-Matching unterstützen |
+| WiFi Eingang | 2 RX | ESP32-S3 → eigene PCM-Leitung | Netzwerkpuffer, Dekodierung und Rate-Matching |
+| USB Eingang | 2 RX | USB-Device, isochroner OUT-Endpunkt | Feedback/Puffer für lokale Audio-Clock |
+| Stereo Ausgang | 2 TX | Eigene Stereo-PCM-Leitung → ES9039Q2M #1 | Lokal synchron |
+| AUX Ausgang | 2 TX | Eigene Stereo-PCM-Leitung → ES9039Q2M #2 | Lokal synchron |
+| Kopfhörer Ausgang | 2 TX | Eigene Stereo-PCM-Leitung → ES9039Q2M #3 | Lokal synchron, danach Kopfhörerverstärker |
+| TOSLINK Ausgang | 2 TX | SAI S/PDIF-TX → optisches Sendemodul | Lokal 48 kHz, spezifischer SAI-Modus |
+| Bluetooth Ausgang | 2 TX | Eigene PCM-Leitung → Classic-BT-Source (offen) | Modul-/Funkpuffer; getrennt vom BT-Eingang |
 
-> **Warum STM32 als Master?**
-> - Der STM32 ist das Deterministik-Zentrum (EQ, Mixing, S/PDIF-Decoder).
-> - Ein Master kann mehrere Slave-Busse betreiben (I2S2 für ADC, I2S3 für ESP32-S3,
->   I2S1 für die 2x ES9039Q2M).
-> - ESP32-S3 als Slave: ESP-IDF unterstützt I2S-Slave-Modus nativ (i2s_std_mode,
->   `i2s_slot_mode` + `i2s_clk_config`).
-> - ADC/DAC als Slave: CS5345, ES9023, ES9039Q2M sind I2S-Slave-fähig (BCLK/LRCLK
->   extern, MCLK optional).
+**Nicht mehr gültig:** ADCs/DACs/WiFi/BT pauschal auf nur drei Stereo-I²S-Verbindungen zusammenfassen. Ein SAI-Block transportiert mehrere Kanäle über TDM, aber nicht beliebige unabhängige Datenleitungen ohne passende Hardware.
 
-### 1.2 Busse (3x I2S)
+## 3. ADC-Frontend und Slotplan
 
-```
-STM32 (F767ZI)
-├── I2S1 ──→ [ES9039Q2M #1 (Stereo)] ──→ Op-Amp → Stereo-Ausgang
-│       └──→ [ES9039Q2M #2 (AUX)] ──→ Op-Amp → AUX-Ausgang
-│           (Kopfhörer: vom selben ES9039Q2M #1 über Op-Amp-Stufe,
-│            oder eigener DAC – siehe Abschnitt 1.3)
-│
-├── I2S2 ──→ [ADC (CS5345/ES9023)] ← analoge Quellen (Stereo 1, 2, AUX)
-│
-└── I2S3 ←── [ESP32-S3 (I2S-Slave)] ← BT (A2DP) + WiFi-Radio
+```text
+Stereo 1 L/R → Schutz/Pegel/Filter/Differenztreiber → ES9842PRO CH1/2
+Stereo 2 L/R → Schutz/Pegel/Filter/Differenztreiber → ES9842PRO CH3/4
+                                                    │
+                                      TDM4: Slots 0,1,2,3 → STM32 RX
+
+AUX L/R      → Schutz/Pegel/Filter/Differenztreiber → ES9822PRO CH1/2
+                                                    │
+                                      I²S: L/R, 2×32 Bit → STM32 RX
 ```
 
-> **Warum 3x I2S?**
-> - I2S1: **Ausgangs-Bus** (DACs). 2x ES9039Q2M hängen parallel an I2S1 (beide Slave,
->   gleiche Takte).
-> - I2S2: **Eingangs-Bus** (ADC). 1x ADC (Stereo). Die 3 analogen Quellen
->   (Stereo 1, Stereo 2, AUX) werden **vor dem ADC** analog gemischt/geschaltet
->   (Analog-Switch / Multiplexer), nicht digital.
-> - I2S3: **BT/WiFi-Bus** (ESP32-S3). Getrennt von I2S1/I2S2, weil der ESP32-S3
->   einen eigenen I2S-Slave-Port braucht und kein Mux auf I2S-Bus-Ebene sinnvoll ist.
->
-> **Alternative (weniger I2S-Peripherie):** I2S1 und I2S2 zu einem Bus zusammenfassen,
-> ADC als **zweiter Slave** an I2S1 (Full-Duplex: ADC sendet, DAC empfängt, gleicher
-> BCLK/LRCLK). Das spart eine I2S-Peripherie, aber:
-> - CS5345/ES9023 als I2S-Slave im **Receive-Modus** (ADC → MCU) brauchen BCLK/LRCLK
->   von außen → OK.
-> - ES9039Q2M als **Transmit-Modus** (MCU → DAC) brauchen BCLK/LRCLK von außen → OK.
-> - **Aber:** ADC und DAC auf demselben Bus = gemeinsame Takte, aber **getrennte
->   Data-Lines** (ADC-DOUT → STM32, STM32-DOUT → DAC-DIN). Das ist machbar,
->   aber der STM32 muss I2S **Full-Duplex** betreiben (1x I2S-Peripherie,
->   TX + RX parallel). F767ZI I2S unterstützt Full-Duplex.
-> - **Entscheidung:** Für Phase 1/2 **3x I2S** (einfacher zu debuggen,
->   getrennte Buses). Für die finale PCB: **2x I2S** (Full-Duplex I2S1 für
->   ADC+DAC, I2S2 für ESP32-S3) – reduziert Routing-Komplexität.
+- Slotzuordnung ES9842PRO: 0=Stereo1 L, 1=Stereo1 R, 2=Stereo2 L, 3=Stereo2 R.
+- ES9822PRO: linker/rechter Slot = AUX L/R.
+- 32-Bit-Slot und tatsächliche Datenbreite/Alignment explizit konfigurieren; Kanaltest mit unterschiedlichen Signalen vor DSP.
+- TDM-Frame-Länge, Frame-Puls, Ein-Bit-Delay und Datenkante an beiden Enden konsistent setzen.
+- Beide ADCs unterstützen I²S/TDM Master und Slave sowie TDM-Cascade. Für die Basis getrennte Datenleitungen verwenden; optionale TDM8-Kaskade erst nach Register-/Timingtest freigeben.
+- Nicht die internen I²S-Decoder-/Delay-Funktionen der ADCs ungeprüft zum Zusammenführen verwenden: deren Wortbreiten können von der ADC-Ausgabe abweichen.
+- I²C-Adressen per ADDR-Pins trennen oder SPI mit getrennten CS einsetzen; ESS-Adressbyte inklusive R/W-Bit von 7-Bit-Treiberadresse unterscheiden.
+- Reset/CHIP_EN, MCLK-Verfügbarkeit und Registerreihenfolge gemäß Datenblatt. Normaler I²C-Zugriff kann bereits MCLK benötigen.
+- Kein interner analoger PGA zugesichert; Eingangsempfindlichkeit durch Analogdesign bestimmen. Pegelbegrenzung vor Wandlung erforderlich, digitales Gain beseitigt kein Overload.
 
-### 1.3 Kopfhörer-Ausgang
+## 4. Lokales Clocking
 
-  - **Phase 1/2:** Kopfhörer-Ausgang geht vom **ES9039Q2M #1** (Stereo-DAC) über
-  eine **zusätzliche Op-Amp-Stufe** (z.B. OPA1612, niederohmig, für 32 Ω)
-  auf die Klinke. Kein separater DAC.
-  - **Ziel-PCB:** Optionaler **dritter ES9039Q2M** (oder dedizierter
-  Kopfhörer-DAC z.B. ES9012) für sauberere Trennung (Kopfhörer = eigene Gain-Stufe,
-  kein Cross-Talk mit Stereo/AUX).
+### 4.1 Sample-, Bit- und Masterclock
 
-### 1.4 I2C-Bus (Codec-Konfiguration)
+Rechenbasis 48 kHz, 32-Bit-Slots:
 
-| Bus | Master | Slave | Zweck |
-|-----|--------|-------|-------|
-| I2C1 (F767ZI) | STM32 | ADC (CS5345/ES9023) | Gain, Mute, Sample-Rate, Power-Down |
-| I2C1 (F767ZI) | STM32 | ES9039Q2M | Register-Konfiguration (Input-Modus, Mute, Power-Down) |
+| Verbindung | Bits pro Frame | BCLK |
+|------------|----------------|------|
+| Stereo-I²S | 2×32 = 64 | **3,072 MHz** |
+| ES9842PRO TDM4 | 4×32 = 128 | **6,144 MHz** |
+| Optionale ADC-TDM8-Kaskade | 8×32 = 256 | **12,288 MHz** |
 
-> ESP32-S3 hat **kein I2C** zum STM32 (Kommunikation läuft über UART).
-> I2C ist ein **einseitiger Konfigurations-Bus** (STM32 → Codec), kein Audio-Bus.
+TDM4 und Stereo-I²S können dieselbe Sample-/Referenzclock verwenden, aber nicht ohne Formatänderung dieselbe BCLK. SAI-A/B-Synchronisierung übernimmt ein gemeinsames Frameformat, nicht automatisch zwei verschiedene Slotzahlen. Entsprechend asynchron konfigurierte Subblöcke oder ein einheitliches TDM-Frameformat sind nötig.
 
-## 2. Clocking
+**MCLK ist nicht automatisch BCLK oder 256×fs.** Das konkrete MCLK/fs-Verhältnis und die ADC-internen Divider nach den Tabellen „I²S Slave Clock Rate Configurations“ bzw. „TDM Slave Clock Rate Configurations“ der beiden ESS-Datenblätter wählen. Ein beliebiger alter 12,288-MHz-MCLK-Eintrag ist keine Freigabe. DAC und STM32-Kernelclock ebenso darauf abstimmen; Jitter, Fanout, Leitungslängen und Resetreihenfolge prüfen.
 
-### 2.1 Takt-Generierung
+### 4.2 Fremde Takte
 
-```
-STM32 (F767ZI)
-├── PLL → SYSCLK (216 MHz)
-│   └── I2S-Peripherie-Predivider → 48 kHz Basis
-│       ├── LRCLK = 48 kHz
-│       ├── BCLK  = 48 kHz × 32 = 1.536 MHz (32-bit)
-│       └── MCLK  = 48 kHz × 256 = 12.288 MHz (für ADC/DAC, falls benötigt)
-│
-└── I2S-Master-Output
-  ├── I2S1 → ES9039Q2M x2 (BCLK, LRCLK, MCLK)
-    ├── I2S2 → ADC (BCLK, LRCLK, MCLK)
-    └── I2S3 → ESP32-S3 (BCLK, LRCLK, MCLK)
-```
+- **TOSLINK:** Clock Recovery durch SPDIFRX, danach elastischer Puffer und ASRC/adaptives SRC auf lokale 48 kHz. Ein FIFO allein verhindert keinen dauerhaften Drift.
+- **BT RX / WiFi:** Dekodierte Samplerate kann z. B. 44,1 kHz sein; Frontend/Host resampelt und gleicht den tatsächlichen Verbrauch der lokalen PCM-Clock aus. Slave-I²S allein ist kein SRC.
+- **USB:** Isochrone Transfers orientieren sich am Host-SOF. Asynchrones Playback mit Feedback an den Host ist der Entwurf; das Feedback muss den tatsächlichen Audioverbrauch abbilden.
+- **BT TX:** Lokale PCM-Ausgabe und Funkübertragung sind getrennte Zeitabläufe; Modulpuffer und Codec-Latenz berücksichtigen. Keine samplegenaue Gleichzeitigkeit mit Line/TOSLINK versprechen.
 
-> **MCLK:** ES9039Q2M und CS5345/ES9023 arbeiten mit MCLK = 256 × fs (oder 384 × fs).
-> Bei 48 kHz: MCLK = 12.288 MHz. Der STM32 kann MCLK über den I2S-Peripheral
-> (I2S_MCLK_EN) ausgeben. F767ZI: I2S_MCLK ist auf **PA7** (I2S2_MCLK) bzw.
-> **PB15** (I2S3_MCLK) verfügbar – muss in der Pin-Map abgeglichen werden.
+### 4.3 CPU- und USB-Clocks
 
-### 2.2 Clock-Verantwortlichkeiten
+CPU-Clock, Audio-Kernelclock und USB-48-MHz-Takt separat konfigurieren. USB benötigt eine spezifikationsgerechte Taktquelle; die Audio-PLL ist nicht automatisch USB-tauglich. Beim aktuellen H753-Clock-Entwurf bestehen Rechen-/Busgrenzenprobleme: siehe [Controller-Kapazität](controller-capacity.md) und Warnhinweis in [Clock-Verifikation](../../firmware/docs/clock-verification.md). Keine Board-Neukonfiguration Teil dieser Dokumentationsänderung.
 
-| Takt | Generator | Empfänger |
-|------|-----------|-----------|
-| LRCLK (48 kHz) | STM32 (I2S-Master) | ADC, ESP32-S3, ES9039Q2M x2 |
-| BCLK (1.536 MHz) | STM32 (I2S-Master) | ADC, ESP32-S3, ES9039Q2M x2 |
-| MCLK (12.288 MHz) | STM32 (I2S-Master) | ADC, ES9039Q2M x2 (ESP32-S3: optional, nicht nötig) |
-| SYSCLK (216 MHz) | STM32 (HSE 8 MHz → PLL) | Intern (CPU, Peripherie) |
+## 5. TOSLINK RX/TX
 
-> **ESP32-S3 als I2S-Slave:** ESP-IDF `i2s_std_mode` unterstützt Slave-Modus
-> (BCLK/LRCLK extern). MCLK wird vom ESP32-S3 **nicht benötigt** (nur für
-> interne PLL, die in Slave-Modus nicht aktiv ist).
+### Eingang
 
-### 2.3 Sample-Rate
+Optischer Empfänger (PLR135/T bisheriger Kandidat) → elektrisches S/PDIF-Signal → **SPDIFRX-Eingangsfunktion** des STM32 → DMA/Statusauswertung → SRC → DSP.
 
-- **Alle Audio-Pfade: 48 kHz / 32-bit / stereo.**
-- TOSLINK-Eingang: S/PDIF kann 44.1/48/88.2/96/176.4/192 kHz tragen.
-  Der **SW-S/PDIF-Decoder** (AN5073) sample-rate-konvertiert auf 48 kHz
-  (oder gibt die Rate an den STM32 weiter, der dann die I2S-Peripherie
-  neu konfiguriert).
-  - **Phase 1/2:** S/PDIF-Eingang wird auf **48 kHz** gezwungen
-    (einfachster Fall). 44.1 kHz Quellen (CD-Player) werden sample-rate-konvertiert.
-  - **Ziel-PCB:** Optional: Sample-Rate-Detektion + dynamische I2S-Umstellung
-    (komplexer, später).
-- BT (A2DP): SBC/AAC/MP3 werden vom ESP32-S3 auf **48 kHz** dekodiert
-  (ESP-IDF A2DP-Sink: 48 kHz ist Standard für SBC/AAC).
-- WiFi-Radio: HTTP-Streams werden vom ESP32-S3 auf **48 kHz** sample-rate-konvertiert
-  (libmad / custom decoder).
+- Empfängerlogik/VCC und maximale optische Sample-Rate prüfen.
+- Lockverlust, Parität, Channel Status und gültige PCM-Daten behandeln.
+- Unterstützte Eingangs-Sampleraten erst nach SRC-/Locktests zusagen.
+- Kein pro-Flanke-GPIO-Interruptdecoder. **AN5073 beschreibt die STM32-S/PDIF-Schnittstellen**, nicht einen automatisch resampelnden Softwaredecoder.
 
-## 3. ADC-Anbindung
+### Ausgang
 
-### 3.1 Analog-Voreinstufe (vor dem ADC)
+DSP-Stereomix → DMA → **SAI im S/PDIF-TX-Modus** → passendes optisches Sendemodul → TOSLINK.
 
-```
-Stereo 1 (Cinch L/R) ──→ [Op-Amp Buffer] ──┐
-Stereo 2 (Cinch L/R) ──→ [Op-Amp Buffer] ──┤
-AUX (Cinch L/R) ──→ [Op-Amp Buffer] ──┤
-                                          │
-                                          ▼
-                                 [Analog-Switch (MUX)]
-                                 3:1 (L/R getrennt)
-                                          │
-                                          ▼
-                                 [ADC (CS5345/ES9023)]
-                                 I2S-Slave → STM32 (I2S2)
-```
+- SAI-Subblock/-Pin, Kanalstatus, Nutzdatenformat und Clock-Divider nach RM0433/AN5073 konfigurieren.
+- 32-Bit interne Speicherwörter bedeuten nicht 32 Bit PCM-Nutzdaten im S/PDIF-Format; Formatkonvertierung/Dither bei Reduktion festlegen.
+- S/PDIF-Biphase-Signal ist nicht die Stereo-I²S-BCLK. Keine alte pauschale „32×fs“-Verdrahtung übernehmen.
+- Konkretes optisches Sendemodul, Versorgung und Ansteuerung offen. Keine unbestätigte IR-LED-/Widerstandsschaltung.
 
-- **Op-Amp Buffer:** Niederimpedanz-Puffer (OPA1612 oder NE5532),
-  Pegelanpassung auf ADC-Eingangspegel (CS5345: ±2.5 V ref, ES9023: ±3 V ref).
-  **Entscheidungsbedarf:** Genauer Op-Amp + Pegel werden im Analog-Signalpfad
-  (separater Abschnitt, folgt) finalisiert.
-- **Analog-Switch (MUX):** 3:1 Stereo-Switch (z.B. DG5081, 2x 3:1, oder
-  2x DG5081 für L/R). Gesteuert über GPIO des STM32 (2x GPIO für
-  Channel-Auswahl: 00=Stereo 1, 01=Stereo 2, 10=AUX).
-  - **Alternative:** 3x separate ADCs (je 1 pro Quelle) – teurer, aber
-    kein Mux-Nachhall, alle Quellen gleichzeitig verfügbar.
-    **Für Phase 1/2: 1x ADC + MUX** (Budget).
-    **Für Ziel-PCB: 3x ADC** (alle Quellen gleichzeitig, kein Mux).
+## 6. USB-Audio-Eingang
 
-### 3.2 ADC-Digitalanbindung
+- PC (Host) → eigener MCU-USB-Anschluss → USB-Audio-Device → Stereo-Puffer → Mixer.
+- Initial 48 kHz, zwei Kanäle. UAC-Version und USB-PCM-Bittiefe offen; 16/24/32-Bit-Formate benötigen passende Deskriptoren und Konvertierung.
+- Bei 32-Bit-Containern: 384 Byte pro nomineller Millisekunde; ein Stereo-Stream passt grundsätzlich in USB Full Speed. Maximale Paketgröße mit Feedback-/Takttoleranz dimensionieren, nicht nur exakt den Mittelwert reservieren.
+- Asynchrones Playback mit Feedback-Endpunkt als Basis; Enumeration, Windows/Linux-Host, Start/Stop, Suspend/Resume und Kabelabzug prüfen.
+- D+/D−, VBUS-Erkennung, ESD und Strompfad auf tatsächlichem Board/Package prüfen; kein Rückspeisen zwischen PC und externer Versorgung.
+- ST-Link-USB bleibt Debug; kein USB-Host oder Speicherplayer vorgesehen.
 
-| Pin (ADC) | → STM32 (F767ZI) | I2S2 |
-|-----------|-------------------|------|
-| SDO (Audio-Data Out) | I2S2_SD | RX |
-| SCLK (BCLK) | I2S2_SCK | (Slave empfängt) |
-| WS (LRCLK) | I2S2_WS | (Slave empfängt) |
-| MCLK | I2S2_MCLK (falls verfügbar) | (Slave empfängt) |
-| SDA (I2C) | I2C1_SDA | Konfiguration |
-| SCL (I2C) | I2C1_SCL | Konfiguration |
-| CS# (Chip-Select, falls SPI-Interface) | – (CS5345/ES9023 sind I2S+I2C, kein SPI) | – |
+## 7. DACs und analoge Ausgänge
 
-> **CS5345 vs. ES9023 (ADC-Entscheidung, offen):**
-> - CS5345: 24-bit / 192 kHz, I2S + I2C, ~8 €, einfacher.
-> - ES9023: 32-bit / 384 kHz, I2S + I2C, ~12 €, besserer SNR.
-> - **Für Phase 1/2: CS5345** (Budget, reicht für 48 kHz/24-bit).
-> - **Für Ziel-PCB: ES9023** (besserer SNR, 32-bit, mehr Reserve).
+Drei separat geroutete Stereo-PCM-Leitungen zu drei ES9039Q2M-Pfaden:
 
-## 4. S/PDIF-Pfad (TOSLINK)
+1. Stereo-DAC → Tiefpass/Puffer/Line-Treiber → Stereo-Ausgang.
+2. AUX-DAC → Tiefpass/Puffer/Line-Treiber → AUX-Ausgang.
+3. Kopfhörer-DAC → geeigneter Kopfhörerverstärker → Klinke.
 
-### 4.1 Eingang (RX)
+Geteilte Takte, getrennte Audiodaten. ADC-/DAC-I²C-Adressen zusammen prüfen; SPI-CS oder zusätzlicher Steuerbus bleibt Option. Analoge Ausgangspegel, Lasten, Strombegrenzung, Einschaltmute und Pop-Unterdrückung sind offen. Kein Kopfhörer direkt am DAC und keine unabhängige Ausgabe durch bloßen Parallelabgriff.
 
-```
-TOSLINK-Eingang (optisch)
-    │
-    ▼
-[PLR135/T] (TOSLINK-Empfänger, 3.3V TTL-Output)
-    │
-    ▼ (3.3V TTL, 32×fs)
-[GPIO des STM32] (Interrupt-gesteuert)
-    │
-    ▼
-[SW-S/PDIF-Decoder] (AN5073)
-    │
-    ▼ (48 kHz, 32-bit, stereo)
-[Audio-Puffer → Mixing-Engine → I2S1 (DAC)]
-```
+## 8. Versorgung, Masse und PCB
 
-- **PLR135/T:** 3.3V, ~3 €, S/PDIF-Output an GPIO.
-- **SW-S/PDIF-Decoder:** GPIO-Interrupt (oder Timer-Input-Capture) →
-  Software-Dekodierung (AN5073). Sample-Rate-Detektion + Sample-Rate-Konvertierung
-  auf 48 kHz.
-- **GPIO-Pin:** In der Pin-Map finalisieren (F767ZI: GPIOA-GPIOH,
-  hoher Prioritäts-Interrupt).
+- Bisheriges 5-V-Netzteilkonzept ist ein Ausgangspunkt, **keine nachgewiesene Leistungsreserve** für die neue Vollausstattung.
+- ADCs: Pinlisten nennen 4,5-V-Analog- und 3,3-V-I/O-Versorgung; Referenzen und interne Core-Regler nach Datenblatt beschalten. Nicht alle Pins pauschal mit 3,3 V speisen.
+- DAC-, MCU-, Frontend- und Kopfhörer-Rails getrennt aus den jeweiligen Anforderungen ableiten; eventuell zusätzliche/negative Analogversorgung nötig.
+- Ruhige Analog-/Referenzversorgung, Decoupling nahe den Pins, kurze Rückstromwege und durchgängige sinnvolle Massefläche. Keine pauschal aufgetrennten Masseflächen unter schnellen Signalen.
+- Clock-Fanout und Flanken kontrollieren; vierlagige Platine als Zielansatz. Layout und thermische/elektrische Dimensionierung bleiben offen.
+- ADCs/DACs auf passenden Modulen/Platinen prototypisieren; QFN-Chips und hochohmige Analogreferenzen nicht über lange Steckbrettleitungen verdrahten.
+- MUX-Versorgung, MUX-Testpunkte und MUX-Auswahlleitungen entfallen. Neue Testpunkte für beide ADC-Datenströme, drei DAC-Ströme, USB, SPDIFRX/TX und unabhängige BT-/WiFi-Pfade.
+- Bestehende KiCad-Projekte bleiben unverändert; Schaltplan-/Layoutmigration und elektrische Prüfung sind separate Aufgaben.
 
-### 4.2 Ausgang (TX)
+## 9. Stufenweise Verifikation
 
-```
-[Audio-Puffer → S/PDIF-Encoder]
-    │
-    ▼ (S/PDIF-Stream, 32×fs)
-[GPIO des STM32] (Timer-gesteuerter Output)
-    │
-    ▼
-[TOSLINK-LED + LED-Treiber (z.B. BTQ11 + Widerstand)]
-    │
-    ▼
-TOSLINK-Ausgang (optisch)
-```
+| Stufe | Aufbau / Test | Abnahmekriterium |
+|-------|---------------|-----------------|
+| 1 | H753-CPU-/Busclock und Zeitbasis | Register und externe Zeitmessung, kein falsches 400-MHz-Label |
+| 2 | Audio-Referenz, ein DAC | Logikanalysator: Rate, Slots, Clock-Verhältnis; Testsignal |
+| 3 | ES9842PRO + ES9822PRO | Sechs verschiedene analoge Kanal-Testsignale gleichzeitig, kein MUX |
+| 4 | USB und TOSLINK RX | USB-Feedback und ASRC, kein langfristiger FIFO-Drift |
+| 5 | WiFi, BT RX und BT TX | Unabhängige Streams, Funk-/Codec-Rollen und Taktführung verifiziert |
+| 6 | Drei DACs + TOSLINK TX + BT TX | Fünf separat geroutete Stereo-Ausgänge |
+| 7 | Gesamtsystem mit EQ/Mixer/UI | Blockdeadline, DMA/Cache, Last, Latenz und Dropout-Zähler |
+| 8 | PCB-/Analogvalidierung | Pegel, THD+N, Rauschen, Versorgung, thermische Reserve und Schutz |
 
-- **GPIO-Output:** Timer-gesteuert (PWM oder Timer-Compare), S/PDIF-Frame
-  (32 Bit pro Sample, 48 kHz → 1.536 MHz Bit-Rate).
-- **LED-Treiber:** TOSLINK-LED (IR, 850–940 nm) + Seriellenwiderstand
-  (z.B. 39 Ω) + optional NPN-Transistor (BTQ11) für Pegelanhebung.
-- **GPIO-Pin:** In der Pin-Map finalisieren.
-
-### 4.3 S/PDIF-Entscheidung (Software vs. Hardware)
-
-- **Software (AN5073):** Kostenneutral, ~5 % CPU, flexibel.
-  **Entscheidung: Software** (für Phase 1/2 und Ziel-PCB).
-- **Hardware (AK4396 oder externer S/PDIF-Decoder):** Teurer (~5–10 €),
-  aber CPU-frei. **Nicht gewählt** (CPU-Budget ist komfortabel).
-
-## 5. Stromversorgung
-
-### 5.1 Spannungsnetze
-
-| Netz | Quelle | Verbraucher | Anmerkung |
-|------|--------|-------------|-----------|
-| 5 V / 3 A | externes 5V-Netzteil (USB-C / DC-Jack) | Alle | Hauptspannung |
-| 3.3 V | LDO / Buck vom 5 V | STM32, ESP32-S3, PLR135/T, Op-Amps, MUX, LEDs | Digital-Logik |
-| 3.3 V (analog) | **Separater LDO** (oder 3.3 V mit analogem Decoupling) | ADC, ES9039Q2M, analoge Op-Amps | **Analog-Netz, getrennt vom Digital-3.3V** |
-| 1.2 V (optional) | LDO vom 3.3 V | ESP32-S3 (core, falls benötigt) | ESP32-S3: 3.3 V reicht (kein 1.2 V nötig für DevKitC) |
-
-> **Analog/Digital-Trennung:**
-> - **Digital-3.3V:** STM32, ESP32-S3, PLR135/T, MUX, LEDs.
-> - **Analog-3.3V:** ADC, ES9039Q2M, analoge Op-Amps.
-> - **Getrennte Decoupling** (100 nF + 10 µF pro Netz), **getrennte GND-Pfade**
->   (analog GND und digital GND, verbunden an einem Punkt: Star Ground).
-> - **Für Phase 1/2 (Breadboard/Protoboard):** Ein 5V-Netzteil → 3.3V-LDO
->   (z.B. AMS1117-3.3) → alle Verbraucher. **Analog/Digital-Trennung wird
->   auf der Breadboard vernachlässigt** (für den Prototyp akzeptabel,
->   für die finale PCB nicht).
-> - **Für Ziel-PCB:** 2x 3.3V-LDO (digital + analog), Star Ground,
->   separater analoger GND-Pour.
-
-### 5.2 Decoupling (pro Chip)
-
-| Chip | Decoupling |
-|------|-----------|
-| STM32 (F767ZI) | 100 nF + 10 µF an VDD/VSS, 10 µF an VDDA/VSSA (analog) |
-| ESP32-S3 (DevKitC-1) | 100 nF + 10 µF an 3V3 (DevKitC hat eigenes Decoupling, prüfen) |
-| ADC (CS5345/ES9023) | 100 nF + 10 µF an AVDD/DVDD, 10 µF an AVSS/DVSS |
-| ES9039Q2M x2 | 100 nF + 10 µF an AVDD/DVDD, 10 µF an AVSS/DVSS |
-| PLR135/T | 100 nF an VCC |
-| Op-Amps (OPA1612 / NE5532) | 100 nF + 10 µF an V+ / V- |
-| MUX (DG5081) | 100 nF an VCC |
-
-### 5.3 Stromverbrauch (geschätzt)
-
-| Verbraucher | Strom (ca.) |
-|-------------|-------------|
-| STM32 (F767ZI, 216 MHz) | ~80 mA (aktiv, I2S+DMA+Interrupts) |
-| ESP32-S3 (DevKitC-1, WiFi+BT aktiv) | ~180 mA (WiFi-Scan), ~80 mA (BT-only) |
-| ADC (CS5345) | ~5 mA |
-| ES9039Q2M x2 | ~2 × 3 mA = 6 mA |
-| Op-Amps (4x) | ~4 × 2 mA = 8 mA |
-| MUX (DG5081) | ~0.5 mA |
-| PLR135/T | ~1 mA |
-| LEDs (10x, 20 mA) | ~200 mA (alle an) |
-| **Summe (typisch)** | **~500 mA – 700 mA @ 3.3V** |
-| **Summe (peak, WiFi+BT+alle LEDs)** | **~1 A @ 3.3V** |
-
-> 5V/3A-Netzteil ist mit großem Vorrat dimensioniert.
-
-## 6. Prototyp-Phasen
-
-### Phase 1: Breadboard (Stufe für Stufe)
-
-**Ziel:** Audio-Pfad validieren (I2S, EQ, Mixing, DAC-Output).
-
-| Stufe | Inhalt | Validierung |
-|-------|--------|-------------|
-| 1 | STM32 (F767ZI) + ES9039Q2M x2 + 5V-Netzteil | I2S-Master → DAC → analoger Output (Testsignal: Sinus 1 kHz) |
-| 2 | + ESP32-S3 (BT + WiFi) | A2DP-Sink → I2S-Slave → DAC (BT-Musik aus Handy) |
-| 3 | + ADC (CS5345) + 1x analoge Quelle (Stereo 1) | Analog → ADC → I2S → STM32 → DAC (Loopback) |
-| 4 | + S/PDIF-Eingang (PLR135/T + CD-Player) | TOSLINK → SW-Decoder → DAC |
-| 5 | + Encoder (8x) + Taster (11x) + LEDs (10x) | UI-Interaktion (EQ, Volume, Quellwahl) |
-| 6 | + 3x analoge Quellen + MUX | Alle Quellen verfügbar |
-| 7 | + S/PDIF-Ausgang (TOSLINK-LED) | Alle Ausgänge verfügbar |
-| 8 | + Chip 3 (RPi Zero 2 W, falls gewählt) | AirPlay / Spotify → I2S/USB → STM32 |
-
-> **Breadboard-Abweichungen vom Ziel-Zustand:**
-> - Analog/Digital-Trennung: **nicht umgesetzt** (ein 3.3V-Netz).
-> - MUX: **DIP-Schalter** (manuell) statt DG5081 (für Phase 1).
-> - Kopfhörer-Ausgang: **direkt vom ES9039Q2M #1** (keine separate Op-Amp-Stufe).
-> - ESP32-S3: **USB-Debug-Kabel** an Laptop (UART-Debug), I2S per Jumper.
-
-### Phase 2: Erste Prototyp-PCB (KiCad)
-
-**Ziel:** Saubere Signalpfade, alle Funktionen auf einer Platine.
-
-| Merkmal | Umsetzung |
-|---------|-----------|
-| Layer | 2-Layer (Top + Bottom), GND-Pour auf Bottom |
-| Analog/Digital | Getrennte 3.3V-LDOs (digital + analog), Star Ground |
-| I2S-Topologie | 3x I2S (wie Phase 1), aber **getrennte Data-Lines** (ADC-DIN, DAC-DOUT, ESP32-DIN) |
-| MUX | DG5081 (digital gesteuert, 2x GPIO) |
-| Kopfhörer | Separate Op-Amp-Stufe (OPA1612) |
-| Decoupling | Vollständig (100 nF + 10 µF pro Chip) |
-| S/PDIF | PLR135/T + TOSLINK-LED + Treiber |
-| ESP32-S3 | DevKitC-1 auf Platine (oder ESP32-S3-WROOM-Modul, kleiner) |
-| STM32 | F767ZI (oder H743ZI, falls NUCLEO-Formfaktor nicht mehr nötig) |
-| Testpunkte | An allen I2S-Signalen, ADC-Ausgang, DAC-Eingang, MUX-Auswahl |
-
-### Ziel-PCB (finale Version)
-
-**Ziel:** Produktionsreife, saubere Audio-Performance.
-
-| Merkmal | Umsetzung |
-|---------|-----------|
-| Layer | 4-Layer (Top, GND1, GND2, Bottom), analoger GND-Pour |
-| I2S-Topologie | **2x I2S** (Full-Duplex I2S1 für ADC+DAC, I2S2 für ESP32-S3) |
-| ADC | **3x ES9023** (alle Quellen gleichzeitig, kein Mux) |
-| DAC | 3x ES9039Q2M (Stereo, AUX, Kopfhörer) |
-| Analog/Digital | 2x 3.3V-LDOs (digital + analog), Star Ground, separater analoger GND-Pour |
-| Gehäuse | Aluminium- oder Stahl-Gehäuse (TBD) |
-| Gehäuse-Befestigung | PCB mit M3-Schrauben, Gehäusesockel mit GND-Kontakten |
-| Testpunkte | Vollständig (alle Audio-Signale, I2C, UART) |
-| Serienfertigung | 5–10 Stück (PCB-Order bei JLCPCB oder Ähnlichem) |
-
-> **Abweichungen Phase 1/2 → Ziel-PCB:**
-> - 3x I2S → 2x I2S (Full-Duplex)
-> - 1x ADC + MUX → 3x ADC (kein Mux)
-> - 2x DAC → 3x DAC (separater Kopfhörer-DAC)
-> - 1x 3.3V-LDO → 2x 3.3V-LDOs (digital + analog)
-> - F767ZI/H743ZI (NUCLEO) → F767ZI/H743ZI (TQFP144, direkt auf Platine)
-> - ESP32-S3 DevKitC-1 → ESP32-S3-WROOM-Modul (kleiner, direkt auf Platine)
-> - DIP-Schalter → DG5081 MUX (digital gesteuert)
-
-## Offene Punkte (für diesen Abschnitt)
-
-1. [ ] **I2S-Pin-Map für F767ZI** (I2S1/2/3: SD, SCK, WS, MCLK – welche Pins?)
-2. [ ] **MCLK-Verfügbarkeit** auf F767ZI (I2S2_MCLK: PA7? I2S3_MCLK: PB15? – abgleichen)
-3. [ ] **ADC-Modell finalisieren** (CS5345 für Phase 1, ES9023 für Ziel-PCB – bestätigt?)
-4. [ ] **Analog-MUX-Modell** (DG5081 3:1? 2x für L/R? – Datasheet prüfen)
-5. [ ] **Op-Amp-Auswahl** für analoge Voreinstufe (OPA1612? NE5532? – Pegel + Impedanz)
-6. [ ] **Kopfhörer-DAC** (Phase 1: ES9039Q2M #1, Ziel-PCB: eigener DAC – bestätigt?)
-7. [ ] **ESP32-S3 I2S-Slave-Pins** (DevKitC-1: welche Pins für I2S-Slave? – Datasheet prüfen)
-8. [ ] **S/PDIF GPIO-Pins** (RX + TX, Interrupt-Priorität – abgleichen mit F767ZI-Pinout)
-9. [ ] **Stromversorgung: 1x oder 2x 3.3V-LDO für Phase 2?** (Budget vs. Qualität)
-10. [ ] **Gehäuse-Integration** (PCB-Maße, Befestigung, GND-Kontakte – TBD)
+Die Teststufen sind **noch auszuführen**, nicht bereits bestanden. Rechenwerte und vorläufiges Ressourcenbudget im [Controller-Check](controller-capacity.md).

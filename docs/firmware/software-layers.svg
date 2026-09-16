@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080">
+<defs>
+<marker id="audio" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#69dbb0"/></marker>
+<marker id="control" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#74b9ff"/></marker>
+<marker id="open" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#ffc078"/></marker>
+<marker id="neutral" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#c4b5fd"/></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="1080" rx="10" fill="#101722" stroke="transparent" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="32" text-anchor="start">
+<tspan x="40" y="57.0">RYTHM / SOFTWARE-SCHICHTEN</tspan>
+</text>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="18" text-anchor="start">
+<tspan x="40" y="93.0">Initialer Entwurf 0.1 | 2026-09-13 | Systemvorgaben + markierte Softwarevorschlaege</tspan>
+</text>
+<rect x="40" y="140" width="440" height="140" rx="10" fill="#20283b" stroke="#ffc078" stroke-width="2" stroke-dasharray="8 6"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="260.0" y="192.5">EXTERNE FRONTENDS</tspan>
+<tspan x="260.0" y="217.5">WiFi: ESP32-S3 / optionaler Host</tspan>
+<tspan x="260.0" y="242.5">Classic-BT: getrennte RX-/TX-Rollen</tspan>
+</text>
+<rect x="560" y="140" width="440" height="140" rx="10" fill="#20283b" stroke="#74b9ff" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="780.0" y="192.5">PC / USB-HOST</tspan>
+<tspan x="780.0" y="217.5">Playback OUT zum STM32</tspan>
+<tspan x="780.0" y="242.5">Feedback IN zum Host</tspan>
+</text>
+<rect x="1080" y="140" width="480" height="140" rx="10" fill="#20283b" stroke="#74b9ff" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="1320.0" y="192.5">LOKALE BEDIENUNG</tspan>
+<tspan x="1320.0" y="217.5">8 Encoder, 7 Quell-/5 Zieltasten</tspan>
+<tspan x="1320.0" y="242.5">LEDs, Auswahl-/Mute-Semantik offen</tspan>
+</text>
+<rect x="40" y="355" width="440" height="160" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="260.0" y="405.0">TRANSPORT-ADAPTER</tspan>
+<tspan x="260.0" y="430.0">PCM RX/TX, USB-Class, SPDIFRX</tspan>
+<tspan x="260.0" y="455.0">Format, FIFOs, Rate-Matching</tspan>
+<tspan x="260.0" y="480.0">Keine Netzwerkdecoder im DSP</tspan>
+</text>
+<rect x="1080" y="355" width="480" height="160" rx="10" fill="#20283b" stroke="#74b9ff" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="1320.0" y="405.0">CONTROL + SYSTEM MANAGER</tspan>
+<tspan x="1320.0" y="430.0">UI-Modell, validierte Snapshots</tspan>
+<tspan x="1320.0" y="455.0">Boot / Mute / Recovery, Presets</tspan>
+<tspan x="1320.0" y="480.0">Codec-/Frontend-Steuerung</tspan>
+</text>
+<rect x="40" y="600" width="960" height="170" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="520.0" y="655.0">ECHTZEIT-AUDIOKERN / STM32H753 DEV, H743 ZIEL</tspan>
+<tspan x="520.0" y="680.0">Source-Bank -&gt; 7 x 5 Stereo-Matrix -&gt; 5 Sink-Pfade</tspan>
+<tspan x="520.0" y="705.0">Vorschlag: 7-Band-EQ je Ausgang; Gain/Mute/Meter</tspan>
+<tspan x="520.0" y="730.0">Statische Blöcke, keine Warteaufrufe oder Heap-Allokation</tspan>
+</text>
+<rect x="1080" y="600" width="480" height="170" rx="10" fill="#20283b" stroke="#74b9ff" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="1320.0" y="655.0">DIAGNOSE / NICHT ECHTZEIT</tspan>
+<tspan x="1320.0" y="680.0">Deadline, FIFO, Lock, Clipping</tspan>
+<tspan x="1320.0" y="705.0">Aktive Parametergeneration</tspan>
+<tspan x="1320.0" y="730.0">Logging und Persistenz gedrosselt</tspan>
+</text>
+<rect x="40" y="870" width="1520" height="125" rx="10" fill="#20283b" stroke="#c4b5fd" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="800.0" y="915.0">PLATTFORM + TREIBER</tspan>
+<tspan x="800.0" y="940.0">Board / Clock / HAL / SAI / I2S / SPDIFRX / USB / DMA / MPU-Cache / Codec-Control</tspan>
+<tspan x="800.0" y="965.0">Pinmux, Clock-Referenz und DMA-Speicherbereiche vor Hardwarefreigabe nachweisen</tspan>
+</text>
+<polyline points="260.0,280 260.0,355" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<polyline points="780.0,280 260.0,355" fill="none" stroke="#74b9ff" stroke-width="2" marker-end="url(#control)"/>
+<polyline points="1320.0,280 1320.0,355" fill="none" stroke="#74b9ff" stroke-width="2" marker-end="url(#control)"/>
+<polyline points="260.0,515 520.0,600" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<polyline points="1320.0,515 520.0,600" fill="none" stroke="#74b9ff" stroke-width="2" marker-end="url(#control)"/>
+<polyline points="1000,685.0 1080,685.0" fill="none" stroke="#74b9ff" stroke-width="2" marker-end="url(#control)"/>
+<polyline points="520.0,770 800.0,870" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="18" text-anchor="start">
+<tspan x="40" y="1048.0">Gruen: Audio / Echtzeit   Blau: Control / Status   Orange: externe oder offene Rollen</tspan>
+</text>
+</svg>

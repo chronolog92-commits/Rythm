@@ -307,6 +307,8 @@ static inline void dwc2_phy_update(dwc2_regs_t* dwc2, uint8_t hs_phy_type) {
 }
 
 //------------- GCCFG configuration -------------//
+#pragma GCC push_options
+#pragma GCC optimize ("O0")
 static inline void dwc2_stm32_gccfg_cfg(dwc2_regs_t* dwc2, bool vbus_sensing, bool is_host) {
   if (is_host) {
     vbus_sensing = false;
@@ -365,6 +367,7 @@ static inline void dwc2_stm32_gccfg_cfg(dwc2_regs_t* dwc2, bool vbus_sensing, bo
 
   dwc2->stm32_gccfg = gccfg;
 }
+#pragma GCC pop_options
 
 //------------- DCache -------------//
 #if CFG_TUD_MEM_DCACHE_ENABLE || CFG_TUH_MEM_DCACHE_ENABLE

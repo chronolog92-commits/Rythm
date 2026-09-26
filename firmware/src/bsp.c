@@ -71,7 +71,7 @@ void bsp_init(void)
 
 /* ---------- USB OTG FS – Full Speed (interne FS-PHY) ----------
  * PA11 = USB_DM, PA12 = USB_DP (USB_OTG_FS).
- * Beide als Alternate Function AF10 (OTG1_FS), Low-Speed GPIO
+ * Beide als Alternate Function AF10, Low-Speed GPIO
  * (entspricht CubeMX: GPIO_SPEED_FREQ_LOW, GPIO_NOPULL).
  *
  * WICHTIG: Die OTG_FS-Peripherie-Clock (AHBENR.OTGFSEN) MUSS aktiviert
@@ -79,6 +79,9 @@ void bsp_init(void)
  * das GSNPSID-Register 0 und der Synopsys-ID-Check schlägt fehl. */
 void bsp_usb_fs_init(void)
 {
+    /* Release the USB supply isolation before TinyUSB connects the FS PHY. */
+    HAL_PWREx_EnableUSBVoltageDetector();
+
     /* 1) OTG_FS-Peripherie-Clock aktivieren.
      * WORKAROUND: Die HAL-Makros __HAL_RCC_USB_OTG_FS_CLK_ENABLE() /
      * __HAL_RCC_USB2_OTG_FS_CLK_ENABLE() setzen fälschlich RCC_AHB1ENR.USB2OTGHSEN

@@ -1,12 +1,13 @@
 /*
- * usb_audio.c - UAC2 application callbacks for the RHYTHM prototype.
+ * usb_audio.c - UAC1 application callbacks for the RHYTHM prototype.
  *
  * Implements the TinyUSB audio device callbacks:
  *   - tud_audio_set_itf_cb: track streaming state (alt 0/1)
- *   - tud_audio_set_req_entity_cb / tud_audio_get_req_entity_cb:
- *       UAC2 Clock Source (freq cur/range, valid) and Feature Unit (mute/vol)
+ *   - tud_audio_set_itf_close_ep_cb: track streaming stop
  *   - tud_audio_feedback_params_cb: FIFO-count feedback method
- *   - tud_audio_rx_done_isr: called in ISR context when a packet arrives
+ *
+ * UAC1: Feature-unit mute/volume controls and endpoint sample-rate control.
+ * Control values are retained for the future SAI/DAC output stage.
  *
  * Data path (Phase 1): USB ISO OUT -> TinyUSB internal FIFO -> (audio_task)
  * -> audio_buffer (application ring buffer). No SAI/DAC yet (Phase 3).
@@ -14,6 +15,7 @@
 #include "tusb.h"
 #include "usb_audio.h"
 #include "audio_buffer.h"
+#include "common_types.h"
 
 //--------------------------------------------------------------------
 // State
@@ -21,92 +23,81 @@
 static uint32_t  s_sample_rate   = 48000;
 static bool      s_streaming     = false;
 static uint8_t   s_alt_setting   = 0;
+static uint8_t   s_mute[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];
+static int16_t   s_volume[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];
 
-// UAC2 supported sample rates (Phase 1: 48 kHz only).
-static const uint32_t s_sample_rates[UAC2_N_SAMPLE_RATES] = { 48000 };
+enum {
+  VOLUME_MIN = -100 * 256,  /* UAC1 volume uses signed 1/256 dB units. */
+  VOLUME_MAX = 0,
+  VOLUME_RES = 256,
+};
 
-//--------------------------------------------------------------------
-// UAC2 entity: Clock Source
-//--------------------------------------------------------------------
-static bool audio20_clock_get(uint8_t rhport, tusb_control_request_t const *p_request) {
-  uint8_t const ctrl_sel = TU_U16_HIGH(p_request->wValue);
+static bool valid_feature_request(tusb_control_request_t const *request) {
+  return tu_u16_low(request->wIndex) == ITF_NUM_AUDIO_CONTROL &&
+         tu_u16_high(request->wIndex) == UAC1_ENTITY_FEATURE_UNIT &&
+         tu_u16_low(request->wValue) <= CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX;
+}
 
-  if (ctrl_sel == AUDIO20_CS_CTRL_SAM_FREQ) {
-    if (p_request->bRequest == AUDIO20_CS_REQ_CUR) {
-      audio20_control_cur_4_t curf = {(int32_t) tu_htole32(s_sample_rate)};
-      return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &curf, sizeof(curf));
-    } else if (p_request->bRequest == AUDIO20_CS_REQ_RANGE) {
-      audio20_control_range_4_n_t(UAC2_N_SAMPLE_RATES) rangef = {
-          .wNumSubRanges = tu_htole16(UAC2_N_SAMPLE_RATES)};
-      for (uint8_t i = 0; i < UAC2_N_SAMPLE_RATES; i++) {
-        rangef.subrange[i].bMin = (int32_t) s_sample_rates[i];
-        rangef.subrange[i].bMax = (int32_t) s_sample_rates[i];
-        rangef.subrange[i].bRes = 0;
-      }
-      return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &rangef, sizeof(rangef));
+bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const *request) {
+  if (!valid_feature_request(request)) return false;
+  uint8_t const channel = tu_u16_low(request->wValue);
+  uint8_t const control = tu_u16_high(request->wValue);
+
+  if (control == AUDIO10_FU_CTRL_MUTE && request->bRequest == AUDIO10_CS_REQ_GET_CUR &&
+      request->wLength == 1) {
+    return tud_audio_buffer_and_schedule_control_xfer(rhport, request, &s_mute[channel], 1);
+  }
+  if (control == AUDIO10_FU_CTRL_VOLUME && request->wLength == 2) {
+    int16_t value;
+    switch (request->bRequest) {
+      case AUDIO10_CS_REQ_GET_CUR: value = s_volume[channel]; break;
+      case AUDIO10_CS_REQ_GET_MIN: value = VOLUME_MIN; break;
+      case AUDIO10_CS_REQ_GET_MAX: value = VOLUME_MAX; break;
+      case AUDIO10_CS_REQ_GET_RES: value = VOLUME_RES; break;
+      default: return false;
     }
-  } else if (ctrl_sel == AUDIO20_CS_CTRL_CLK_VALID &&
-             p_request->bRequest == AUDIO20_CS_REQ_CUR) {
-    audio20_control_cur_1_t cur_valid = {.bCur = 1};
-    return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &cur_valid, sizeof(cur_valid));
+    uint8_t data[2] = {(uint8_t)value, (uint8_t)((uint16_t)value >> 8)};
+    return tud_audio_buffer_and_schedule_control_xfer(rhport, request, data, sizeof(data));
   }
   return false;
 }
 
-static bool audio20_clock_set(tusb_control_request_t const *p_request, uint8_t const *buf) {
-  uint8_t const ctrl_sel = TU_U16_HIGH(p_request->wValue);
-  TU_VERIFY(p_request->bRequest == AUDIO20_CS_REQ_CUR);
-
-  if (ctrl_sel == AUDIO20_CS_CTRL_SAM_FREQ) {
-    TU_VERIFY(p_request->wLength == sizeof(audio20_control_cur_4_t));
-    s_sample_rate = (uint32_t) ((audio20_control_cur_4_t const *) buf)->bCur;
+bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const *request, uint8_t *data) {
+  (void)rhport;
+  if (!valid_feature_request(request) || request->bRequest != AUDIO10_CS_REQ_SET_CUR) return false;
+  uint8_t const channel = tu_u16_low(request->wValue);
+  uint8_t const control = tu_u16_high(request->wValue);
+  if (control == AUDIO10_FU_CTRL_MUTE && request->wLength == 1 && data[0] <= 1) {
+    s_mute[channel] = data[0];
+    return true;
+  }
+  if (control == AUDIO10_FU_CTRL_VOLUME && request->wLength == 2) {
+    int16_t const value = (int16_t)((uint16_t)data[0] | ((uint16_t)data[1] << 8));
+    if (value < VOLUME_MIN || value > VOLUME_MAX || value % VOLUME_RES != 0) return false;
+    s_volume[channel] = value;
     return true;
   }
   return false;
 }
 
-//--------------------------------------------------------------------
-// UAC2 entity: Feature Unit (mute / volume)
-//--------------------------------------------------------------------
-static uint8_t s_mute[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];
-static int16_t s_volume[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];
-
-static bool audio20_feature_unit_get(uint8_t rhport, tusb_control_request_t const *p_request) {
-  uint8_t const ctrl_sel    = TU_U16_HIGH(p_request->wValue);
-  uint8_t const channel_num = TU_U16_LOW(p_request->wValue);
-
-  if (ctrl_sel == AUDIO20_FU_CTRL_MUTE && p_request->bRequest == AUDIO20_CS_REQ_CUR) {
-    audio20_control_cur_1_t mute1 = {.bCur = s_mute[channel_num]};
-    return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &mute1, sizeof(mute1));
-  } else if (ctrl_sel == AUDIO20_FU_CTRL_VOLUME) {
-    if (p_request->bRequest == AUDIO20_CS_REQ_CUR) {
-      audio20_control_cur_2_t cur_vol = {.bCur = tu_htole16(s_volume[channel_num])};
-      return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &cur_vol, sizeof(cur_vol));
-    } else if (p_request->bRequest == AUDIO20_CS_REQ_RANGE) {
-      audio20_control_range_2_n_t(1) range_vol = {
-          .wNumSubRanges = tu_htole16(1),
-          .subrange[0] = {.bMin = tu_htole16(-50 * 256), tu_htole16(0), tu_htole16(256)}};
-      return tud_audio_buffer_and_schedule_control_xfer(rhport, p_request, &range_vol, sizeof(range_vol));
-    }
-  }
-  return false;
+static bool valid_rate_request(tusb_control_request_t const *request) {
+  return request->wIndex == USB_AUDIO_OUT_EP &&
+         request->wValue == (AUDIO10_EP_CTRL_SAMPLING_FREQ << 8) && request->wLength == 3;
 }
 
-static bool audio20_feature_unit_set(tusb_control_request_t const *p_request, uint8_t const *buf) {
-  uint8_t const ctrl_sel    = TU_U16_HIGH(p_request->wValue);
-  uint8_t const channel_num = TU_U16_LOW(p_request->wValue);
-  TU_VERIFY(p_request->bRequest == AUDIO20_CS_REQ_CUR);
+bool tud_audio_get_req_ep_cb(uint8_t rhport, tusb_control_request_t const *request) {
+  if (!valid_rate_request(request) || request->bRequest != AUDIO10_CS_REQ_GET_CUR) return false;
+  uint8_t data[3] = {(uint8_t)s_sample_rate, (uint8_t)(s_sample_rate >> 8), (uint8_t)(s_sample_rate >> 16)};
+  return tud_audio_buffer_and_schedule_control_xfer(rhport, request, data, sizeof(data));
+}
 
-  if (ctrl_sel == AUDIO20_FU_CTRL_MUTE) {
-    TU_VERIFY(p_request->wLength == sizeof(audio20_control_cur_1_t));
-    s_mute[channel_num] = ((audio20_control_cur_1_t const *) buf)->bCur;
-    return true;
-  } else if (ctrl_sel == AUDIO20_FU_CTRL_VOLUME) {
-    TU_VERIFY(p_request->wLength == sizeof(audio20_control_cur_2_t));
-    s_volume[channel_num] = (int16_t) ((audio20_control_cur_2_t const *) buf)->bCur;
-    return true;
-  }
-  return false;
+bool tud_audio_set_req_ep_cb(uint8_t rhport, tusb_control_request_t const *request, uint8_t *data) {
+  (void)rhport;
+  if (!valid_rate_request(request) || request->bRequest != AUDIO10_CS_REQ_SET_CUR) return false;
+  uint32_t const rate = (uint32_t)data[0] | ((uint32_t)data[1] << 8) | ((uint32_t)data[2] << 16);
+  if (rate != 44100 && rate != 48000) return false;
+  s_sample_rate = rate;
+  return true;
 }
 
 //--------------------------------------------------------------------
@@ -132,29 +123,6 @@ bool tud_audio_set_itf_close_ep_cb(uint8_t rhport, tusb_control_request_t const 
     s_streaming = false;
   }
   return true;
-}
-
-bool tud_audio_set_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p_request, uint8_t *buf) {
-  (void) rhport;
-  uint8_t const entity_id = TU_U16_HIGH(p_request->wIndex);
-  if (entity_id == UAC2_ENTITY_CLOCK) {
-    return audio20_clock_set(p_request, buf);
-  }
-  if (entity_id == UAC2_ENTITY_FEATURE_UNIT) {
-    return audio20_feature_unit_set(p_request, buf);
-  }
-  return false;
-}
-
-bool tud_audio_get_req_entity_cb(uint8_t rhport, tusb_control_request_t const *p_request) {
-  uint8_t const entity_id = TU_U16_HIGH(p_request->wIndex);
-  if (entity_id == UAC2_ENTITY_CLOCK) {
-    return audio20_clock_get(rhport, p_request);
-  }
-  if (entity_id == UAC2_ENTITY_FEATURE_UNIT) {
-    return audio20_feature_unit_get(rhport, p_request);
-  }
-  return false;
 }
 
 // Feedback: FIFO-count method. The driver regulates the FIFO fill level to

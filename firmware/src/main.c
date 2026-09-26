@@ -2,14 +2,14 @@
  * RHYTHM – Main
  * STM32H753ZI (NUCLEO-H753ZI als Dev-Board; final STM32H743ZI)
  *
- * Phase 2c: UAC2 USB-Audio-Prototyp (TinyUSB, OTG_FS Rhport 0, interne FS-PHY).
- *   - USB Audio Class 2.0, stereo playback, 48 kHz, 24-bit in 32-bit slots
+ * Phase 2c: UAC1 USB-Audio-Prototyp (TinyUSB, OTG_FS Rhport 0, interne FS-PHY).
+ *   - USB Audio Class 1.0, stereo playback, 48 kHz, 16-bit
  *   - Asynchroner Feedback (FIFO-count)
  *   - Audiodaten werden in einen RAM-Ringbuffer geschrieben (noch kein SAI/DAC).
  *
  * Initialisierung entspricht dem CubeMX-Referenzprojekt:
  *   MPU_Config → HAL_Init → SystemClock_Config (480 MHz VOS0) → GPIO → USB_OTG_FS
- * Danach: TinyUSB UAC2-Init + Main-Loop (tud_task + usb_audio_task).
+ * Danach: TinyUSB UAC1-Init + Main-Loop (tud_task + usb_audio_task).
  *
  * Debug über UART (USART3) – keine printf im Isochronous-ISR-Pfad.
  */
@@ -28,59 +28,6 @@ static volatile bool s_usb_configured = false;
 static volatile bool s_usb_reset = false;
 static volatile bool s_usb_suspended = false;
 
-//--------------------------------------------------------------------+
-// MACRO CONSTANT TYPEDEF PROTOTYPES
-//--------------------------------------------------------------------+
-
-/* Blink pattern
- * - 25 ms   : streaming data
- * - 250 ms  : device not mounted
- * - 1000 ms : device mounted
- * - 2500 ms : device is suspended
- */
-enum {
-  BLINK_STREAMING = 25,
-  BLINK_NOT_MOUNTED = 250,
-  BLINK_MOUNTED = 1000,
-  BLINK_SUSPENDED = 2500,
-};
-
-enum {
-  VOLUME_CTRL_0_DB = 0,
-  VOLUME_CTRL_10_DB = 2560,
-  VOLUME_CTRL_20_DB = 5120,
-  VOLUME_CTRL_30_DB = 7680,
-  VOLUME_CTRL_40_DB = 10240,
-  VOLUME_CTRL_50_DB = 12800,
-  VOLUME_CTRL_60_DB = 15360,
-  VOLUME_CTRL_70_DB = 17920,
-  VOLUME_CTRL_80_DB = 20480,
-  VOLUME_CTRL_90_DB = 23040,
-  VOLUME_CTRL_100_DB = 25600,
-  VOLUME_CTRL_SILENCE = 0x8000,
-};
-
-static uint32_t blink_interval_ms = BLINK_NOT_MOUNTED;
-
-// Audio controls
-// Current states
-uint8_t mute[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];   // +1 for master channel 0
-int16_t volume[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];// +1 for master channel 0
-uint32_t current_sample_rate = 44100;
-
-// Buffer for speaker data
-uint16_t i2s_dummy_buffer[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ / 2];
-
-void led_blinking_task(void);
-void audio_task(void);
-
-#if CFG_AUDIO_DEBUG
-void audio_debug_task(void);
-uint8_t current_alt_settings;
-volatile uint16_t fifo_count;
-volatile uint32_t fifo_count_avg;
-#endif
-
 //--------------------------------------------------------------------
 // TinyUSB device callbacks (device level, NOT the audio class)
 //--------------------------------------------------------------------
@@ -94,7 +41,7 @@ uint32_t tud_get_extra_status_cb(uint8_t type, uint16_t addr) {
 //--------------------------------------------------------------------
 static void debug_print_status(void) {
   const audio_buffer_stats_t *st = audio_buffer_stats();
-  printf("[UAC2] %s | %u Hz | rx=%u pkt / %u B | overrun=%u underrun=%u | %s%s%s\r\n",
+  printf("[UAC1] %s | %u Hz | rx=%u pkt / %u B | overrun=%u underrun=%u | %s%s%s\r\n",
          s_usb_configured ? "configured" : "not configured",
          (unsigned)usb_audio_sample_rate(),
          (unsigned)st->rx_packets,
@@ -160,10 +107,10 @@ int main(void)
 
     /* ── RHYTHM-Applikation ──────────────────────────────────────────────── */
 
-    printf("RHYTHM firmware started (UAC2, %u Hz, 2ch, 24-bit)\r\n",
+    printf("RHYTHM firmware started (UAC1, %u Hz, 2ch, 16-bit)\r\n",
            (unsigned)CFG_TUD_AUDIO_FUNC_1_MAX_SAMPLE_RATE_FS);
 
-    /* USB-Audio-Device (TinyUSB UAC2) initialisieren.
+    /* USB-Audio-Device (TinyUSB UAC1) initialisieren.
      * tusb_init() bringt den USB-Stack auf Rhport 0 (OTG_FS) hoch. */
     audio_buffer_init();
     tusb_rhport_init_t dev_init = {
@@ -174,38 +121,8 @@ int main(void)
         printf("ERROR: tusb_init() FAILED\r\n");
         while (1) { bsp_toggle_led(); bsp_delay_ms(200); }
     }
-    printf("USB Audio Device initialized (TinyUSB UAC2, OTG_FS Rhport0, FS mode)\r\n");
+    printf("USB Audio Device initialized (TinyUSB UAC1, OTG_FS Rhport0, FS mode)\r\n");
     printf("Waiting for USB enumeration...\r\n");
-
-    /* DEBUG: USB-Controller-Register-Diagnose (OTG_FS @ 0x40080000) */
-    {
-        volatile uint32_t* gsnpsid = (volatile uint32_t*)0x40080004;
-        volatile uint32_t* ghwcfg2 = (volatile uint32_t*)0x40080014;
-        volatile uint32_t* dcfg    = (volatile uint32_t*)0x40080400;
-        volatile uint32_t* gintsts = (volatile uint32_t*)0x40080418;
-
-        uint32_t gsnpsid_val = *gsnpsid;
-        uint32_t ghwcfg2_val = *ghwcfg2;
-        uint32_t dcfg_val    = *dcfg;
-        uint32_t gintsts_val = *gintsts;
-
-        printf("=== USB OTG_FS Controller Register Dump ===\r\n");
-        printf("GSNPSID:   0x%08lX (erwartet: 0x4F544737)\r\n", (unsigned long)gsnpsid_val);
-        printf("GHWCFG2:   0x%08lX (hs_phy=%lu, fs_phy=%lu)\r\n",
-               (unsigned long)ghwcfg2_val, (unsigned long)((ghwcfg2_val >> 18) & 0x3),
-               (unsigned long)((ghwcfg2_val >> 20) & 0x3));
-        printf("DCFG:      0x%08lX\r\n", (unsigned long)dcfg_val);
-        printf("GINTSTS:   0x%08lX\r\n", (unsigned long)gintsts_val);
-        printf("AHB1ENR:   0x%08lX (OTGFSEN=bit27)\r\n", (unsigned long)RCC->AHB1ENR);
-        printf("===========================================\r\n");
-
-        if (gsnpsid_val != 0x4F544737) {
-            printf("WARN: GSNPSID unexpected! OTG_FS clock may be off.\r\n");
-        }
-        if (((ghwcfg2_val >> 20) & 0x3) == 0) {
-            printf("WARN: No FS PHY detected! Check PA11/PA12 wiring.\r\n");
-        }
-    }
 
     uint32_t last_led_ms    = HAL_GetTick();
     uint32_t last_status_ms = HAL_GetTick();
@@ -271,55 +188,3 @@ void tud_resume_cb(void) {
   s_usb_suspended = false;
   printf("[USB] resumed\r\n");
 }
-
-#if CFG_AUDIO_DEBUG
-//--------------------------------------------------------------------+
-// HID interface for audio debug
-//--------------------------------------------------------------------+
-// Every 1ms, we will sent 1 debug information report
-void audio_debug_task(void) {
-  static uint32_t start_ms = 0;
-  uint32_t curr_ms = tusb_time_millis_api();
-  if (start_ms == curr_ms) return;// not enough time
-  start_ms = curr_ms;
-
-  audio_debug_info_t debug_info;
-  debug_info.sample_rate = current_sample_rate;
-  debug_info.alt_settings = current_alt_settings;
-  debug_info.fifo_size = CFG_TUD_AUDIO_FUNC_1_EP_OUT_SW_BUF_SZ;
-  debug_info.fifo_count = fifo_count;
-  debug_info.fifo_count_avg = (uint16_t) (fifo_count_avg >> 16);
-  for (int i = 0; i < CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1; i++) {
-    debug_info.mute[i] = mute[i];
-    debug_info.volume[i] = volume[i];
-  }
-
-  if (tud_hid_ready())
-    tud_hid_report(0, &debug_info, sizeof(debug_info));
-}
-
-// Invoked when received GET_REPORT control request
-// Unused here
-uint16_t tud_hid_get_report_cb(uint8_t itf, uint8_t report_id, hid_report_type_t report_type, uint8_t *buffer, uint16_t reqlen) {
-  // TODO not Implemented
-  (void) itf;
-  (void) report_id;
-  (void) report_type;
-  (void) buffer;
-  (void) reqlen;
-
-  return 0;
-}
-
-// Invoked when received SET_REPORT control request or
-// Unused here
-void tud_hid_set_report_cb(uint8_t itf, uint8_t report_id, hid_report_type_t report_type, uint8_t const *buffer, uint16_t bufsize) {
-  // This example doesn't use multiple report and report ID
-  (void) itf;
-  (void) report_id;
-  (void) report_type;
-  (void) buffer;
-  (void) bufsize;
-}
-
-#endif

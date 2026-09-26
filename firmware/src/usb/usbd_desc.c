@@ -31,15 +31,15 @@
 #define USB_PID           0x401b
 
 size_t board_usb_get_serial(uint16_t id[], size_t max_len){
-  (void) max_len;
-  volatile uint16_t *stm32_uuid = (volatile uint16_t *) id;
-  uint16_t *id16= (uint16_t *) (uintptr_t) id;
-  uint8_t const len = 12;
-  
-  //Todo: Implement correct length for STM32 UUID
-  id16[0] = stm32_uuid[0];
-  id16[1] = stm32_uuid[1];
-  id16[2] = stm32_uuid[2];
+  /* Use the selected MCU's UID address; an address from another STM32
+   * family causes a BusFault during GET_DESCRIPTOR(String, serial). */
+  const uint8_t *uuid = (const uint8_t *)UID_BASE;
+  size_t const len = max_len < 24 ? max_len : 24;
+
+  for (size_t i = 0; i < len; i++) {
+    uint8_t nib = (uuid[i / 2] >> ((i % 2) * 4)) & 0xF;
+    id[i] = (nib < 10) ? ('0' + nib) : ('A' + nib - 10);
+  }
 
   return len;
 }
@@ -77,32 +77,7 @@ uint8_t const * tud_descriptor_device_cb(void) {
   return (uint8_t const *) &desc_device;
 }
 
-#if CFG_AUDIO_DEBUG
-//--------------------------------------------------------------------+
-// HID Report Descriptor
-//--------------------------------------------------------------------+
 
-uint8_t const desc_hid_report[] = {
-  HID_USAGE_PAGE_N ( HID_USAGE_PAGE_VENDOR, 2   ),\
-  HID_USAGE        ( 0x01                       ),\
-  HID_COLLECTION   ( HID_COLLECTION_APPLICATION ),\
-  HID_USAGE       ( 0x02                                   ),\
-  HID_LOGICAL_MIN ( 0x00                                   ),\
-  HID_LOGICAL_MAX_N ( 0xff, 2                              ),\
-  HID_REPORT_SIZE ( 8                                      ),\
-  HID_REPORT_COUNT( sizeof(audio_debug_info_t)             ),\
-  HID_INPUT       ( HID_DATA | HID_VARIABLE | HID_ABSOLUTE ),\
-  HID_COLLECTION_END
-};
-
-// Invoked when received GET HID REPORT DESCRIPTOR
-// Application return pointer to descriptor
-// Descriptor contents must exist long enough for transfer to complete
-uint8_t const * tud_hid_descriptor_report_cb(uint8_t itf) {
-  (void) itf;
-  return desc_hid_report;
-}
-#endif
 
 //--------------------------------------------------------------------+
 // Configuration Descriptor
@@ -136,28 +111,19 @@ uint8_t const * tud_hid_descriptor_report_cb(uint8_t itf) {
   #endif
 
 #else
-  #define EPNUM_AUDIO       0x01
+  #define EPNUM_AUDIO       USB_AUDIO_OUT_EP
   #define EPNUM_AUDIO_FB    0x01
   #define EPNUM_DEBUG       0x02
 #endif
 
-#if CFG_AUDIO_DEBUG
-  #define CONFIG_UAC1_TOTAL_LEN    	(TUD_CONFIG_DESC_LEN + TUD_AUDIO10_SPEAKER_STEREO_FB_DESC_LEN(2) + TUD_HID_DESC_LEN)
-#else
-  #define CONFIG_UAC1_TOTAL_LEN    	(TUD_CONFIG_DESC_LEN + TUD_AUDIO10_SPEAKER_STEREO_FB_DESC_LEN(2))
-#endif
+#define CONFIG_UAC1_TOTAL_LEN    	(TUD_CONFIG_DESC_LEN + TUD_AUDIO10_SPEAKER_STEREO_FB_DESC_LEN(2))
 
 uint8_t const desc_uac1_configuration[] = {
   // Config number, interface count, string index, total length, attribute, power in mA
   TUD_CONFIG_DESCRIPTOR(1, ITF_NUM_TOTAL, 0, CONFIG_UAC1_TOTAL_LEN, 0x00, 100),
 
   // Interface number, string index, byte per sample, bit per sample, EP Out, EP size, EP feedback, sample rates (44.1kHz, 48kHz)
-  TUD_AUDIO10_SPEAKER_STEREO_FB_DESCRIPTOR(ITF_NUM_AUDIO_CONTROL, 5, CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX, CFG_TUD_AUDIO_FUNC_1_RESOLUTION_RX, EPNUM_AUDIO, CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_FS, EPNUM_AUDIO_FB | 0x80, 44100, 48000),
-
-#if CFG_AUDIO_DEBUG
-  // Interface number, string index, protocol, report descriptor len, EP In address, size & polling interval
-  TUD_HID_DESCRIPTOR(ITF_NUM_DEBUG, 0, HID_ITF_PROTOCOL_NONE, sizeof(desc_hid_report), EPNUM_DEBUG | 0x80, CFG_TUD_HID_EP_BUFSIZE, 7)
-#endif
+  TUD_AUDIO10_SPEAKER_STEREO_FB_DESCRIPTOR(ITF_NUM_AUDIO_CONTROL, 5, CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX, CFG_TUD_AUDIO_FUNC_1_RESOLUTION_RX, EPNUM_AUDIO, CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_FS, EPNUM_AUDIO_FB | 0x80, 44100, 48000)
 };
 
 TU_VERIFY_STATIC(sizeof(desc_uac1_configuration) == CONFIG_UAC1_TOTAL_LEN, "Incorrect size");
@@ -254,10 +220,10 @@ static char const *string_desc_arr[] =
 {
   (const char[]) { 0x09, 0x04 },  // 0: is supported language is English (0x0409)
   "TinyUSB",                      // 1: Manufacturer
-  "Rythm",                        // 2: Product
+  "Rythm Audio Stereo",           // 2: Product
   NULL,                           // 3: Serials will use unique ID if possible
-  "UAC2 Speaker",                 // 4: Audio Interface
-  "UAC1 Speaker",                 // 5: UAC1 Audio Interface
+  "Rythm Audio Stereo",           // 4: Audio Interface
+  "Rythm Audio Stereo",           // 5: UAC1 Audio Interface
 };
 
 static uint16_t _desc_str[32 + 1];

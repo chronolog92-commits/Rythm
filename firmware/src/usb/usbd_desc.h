@@ -92,6 +92,9 @@
 #define UAC1_ENTITY_FEATURE_UNIT        0x02
 #define UAC1_ENTITY_OUTPUT_TERMINAL     0x03
 
+/* STM32 DWC2 playback endpoint, shared with the UAC1 control callbacks. */
+#define USB_AUDIO_OUT_EP               0x01
+
 #define TUD_AUDIO10_SPEAKER_STEREO_FB_DESC_LEN(_nfreqs) (\
   + TUD_AUDIO10_DESC_STD_AC_LEN\
   + TUD_AUDIO10_DESC_CS_AC_LEN(1)\

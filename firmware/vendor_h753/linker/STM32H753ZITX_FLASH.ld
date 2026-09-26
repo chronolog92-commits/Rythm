@@ -223,7 +223,7 @@ SECTIONS
    * NOT in DTCM because STM32H7 USB OTG FS DMA cannot access DTCM.
    * Phase 1 is CPU-only, so cache coherence is a non-issue; Phase 3 (SAI/DMA)
    * gets the same cache-line treatment. */
-  .ram_audio_buf :
+  .ram_audio_buf (NOLOAD) :
   {
     . = ALIGN(64);
     _sram_audio_buf = .;

@@ -1,123 +1,222 @@
-# Rythm Firmware — NUCLEO-H753ZI
+# RHYTHM – UAC2 USB Audio Interface (STM32H753ZI)
 
-Alle projektspezifischen C-/Assembler-Quellen, Header, HAL/CMSIS-Bausteine,
-Startup-Code, Linkerskript und Build-Einstellungen liegen in diesem Ordner.
-Es sind keine CubeIDE-Dateien, Vendor-Importe oder globalen PlatformIO-Patches
-notwendig. Der Build ist jetzt für **STM32H753** (NUCLEO-H753ZI) — das aktuelle
-und einzige Dev-Board (vorhanden). Der finale H7-Teil bleibt **STM32H743**;
-bis das Ziel-Hardware da ist, entwickelt man ausschließlich auf dem H753ZI.
+## Projektziel
+Hochwertiges USB Audio Interface:
+- STM32H753ZI, USB 2.0 High Speed, externes ULPI PHY (USB3300)
+- USB Audio Class 2.0
+- 4 ADC-Eingänge, 2 DAC-Ausgänge, 24-bit in 32-bit Slots
+- 48 / 96 / 192 kHz (später 44.1 / 88.2 / 176.4 / 384 kHz)
+- Full Duplex, SAI/TDM, DMA, asynchrones USB-Audio-Feedback
 
-## Audio-Zielarchitektur (Stand 2026-09-12)
+## Phase 1 (aktuell) – Minimaler UAC2-Prototyp
+- USB **Full Speed** (12 Mbps) über interne FS-PHY (PA11=DM, PA12=DP)
+- **Kein externes ULPI PHY** auf dem Dev-Board → kein High Speed (480 Mbps)
+- UAC2, 2-Kanal Playback, 48 kHz, 24-bit in 32-bit Slots
+- Audiodaten werden in einen RAM-Ringbuffer geschrieben (kein SAI/DAC)
+- Asynchrones Feedback (FIFO-count)
+- **High Speed kommt später** mit einem USB3300 (ULPI)
 
-Die Projektdokumentation plant jetzt **7 Stereo-Eingänge und 5 unabhängige Stereo-Ausgänge**:
-Stereo 1/2 über **1× ES9842PRO**, AUX über **1× ES9822PRO**, zusätzlich TOSLINK,
-BT, WiFi und **USB-Audio vom PC (STM32 als Device)**. Kein analoger Quell-MUX.
-Ausgänge: Stereo, AUX, Kopfhörer (drei getrennte DAC-Pfade), TOSLINK und BT.
-
-Das ist eine Zielanforderung, **nicht der Funktionsumfang dieses Boot-/Clock-Gerüsts**.
-SAI/TDM, SPDIFRX, SAI-S/PDIF-TX, USB-Device-Audio/Feedback, SRC, Mixer/EQ und
-vollständige DMA-/Cache-Behandlung müssen noch implementiert und getestet werden.
-ESP32-S3 ist nur WiFi-Kandidat; A2DP-Sink/-Source benötigen Classic-BT-Hardware.
-
-**Clock-Blocker:** Der bei der Architekturprüfung vorgefundene PLL1-Entwurf in
-`src/board_clock.c` nutzt HSI 64 MHz mit M=4, N=100 und P=2. Das ergibt rechnerisch
-800 MHz statt 400 MHz; CPU-/Bus-/VCO-Grenzen sind vor weiterer Audiofreigabe zu
-korrigieren und zu verifizieren. Es erfolgte in dieser Dokumentationsänderung
-keine Firmwareänderung und kein Flashen. Ein erfolgreicher Build wäre hierfür
-kein Hardware-Nachweis. Siehe [Clock-Warnhinweis](docs/clock-verification.md).
-
-Details: [Architektur](../docs/architecture.md),
-[Signalpfad](../docs/hardware/signal-path.md),
-[Controller-Kapazitätsprüfung](../docs/hardware/controller-capacity.md).
-
-## Boards & Environments
-
-| Environment | Board | MCU | Zweck |
-|-------------|-------|-----|-------|
-| `nucleo-h753zi` (Default) | ST NUCLEO-H753ZI | STM32H753 | **Aktuelles Dev-Board** (vorhanden) |
-| `nucleo-h753zi-debug` | ST NUCLEO-H753ZI | STM32H753 | Debug-Build (ST-Link/OpenOCD) |
-
-> **Hinweis:** Die Firmware-Quellen (`src/`) sind H7-familien-agnostisch.
-> `main.h` wählt je nach definiertem STM32-Teil (`STM32H7xx`) die passenden
-> CMSIS-/HAL-Header. H753 und H743 teilen sich die STM32H7xx-HAL/CMSIS-Familie
-> (identische HAL-Header, Cortex-M7); nur das Teil-Makro (`STM32H753xx` vs.
-> `STM32H743xx`), die Startup-Vektortabelle und das Linkerskript unterscheiden
-> sich. So bauen dieselben App-Quellen später auch für das H743-Ziel-Board.
-
-## Voraussetzungen und Build
-
-Extern erforderlich: Python und PlatformIO Core. PlatformIO installiert die in
-`platformio.ini` festgelegte ST-STM32-Plattform 20.0.0, die ARM-GCC-Toolchain
-7.2.1 (Paket 1.70201.0) und seine Build-Werkzeuge. Für deren Erstinstallation
-ist Internetzugriff erforderlich; die Compiler-/C-Laufzeitbibliotheken werden
-nicht als Projektquellen eingecheckt. Getestet unter Windows.
-
-Das VS Code-Projekt ist im Repository-Root `rhythm/` geöffnet; PlatformIO
-verwendet `rhythm/firmware/` als Projekt- und Quellverzeichnis:
-
-```text
-platformio.projectDir = ${workspaceFolder}/firmware
+## Build
 ```
-
-Build-Befehle laufen deshalb weiterhin aus `rhythm/firmware/`:
-
-```text
+cd firmware
 pio run -e nucleo-h753zi
-pio run -e nucleo-h753zi-debug
+```
+Ergebnis: `firmware/.pio/build/nucleo-h753zi/firmware.bin` (26.9 KB)
+
+### Flashen
+```
+pio run -e nucleo-h753zi -t upload
+```
+Oder manuell mit OpenOCD / ST-Link:
+```
+openocd -f interface/stlink.cfg -f target/stm32h7x.cfg -c "program firmware/.pio/build/nucleo-h753zi/firmware.bin verify reset exit"
 ```
 
-Ein sauberer Neubau:
+## Architektur
 
-```text
-pio run -t clean -e nucleo-h753zi -e nucleo-h753zi-debug
-pio run -e nucleo-h753zi -e nucleo-h753zi-debug
+```
+PC / Host
+│
+│ USB 2.0 High Speed / UAC2
+▼
+USB3300 / ULPI PHY
+│
+▼
+STM32H753ZI
+│
+├── TinyUSB UAC2 (Rhport 1 = OTG_HS, USB1_OTG_HS @ 0x40040000)
+│   ├── EP0 (Control)
+│   ├── EP1 OUT (ISO, 56 B, async, 48 kHz/2ch/4B)
+│   └── EP81 IN (ISO feedback, 4 B, interval 4 = 16 ms)
+│
+├── USB RX FIFO (TinyUSB intern, 32 × 56 B = 1792 B, in AXI-SRAM)
+│
+├── audio_buffer (App-Ringbuffer, AXI-SRAM, 64-B-allo-Cache-Line)
+│   ├── Push: usb_audio_task() (Main-Loop, 1 ms)
+│   ├── Pull: (Phase 3) SAI/DMA
+│   └── Overrun/Underrun-Counter (ISR-safe)
+│
+├── (Phase 3) SAI/TDM → DMA → DAC
+└── (Phase 5) ADC → DMA → Ringbuffer → USB IN
 ```
 
-ELF/BIN entstehen unter `rhythm/firmware/.pio/build/<environment>/`.
-`.pio/` wird nicht versioniert und kann nach dem Build gelöscht werden.
-
-## Inhalt
-
-- `src/`: Anwendung und Boardinitialisierung (bsp.c/bsp.h, main.c/main.h).
-  Blaue LED, HAL_Init und SysTick_Handler für die HAL-Zeitbasis. Die Pin-Map
-  in `bsp.h` ist vorläufig und muss mit dem NUCLEO-H753ZI-Pinout abgeglichen
-  werden.
-- `vendor_h753/`: CMSIS-Core, CMSIS-Device (H753), HAL (nur aktivierte Module),
-  Startup (`startup_stm32h753xx.s`) und Linkerskript (`STM32H753ZITX_FLASH.ld`)
-  für das aktuelle Dev-Board.
-- `tools/build_flags_h753.py`: setzt Hard-Float-ABI (fpv5-d16) und
-  Newlib-Nano/Nosys auch für den Linker. Normales lokales
-  PlatformIO-Extra-Skript, kein Framework-Patch.
-
-Die Vendor-Bausteine stammen aus dem offiziellen STM32CubeH7-Paket
-(`framework-stm32cubeh7`). Unreferenzierte Module wurden weggelassen; bei neuen
-Targets oder aktivierten HAL-Modulen müssen deren Quellen/Header bewusst
-ergänzt werden. Die aktivierten HAL-Module (DMA, EXTI, FLASH, GPIO, I2C, I2S,
-PWR, RCC, SPI, TIM, UART, CORTEX) bleiben unverändert.
-
-## Flashen und Debuggen (optional, verändert den Boardzustand)
-
-ST-Link und separat installiertes OpenOCD werden nur für Hardwarezugriff
-benötigt, nicht zum Kompilieren. Nach einem erfolgreichen Debug-Build
-(aktuelles H753-Board):
-
-```text
-openocd -f interface/stlink.cfg -f target/stm32h7x.cfg -c "gdb port disabled" -c "tcl port disabled" -c "telnet port disabled" -c "program .pio/build/nucleo-h753zi-debug/firmware.elf verify reset exit"
+### Dateistruktur
+```
+firmware/
+├── platformio.ini              # Build-Konfiguration
+├── tools/build_flags_h753.py   # Linker-ABI (FPv5-D16)
+├── src/
+│   ├── main.c                  # Main-Loop: tud_task + usb_audio_task + Debug
+│   ├── main.h                  # HAL-Entry-Point
+│   ├── board_clock.c           # 400 MHz (VOS1, HSI-PLL1) + HSI48 (USB)
+│   ├── board_clock.h
+│   ├── bsp.c                   # GPIO (LED, ULPI), UART, Delay
+│   ├── bsp.h
+│   ├── tusb_config.h           # TinyUSB-Konfiguration (OTG_HS Rhport1, UAC2)
+│   ├── audio_buffer.c          # App-Ringbuffer (AXI-SRAM, 64-B-allo)
+│   ├── audio_buffer.h
+│   ├── audio_config.h          # Zentrale Audio-Konfiguration
+│   ├── periodic.h              # Zeitbasierter Tick (LED)
+│   └── usb/
+│       ├── usb_audio.c         # UAC2-Callbacks + RX-Pump
+│       ├── usb_audio.h
+│       ├── usbd_desc.c         # UAC2-Descriptors (IAD, AC, CS-AC, AS)
+│       └── usbd_desc.h
+├── tools/
+│   └── ST32CubeMX_project_for generation/   # CubeMX-Referenzprojekt (Pin/Interrupt-Generierung)
+│       # ⚠ NICHT Teil des PlatformIO-Builds – nur als Referenz für die
+│       #    Pin-/Interrupt-Konfiguration. Siehe build_src_filter in platformio.ini.
+├── vendor/
+│   ├── tusb/                   # TinyUSB (hathach/tinyusb, kopiert)
+│   │   └── src/
+│   │       ├── tusb.c          # Core
+│   │       ├── tusb_fifo.c
+│   │       ├── device/usbd.c
+│   │       ├── class/audio/audio_device.c
+│   │       └── portable/synopsys/dwc2/
+│   │           ├── dcd_dwc2.c  # DWC2 Driver (STM32H7 ULPI)
+│   │           └── dwc2_common.c
+│   └── h753/                   # CMSIS + HAL (lokal)
+│       ├── cmsis_core/
+│       ├── cmsis_device/Include/stm32h753xx.h
+│       ├── hal/
+│       └── linker/STM32H753ZITX_FLASH.ld
+└── docs/
+    └── clock-verification.md   # Clock-Tree-Dokumentation
 ```
 
-Das ersetzt die Firmware. Nur mit passender Hardware und Freigabe ausführen.
-Für Debugging muss das geladene ELF genau zur geflashten Firmware passen.
-Beim alten ARM-GDB 8.0.50 funktioniert `target remote`; `extended-remote` kann
-beim Trennen abstürzen. Nach dem Debuggen CPU-Laufzustand prüfen.
+## Clock-Tree
+```
+HSI (64 MHz, ±1 %) ──→ PLL1 (M=4, N=100, P=2) ──→ 400 MHz (SYSCLK)
+                                              └── Q=4 ──→ 400 MHz (ungenutzt)
 
-> **Wichtig (H7):** Der STM32H7 hat mehrere RAM-Bereiche (DTCM, AXI-SRAM,
-> D2/D3). Das Linkerskript legt Code/Daten in `RAM_D1` (AXI-SRAM) an. Falsch
-> adressierte RAM-Sektionen können zur Laufzeit stillschweigend fehlschlagen.
+HSI48 (48 MHz, dedizierter Oszillator, ±0.25 %) ──→ USB OTG HS (48 MHz)
+    USBSEL in RCC->D2CCIP2R = HSI48 (beide Bits gesetzt)
 
-UART-Ausgabe über ST-Link COM ist nicht durch den LED-Test verifiziert.
+APB1: 200 MHz, APB2: 400 MHz, APB3: 400 MHz, APB4: 200 MHz
+```
+Dokumentation: `docs/clock-verification.md`
 
-## Drittanbieterquellen
+## USB / PHY-Pins
+STM32H753ZI: USB1_OTG_HS (Rhport 1) in **Full-Speed-Modus** (interne FS-PHY).
+Kein externes ULPI PHY auf dem Dev-Board.
 
-Die Vendor-Dateien stammen aus dem zuvor importierten PlatformIO-Paket
-`framework-stm32cubeh7`. Copyright- und Lizenzhinweise in den Dateien bleiben
-unverändert. Die CMSIS-Core-Lizenz liegt in `vendor_h753/cmsis_core/LICENSE.txt`.
+| Signal   | Pin  | AF    | Richtung |
+|----------|------|-------|----------|
+| USB_DM   | PA11 | AF10  | bidirektional (FS-PHY intern) |
+| USB_DP   | PA12 | AF10  | bidirektional (FS-PHY intern) |
+| VBUS     | PA9  | –     | Input (VBUS-Erkennung) |
+| ID       | PA10 | –     | Input (OTG-Rolle, hier Device) |
+
+### Voraussetzungen für funktionierenden USB (wichtig!)
+1. **OTG_HS-Peripherie-Clock** aktiviert: `__HAL_RCC_USB1_OTG_HS_CLK_ENABLE()`
+   (AHB1ENR.USB1OTGHSEN). Ohne diese liefert das GSNPSID-Register 0 und
+   `tusb_init()` schlägt mit `ASSERT FAILED` in `dwc2_common.c` fehl.
+2. **IRQ-Handler** `OTG_HS_IRQHandler()` definiert, der `dcd_int_handler(1)`
+   aufruft. Ohne diesen bleibt der USB-Stack stumm (keine Enumeration).
+3. **USB-48-MHz-Quelle** (HSI48) konfiguriert in `board_clock.c`.
+
+**High Speed (480 Mbps)** erfordert ein externes ULPI PHY (z. B. USB3300) mit
+12+ Leitungen (D0–D7, STP, DIR, NXT, CLK). Das kommt in Phase 2+ mit
+Hardware-Änderung.
+
+## UAC2-Descriptor-Topologie
+```
+IAD (8 B)
+├── AC Interface (itf 0)
+│   ├── CS-AC Header (9 B): bcdADC 2.00, category=Desktop Speaker
+│   ├── Clock Source 0x04 (8 B): internal, fixed 48 kHz, freq read-only
+│   ├── Input Terminal 0x01 (17 B): USB streaming, 2ch
+│   ├── Feature Unit 0x02 (18 B): 3ch (master+L+R), mute+volume RW
+│   └── Output Terminal 0x03 (12 B): speaker → FU 0x02
+└── AS Interface (itf 1, alt 0/1)
+    ├── alt 0: 0-bandwidth
+    └── alt 1: streaming
+        ├── CS-AS (16 B): Type I, 2ch physical
+        ├── Type I Format (6 B): subslot 4 B, 24-bit resolution
+        ├── ISO OUT EP 0x01 (7 B): async, 56 B, interval 1
+        ├── CS-AS ISO EP (8 B): non-max-packets-ok
+        └── ISO Feedback EP 0x81 (7 B): 4 B, interval 4 (16 ms HS)
+```
+Gesamte Config-Descriptor-Länge: 154 B (9 Config + 145 Func1)
+
+## Feedback
+Asynchrones USB-Audio mit FIFO-count-Methode:
+- `tud_audio_feedback_params_cb()`: method = FIFO_COUNT, sample_freq = 48000
+- TinyUSB regelt den FIFO-Füllstand automatisch und leitet den Feedback-Wert
+  vom EP81 aus
+- Kein SOF-ISR nötig
+
+## Buffer-Struktur
+1. **TinyUSB RX FIFO** (intern): 32 × 56 B = 1792 B, in AXI-SRAM (D1).
+   - DMA-Puffer für USB OTG HS (TinyUSB verwaltet die D-Cache-Coherenz)
+2. **App-Ringbuffer** (`audio_buffer.c`): 4 KB, in AXI-SRAM (D1), 64-B-allo-Cache-Line
+   - Push: `usb_audio_task()` (Main-Loop, 1 ms)
+   - Overrun/Underrun-Counter (ISR-safe)
+   - Phase 3: SAI/DMA liest aus diesem Buffer
+
+## STM32H7 DMA / Cache
+- **USB OTG HS DMA**: kann NICHT auf DTCM (0x20000000) zugreifen
+- **USB-Puffer**: AXI-SRAM (0x24000000, D1) oder D2-RAM (0x30000000)
+- **TinyUSB D-Cache**: aktiviert (32-B-Line), verwaltet Coherenz intern
+  (`CFG_TUD_MEM_DCACHE_ENABLE=1`)
+- **App-Ringbuffer**: AXI-SRAM (D1), 64-B-allo-Cache-Line
+  - Phase 1: CPU-only (kein Coherency-Problem)
+  - Phase 3 (SAI/DMA): D-Cache-Maintenance erforderlich
+
+## Debug
+- UART (USART2, 115200): Status alle 2 s
+  ```
+  [UAC2] configured | 48000 Hz | rx=1234 pkt / 39488 B | overrun=0 underrun=0 |  STREAMING
+  ```
+- LED (PE1): toggle alle 10 s
+- Keine printf im Isochronous-ISR-Pfad
+
+## Testanleitung
+
+### Windows
+1. STM32 per USB an den PC anschließen
+2. Geräte-Manager: "USB-Audio-Gerät" / "STM32H753 UAC2 Audio" sollte erscheinen
+3. Audio-Eingabe/Ausgabe: Stereo, 48 kHz, 24-bit
+4. Audio abspielen und UART-Log beobachten (rx-Packet-Counter steigt)
+
+### Linux
+1. `lsusb` → "STM32H753 UAC2 Audio"
+2. `aplay -l` → Gerät sollte gelistet sein
+3. `aplay -D plughw:1,0 /usr/share/sounds/alsa/Front_Center.wav`
+4. UART-Log: `sudo stty -F /dev/ttyACM0 115200 && cat /dev/ttyACM0`
+
+## Erwartetes Ergebnis (Phase 1)
+1. ✅ Projekt baut fehlerfrei
+2. ✅ STM32 enumeriert als UAC2-Gerät (2ch, 48 kHz, 24-bit)
+3. ✅ Audiodaten treffen kontinuierlich ein
+4. ✅ Daten werden in Ringbuffer geschrieben
+5. ✅ Overrun/Underrun-Counter über UART sichtbar
+6. ✅ USB-Verbindung stabil bei längerem Streaming
+
+## Nächste Schritte (Phase 2-6)
+- Phase 2: Audio-Pipeline vorbereiten (Module: usb_audio, audio_buffer, audio_output, audio_input, audio_clock)
+- Phase 3: SAI-Ausgabe (USB → Ringbuffer → SAI → DMA → DAC)
+- Phase 4: Sampleraten 48/96/192 kHz
+- Phase 5: 4-Kanal ADC
+- Phase 6: Full Duplex (4 IN + 2 OUT)

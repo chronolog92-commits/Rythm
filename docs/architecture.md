@@ -1,6 +1,6 @@
 # RHYTHM – Systemarchitektur
 
-> Stand: 2026-09-12 · Zielarchitektur für **7 Stereo-Eingänge und 5 unabhängig routbare Stereo-Ausgänge**.
+> Stand: 2026-09-13 · Zielarchitektur für **7 Stereo-Eingänge und 5 unabhängig routbare Stereo-Ausgänge**.
 > Dokumentierter Entwurf, keine vollständige Hardware-/Firmwarefreigabe. Die alte „3× I²S genügt“-Topologie wird ersetzt.
 
 ## 1. Entscheidungen und Systemrollen
@@ -120,6 +120,8 @@ Bewertung: H753/H743 sind grundsätzlich plausible Kandidaten für 48-kHz-7×5-A
 Zusätzlicher aktueller Blocker: Der vorgefundene `firmware/src/board_clock.c`-Entwurf enthält PLL1 M=4, N=100, P=2 bei HSI=64 MHz; das ergibt rechnerisch 800 MHz, nicht 400 MHz. Die Firmware bleibt bei dieser Dokuänderung unangetastet. Details und Abgrenzung im Kapazitätsbericht.
 
 ## 8. Bedienung / Firmware-Schichten
+
+**Initialer Softwareentwurf:** [Softwarearchitektur v0.1](firmware/software-architecture.md) mit Modulverantwortlichkeiten, Audio-/Control-Trennung, Clock-Anpassung, DMA-/Buffer-Ownership, Fehlerbehandlung und Teststrategie. Drei editierbare Excalidraw-Grafiken samt SVG-Ansichten erläutern Schichten, Audiodatenfluss und Laufzeit. Softwarevorschläge (insbesondere EQ je Ausgang und UI-Zuordnung) sind dort ausdrücklich als noch zu bestätigende Entscheidungen gekennzeichnet; keine Firmwareimplementierung durch diese Dokumentation.
 
 - Acht Encoder (7 EQ + Volume), sieben Quelltasten, fünf Output-Tasten plus LEDs.
 - GPIO-Scanning/Entprellung statt einer unvalidierten Zuordnung jedes Encoders zu einem eigenen Timer; TIM6/7 sind keine Quadratur-Encoder-Timer.

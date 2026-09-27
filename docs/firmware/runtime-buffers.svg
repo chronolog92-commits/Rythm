@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080">
+<defs>
+<marker id="audio" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#69dbb0"/></marker>
+<marker id="control" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#74b9ff"/></marker>
+<marker id="open" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#ffc078"/></marker>
+<marker id="neutral" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#c4b5fd"/></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="1080" rx="10" fill="#101722" stroke="transparent" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="32" text-anchor="start">
+<tspan x="40" y="57.0">RYTHM / LAUFZEIT + BUFFER-OWNERSHIP</tspan>
+</text>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="18" text-anchor="start">
+<tspan x="40" y="93.0">Vorschlag: 48 Frames / Block = 1 ms | Audio-Worker vor Control | RTOS-neutrale Modulverträge</tspan>
+</text>
+<rect x="40" y="150" width="340" height="140" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="210.0" y="202.5">LOKALES AUDIO-DMA</tspan>
+<tspan x="210.0" y="227.5">RX fertig / TX-Hälfte frei</tspan>
+<tspan x="210.0" y="252.5">Unabhängig von USB-SOF</tspan>
+</text>
+<rect x="470" y="150" width="340" height="140" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="640.0" y="202.5">KURZER ISR</tspan>
+<tspan x="640.0" y="227.5">Quittieren, Sequenz, Timestamp</tspan>
+<tspan x="640.0" y="252.5">Descriptor veröffentlichen</tspan>
+</text>
+<rect x="900" y="150" width="650" height="140" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="1225.0" y="202.5">FESTE SPSC-QUEUES / EPOCH + SEQUENZ</tspan>
+<tspan x="1225.0" y="227.5">Je Producer/Consumer ein Kanal</tspan>
+<tspan x="1225.0" y="252.5">Overflow sichtbar, keine verlorenen Bool-Ereignisse</tspan>
+</text>
+<polyline points="380,220.0 470,220.0" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<polyline points="810,220.0 900,220.0" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<rect x="40" y="405" width="340" height="160" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="210.0" y="455.0">RX-OWNERSHIP</tspan>
+<tspan x="210.0" y="480.0">DMA_OWNED -&gt; RX_READY</tspan>
+<tspan x="210.0" y="505.0">CPU_READING -&gt; RELEASED</tspan>
+<tspan x="210.0" y="530.0">Vor DMA-Rückkehr fertig!</tspan>
+</text>
+<rect x="470" y="405" width="640" height="160" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="790.0" y="455.0">PRIORISIERTER AUDIO-WORKER</tspan>
+<tspan x="790.0" y="480.0">Snapshot -&gt; Quellen/SRC -&gt; Matrix/EQ -&gt; Packing</tspan>
+<tspan x="790.0" y="505.0">Kein Warten, printf, Heap oder Control-I2C</tspan>
+<tspan x="790.0" y="530.0">RX lesen / nur freie TX-Hälfte schreiben</tspan>
+</text>
+<rect x="1200" y="405" width="350" height="160" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="1375.0" y="455.0">TX-OWNERSHIP</tspan>
+<tspan x="1375.0" y="480.0">DMA_PLAYING -&gt; CPU_WRITABLE</tspan>
+<tspan x="1375.0" y="505.0">TX_READY -&gt; DMA_PLAYING</tspan>
+<tspan x="1375.0" y="530.0">Vor Wiederverwendung fertig!</tspan>
+</text>
+<polyline points="380,485.0 470,485.0" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<polyline points="1110,485.0 1200,485.0" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<polyline points="1225.0,290 790.0,405" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<rect x="40" y="705" width="540" height="160" rx="10" fill="#20283b" stroke="#74b9ff" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="310.0" y="755.0">CONTROL / INAKTIVER SNAPSHOT</tspan>
+<tspan x="310.0" y="780.0">Prüfen, Koeffizienten vorbereiten</tspan>
+<tspan x="310.0" y="805.0">Publish: Generation oder BUSY</tspan>
+<tspan x="310.0" y="830.0">Erst nach ACK darf Slot wiederbenutzt werden</tspan>
+</text>
+<rect x="700" y="705" width="410" height="160" rx="10" fill="#20283b" stroke="#74b9ff" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="905.0" y="755.0">ÜBERNAHME AN BLOCKGRENZE</tspan>
+<tspan x="905.0" y="780.0">Nur vollständige Generation</tspan>
+<tspan x="905.0" y="805.0">Audio besitzt Filterzustände</tspan>
+<tspan x="905.0" y="830.0">EQ-Übergangsbudget beachten</tspan>
+</text>
+<rect x="1200" y="705" width="350" height="160" rx="10" fill="#20283b" stroke="#ffc078" stroke-width="2" stroke-dasharray="8 6"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="1375.0" y="755.0">DEADLINE-MISS</tspan>
+<tspan x="1375.0" y="780.0">Nicht aktive Hälfte ändern</tspan>
+<tspan x="1375.0" y="805.0">Mute / Stop / neu vorfüllen</tspan>
+<tspan x="1375.0" y="830.0">Zähler + sichere Recovery</tspan>
+</text>
+<polyline points="580,785.0 700,785.0" fill="none" stroke="#74b9ff" stroke-width="2" marker-end="url(#control)"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="start">
+<tspan x="40" y="955.0">Zirkuläres DMA wartet NICHT auf Software-Flags. Buffer-Zustände sind Fristen, keine Hardware-Locks.</tspan>
+<tspan x="40" y="980.0">IRQ + Blockierung + SRC/DSP + Packing/Cache + Unterbrechungen müssen unter der Blockdeadline bleiben.</tspan>
+<tspan x="40" y="1005.0">Bei Start: TX mit Stille vorfüllen. Bei Fehler: keine zugesagte Stille ohne sicheren Treiber-/Mute-Pfad.</tspan>
+</text>
+<polyline points="905,705 905,565" fill="none" stroke="#74b9ff" stroke-width="2" marker-end="url(#control)"/>
+<polyline points="1375,565 1375,705" fill="none" stroke="#ffc078" stroke-width="2" marker-end="url(#open)"/>
+</svg>

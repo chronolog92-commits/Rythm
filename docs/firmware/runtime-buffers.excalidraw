@@ -1,0 +1,1297 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "hermes-agent",
+  "elements": [
+    {
+      "type": "rectangle",
+      "id": "canvas",
+      "x": 0,
+      "y": 0,
+      "width": 1600,
+      "height": 1080,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#101722",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 100,
+      "version": 1,
+      "versionNonce": 900,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "x": 40,
+      "y": 25,
+      "width": 1520,
+      "height": 40.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 101,
+      "version": 1,
+      "versionNonce": 901,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "RYTHM / LAUFZEIT + BUFFER-OWNERSHIP",
+      "originalText": "RYTHM / LAUFZEIT + BUFFER-OWNERSHIP",
+      "fontSize": 32,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "text",
+      "id": "sub",
+      "x": 40,
+      "y": 75,
+      "width": 1520,
+      "height": 22.5,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 102,
+      "version": 1,
+      "versionNonce": 902,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "Vorschlag: 48 Frames / Block = 1 ms | Audio-Worker vor Control | RTOS-neutrale Modulverträge",
+      "originalText": "Vorschlag: 48 Frames / Block = 1 ms | Audio-Worker vor Control | RTOS-neutrale Modulverträge",
+      "fontSize": 18,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "dma",
+      "x": 40,
+      "y": 150,
+      "width": 340,
+      "height": 140,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 103,
+      "version": 1,
+      "versionNonce": 903,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_dma",
+          "type": "text"
+        },
+        {
+          "id": "dma_isr",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_dma",
+      "x": 55,
+      "y": 182.5,
+      "width": 310,
+      "height": 75.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 104,
+      "version": 1,
+      "versionNonce": 904,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "LOKALES AUDIO-DMA\nRX fertig / TX-Hälfte frei\nUnabhängig von USB-SOF",
+      "originalText": "LOKALES AUDIO-DMA\nRX fertig / TX-Hälfte frei\nUnabhängig von USB-SOF",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "dma",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "isr",
+      "x": 470,
+      "y": 150,
+      "width": 340,
+      "height": 140,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 105,
+      "version": 1,
+      "versionNonce": 905,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_isr",
+          "type": "text"
+        },
+        {
+          "id": "dma_isr",
+          "type": "arrow"
+        },
+        {
+          "id": "isr_queue",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_isr",
+      "x": 485,
+      "y": 182.5,
+      "width": 310,
+      "height": 75.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 106,
+      "version": 1,
+      "versionNonce": 906,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "KURZER ISR\nQuittieren, Sequenz, Timestamp\nDescriptor veröffentlichen",
+      "originalText": "KURZER ISR\nQuittieren, Sequenz, Timestamp\nDescriptor veröffentlichen",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "isr",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "queue",
+      "x": 900,
+      "y": 150,
+      "width": 650,
+      "height": 140,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 107,
+      "version": 1,
+      "versionNonce": 907,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_queue",
+          "type": "text"
+        },
+        {
+          "id": "isr_queue",
+          "type": "arrow"
+        },
+        {
+          "id": "queue_work",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_queue",
+      "x": 915,
+      "y": 182.5,
+      "width": 620,
+      "height": 75.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 108,
+      "version": 1,
+      "versionNonce": 908,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "FESTE SPSC-QUEUES / EPOCH + SEQUENZ\nJe Producer/Consumer ein Kanal\nOverflow sichtbar, keine verlorenen Bool-Ereignisse",
+      "originalText": "FESTE SPSC-QUEUES / EPOCH + SEQUENZ\nJe Producer/Consumer ein Kanal\nOverflow sichtbar, keine verlorenen Bool-Ereignisse",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "queue",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "arrow",
+      "id": "dma_isr",
+      "x": 380,
+      "y": 220.0,
+      "width": 90,
+      "height": 0.0,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 109,
+      "version": 1,
+      "versionNonce": 909,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          90,
+          0.0
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "dma",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "isr",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "isr_queue",
+      "x": 810,
+      "y": 220.0,
+      "width": 90,
+      "height": 0.0,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 110,
+      "version": 1,
+      "versionNonce": 910,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          90,
+          0.0
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "isr",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "queue",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "rx",
+      "x": 40,
+      "y": 405,
+      "width": 340,
+      "height": 160,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 111,
+      "version": 1,
+      "versionNonce": 911,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_rx",
+          "type": "text"
+        },
+        {
+          "id": "rx_work",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_rx",
+      "x": 55,
+      "y": 435.0,
+      "width": 310,
+      "height": 100.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 112,
+      "version": 1,
+      "versionNonce": 912,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "RX-OWNERSHIP\nDMA_OWNED -> RX_READY\nCPU_READING -> RELEASED\nVor DMA-Rückkehr fertig!",
+      "originalText": "RX-OWNERSHIP\nDMA_OWNED -> RX_READY\nCPU_READING -> RELEASED\nVor DMA-Rückkehr fertig!",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "rx",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "worker",
+      "x": 470,
+      "y": 405,
+      "width": 640,
+      "height": 160,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 113,
+      "version": 1,
+      "versionNonce": 913,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_worker",
+          "type": "text"
+        },
+        {
+          "id": "rx_work",
+          "type": "arrow"
+        },
+        {
+          "id": "work_tx",
+          "type": "arrow"
+        },
+        {
+          "id": "queue_work",
+          "type": "arrow"
+        },
+        {
+          "id": "activate",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_worker",
+      "x": 485,
+      "y": 435.0,
+      "width": 610,
+      "height": 100.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 114,
+      "version": 1,
+      "versionNonce": 914,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "PRIORISIERTER AUDIO-WORKER\nSnapshot -> Quellen/SRC -> Matrix/EQ -> Packing\nKein Warten, printf, Heap oder Control-I2C\nRX lesen / nur freie TX-Hälfte schreiben",
+      "originalText": "PRIORISIERTER AUDIO-WORKER\nSnapshot -> Quellen/SRC -> Matrix/EQ -> Packing\nKein Warten, printf, Heap oder Control-I2C\nRX lesen / nur freie TX-Hälfte schreiben",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "worker",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "tx",
+      "x": 1200,
+      "y": 405,
+      "width": 350,
+      "height": 160,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 115,
+      "version": 1,
+      "versionNonce": 915,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_tx",
+          "type": "text"
+        },
+        {
+          "id": "work_tx",
+          "type": "arrow"
+        },
+        {
+          "id": "fault",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_tx",
+      "x": 1215,
+      "y": 435.0,
+      "width": 320,
+      "height": 100.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 116,
+      "version": 1,
+      "versionNonce": 916,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "TX-OWNERSHIP\nDMA_PLAYING -> CPU_WRITABLE\nTX_READY -> DMA_PLAYING\nVor Wiederverwendung fertig!",
+      "originalText": "TX-OWNERSHIP\nDMA_PLAYING -> CPU_WRITABLE\nTX_READY -> DMA_PLAYING\nVor Wiederverwendung fertig!",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "tx",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "arrow",
+      "id": "rx_work",
+      "x": 380,
+      "y": 485.0,
+      "width": 90,
+      "height": 0.0,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 117,
+      "version": 1,
+      "versionNonce": 917,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          90,
+          0.0
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "rx",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "worker",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "work_tx",
+      "x": 1110,
+      "y": 485.0,
+      "width": 90,
+      "height": 0.0,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 118,
+      "version": 1,
+      "versionNonce": 918,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          90,
+          0.0
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "worker",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "tx",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "queue_work",
+      "x": 1225.0,
+      "y": 290,
+      "width": 435.0,
+      "height": 115,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 119,
+      "version": 1,
+      "versionNonce": 919,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          -435.0,
+          115
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "queue",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "worker",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "config",
+      "x": 40,
+      "y": 705,
+      "width": 540,
+      "height": 160,
+      "angle": 0,
+      "strokeColor": "#74b9ff",
+      "backgroundColor": "#20283b",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 120,
+      "version": 1,
+      "versionNonce": 920,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_config",
+          "type": "text"
+        },
+        {
+          "id": "publish",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_config",
+      "x": 55,
+      "y": 735.0,
+      "width": 510,
+      "height": 100.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 121,
+      "version": 1,
+      "versionNonce": 921,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "CONTROL / INAKTIVER SNAPSHOT\nPrüfen, Koeffizienten vorbereiten\nPublish: Generation oder BUSY\nErst nach ACK darf Slot wiederbenutzt werden",
+      "originalText": "CONTROL / INAKTIVER SNAPSHOT\nPrüfen, Koeffizienten vorbereiten\nPublish: Generation oder BUSY\nErst nach ACK darf Slot wiederbenutzt werden",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "config",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "handoff",
+      "x": 700,
+      "y": 705,
+      "width": 410,
+      "height": 160,
+      "angle": 0,
+      "strokeColor": "#74b9ff",
+      "backgroundColor": "#20283b",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 122,
+      "version": 1,
+      "versionNonce": 922,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_handoff",
+          "type": "text"
+        },
+        {
+          "id": "publish",
+          "type": "arrow"
+        },
+        {
+          "id": "activate",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_handoff",
+      "x": 715,
+      "y": 735.0,
+      "width": 380,
+      "height": 100.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 123,
+      "version": 1,
+      "versionNonce": 923,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "ÜBERNAHME AN BLOCKGRENZE\nNur vollständige Generation\nAudio besitzt Filterzustände\nEQ-Übergangsbudget beachten",
+      "originalText": "ÜBERNAHME AN BLOCKGRENZE\nNur vollständige Generation\nAudio besitzt Filterzustände\nEQ-Übergangsbudget beachten",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "handoff",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "failure",
+      "x": 1200,
+      "y": 705,
+      "width": 350,
+      "height": 160,
+      "angle": 0,
+      "strokeColor": "#ffc078",
+      "backgroundColor": "#20283b",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 124,
+      "version": 1,
+      "versionNonce": 924,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_failure",
+          "type": "text"
+        },
+        {
+          "id": "fault",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_failure",
+      "x": 1215,
+      "y": 735.0,
+      "width": 320,
+      "height": 100.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 125,
+      "version": 1,
+      "versionNonce": 925,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "DEADLINE-MISS\nNicht aktive Hälfte ändern\nMute / Stop / neu vorfüllen\nZähler + sichere Recovery",
+      "originalText": "DEADLINE-MISS\nNicht aktive Hälfte ändern\nMute / Stop / neu vorfüllen\nZähler + sichere Recovery",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "failure",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "arrow",
+      "id": "publish",
+      "x": 580,
+      "y": 785.0,
+      "width": 120,
+      "height": 0.0,
+      "angle": 0,
+      "strokeColor": "#74b9ff",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 126,
+      "version": 1,
+      "versionNonce": 926,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          120,
+          0.0
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "config",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "handoff",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "text",
+      "id": "deadline",
+      "x": 40,
+      "y": 935,
+      "width": 1500,
+      "height": 75.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 127,
+      "version": 1,
+      "versionNonce": 927,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "Zirkuläres DMA wartet NICHT auf Software-Flags. Buffer-Zustände sind Fristen, keine Hardware-Locks.\nIRQ + Blockierung + SRC/DSP + Packing/Cache + Unterbrechungen müssen unter der Blockdeadline bleiben.\nBei Start: TX mit Stille vorfüllen. Bei Fehler: keine zugesagte Stille ohne sicheren Treiber-/Mute-Pfad.",
+      "originalText": "Zirkuläres DMA wartet NICHT auf Software-Flags. Buffer-Zustände sind Fristen, keine Hardware-Locks.\nIRQ + Blockierung + SRC/DSP + Packing/Cache + Unterbrechungen müssen unter der Blockdeadline bleiben.\nBei Start: TX mit Stille vorfüllen. Bei Fehler: keine zugesagte Stille ohne sicheren Treiber-/Mute-Pfad.",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "arrow",
+      "id": "activate",
+      "x": 905,
+      "y": 705,
+      "width": 0,
+      "height": 140,
+      "angle": 0,
+      "strokeColor": "#74b9ff",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 928,
+      "version": 1,
+      "versionNonce": 828,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          -140
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "handoff",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      },
+      "endBinding": {
+        "elementId": "worker",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0.6796875,
+          1
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "fault",
+      "x": 1375,
+      "y": 565,
+      "width": 0,
+      "height": 140,
+      "angle": 0,
+      "strokeColor": "#ffc078",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 929,
+      "version": 1,
+      "versionNonce": 829,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          140
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "tx",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "failure",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      }
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#101722",
+    "gridSize": null
+  },
+  "files": {}
+}

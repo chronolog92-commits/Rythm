@@ -1,0 +1,1913 @@
+{
+  "type": "excalidraw",
+  "version": 2,
+  "source": "hermes-agent",
+  "elements": [
+    {
+      "type": "rectangle",
+      "id": "canvas",
+      "x": 0,
+      "y": 0,
+      "width": 1600,
+      "height": 1080,
+      "angle": 0,
+      "strokeColor": "transparent",
+      "backgroundColor": "#101722",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 100,
+      "version": 1,
+      "versionNonce": 900,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": true
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "x": 40,
+      "y": 25,
+      "width": 1520,
+      "height": 40.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 101,
+      "version": 1,
+      "versionNonce": 901,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "RYTHM / AUDIODATENFLUSS",
+      "originalText": "RYTHM / AUDIODATENFLUSS",
+      "fontSize": 32,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "text",
+      "id": "sub",
+      "x": 40,
+      "y": 75,
+      "width": 1520,
+      "height": 22.5,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 102,
+      "version": 1,
+      "versionNonce": 902,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "7 Stereoquellen -> 7 x 5 Matrix -> 5 unabhängige Stereoziele | lokale DSP-Domäne: 48 kHz, Float32",
+      "originalText": "7 Stereoquellen -> 7 x 5 Matrix -> 5 unabhängige Stereoziele | lokale DSP-Domäne: 48 kHz, Float32",
+      "fontSize": 18,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "analog",
+      "x": 40,
+      "y": 145,
+      "width": 355,
+      "height": 110,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 103,
+      "version": 1,
+      "versionNonce": 903,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_analog",
+          "type": "text"
+        },
+        {
+          "id": "in_analog",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_analog",
+      "x": 55,
+      "y": 175.0,
+      "width": 325,
+      "height": 50.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 104,
+      "version": 1,
+      "versionNonce": 904,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "ES9842PRO: Stereo 1 + 2\nES9822PRO: AUX",
+      "originalText": "ES9842PRO: Stereo 1 + 2\nES9822PRO: AUX",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "analog",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "analog_adapter",
+      "x": 455,
+      "y": 145,
+      "width": 445,
+      "height": 110,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 105,
+      "version": 1,
+      "versionNonce": 905,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_analog_adapter",
+          "type": "text"
+        },
+        {
+          "id": "in_analog",
+          "type": "arrow"
+        },
+        {
+          "id": "collect_analog",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_analog_adapter",
+      "x": 470,
+      "y": 175.0,
+      "width": 415,
+      "height": 50.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 106,
+      "version": 1,
+      "versionNonce": 906,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "TDM4-Demux / I2S\n3 lokale Stereoquellen",
+      "originalText": "TDM4-Demux / I2S\n3 lokale Stereoquellen",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "analog_adapter",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "arrow",
+      "id": "in_analog",
+      "x": 395,
+      "y": 200.0,
+      "width": 60,
+      "height": 0.0,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 107,
+      "version": 1,
+      "versionNonce": 907,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0.0
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "analog",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "analog_adapter",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "spdif",
+      "x": 40,
+      "y": 300,
+      "width": 355,
+      "height": 110,
+      "angle": 0,
+      "strokeColor": "#ffc078",
+      "backgroundColor": "#20283b",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 108,
+      "version": 1,
+      "versionNonce": 908,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_spdif",
+          "type": "text"
+        },
+        {
+          "id": "in_spdif",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_spdif",
+      "x": 55,
+      "y": 330.0,
+      "width": 325,
+      "height": 50.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 109,
+      "version": 1,
+      "versionNonce": 909,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "TOSLINK / SPDIFRX\nFremde Sample-Clock",
+      "originalText": "TOSLINK / SPDIFRX\nFremde Sample-Clock",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "spdif",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "spdif_adapter",
+      "x": 455,
+      "y": 300,
+      "width": 445,
+      "height": 110,
+      "angle": 0,
+      "strokeColor": "#ffc078",
+      "backgroundColor": "#20283b",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 110,
+      "version": 1,
+      "versionNonce": 910,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_spdif_adapter",
+          "type": "text"
+        },
+        {
+          "id": "in_spdif",
+          "type": "arrow"
+        },
+        {
+          "id": "collect_spdif",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_spdif_adapter",
+      "x": 470,
+      "y": 330.0,
+      "width": 415,
+      "height": 50.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 111,
+      "version": 1,
+      "versionNonce": 911,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "Lock + FIFO + adaptives SRC\n1 lokale Stereoquelle",
+      "originalText": "Lock + FIFO + adaptives SRC\n1 lokale Stereoquelle",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "spdif_adapter",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "arrow",
+      "id": "in_spdif",
+      "x": 395,
+      "y": 355.0,
+      "width": 60,
+      "height": 0.0,
+      "angle": 0,
+      "strokeColor": "#ffc078",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 112,
+      "version": 1,
+      "versionNonce": 912,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0.0
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "spdif",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "spdif_adapter",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "radio",
+      "x": 40,
+      "y": 455,
+      "width": 355,
+      "height": 110,
+      "angle": 0,
+      "strokeColor": "#ffc078",
+      "backgroundColor": "#20283b",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 113,
+      "version": 1,
+      "versionNonce": 913,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_radio",
+          "type": "text"
+        },
+        {
+          "id": "in_radio",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_radio",
+      "x": 55,
+      "y": 485.0,
+      "width": 325,
+      "height": 50.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 114,
+      "version": 1,
+      "versionNonce": 914,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "Classic-BT-Sink + WiFi\nGetrennte PCM-Datenleitungen",
+      "originalText": "Classic-BT-Sink + WiFi\nGetrennte PCM-Datenleitungen",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "radio",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "radio_adapter",
+      "x": 455,
+      "y": 455,
+      "width": 445,
+      "height": 110,
+      "angle": 0,
+      "strokeColor": "#ffc078",
+      "backgroundColor": "#20283b",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "dashed",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 115,
+      "version": 1,
+      "versionNonce": 915,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_radio_adapter",
+          "type": "text"
+        },
+        {
+          "id": "in_radio",
+          "type": "arrow"
+        },
+        {
+          "id": "collect_radio",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_radio_adapter",
+      "x": 470,
+      "y": 485.0,
+      "width": 415,
+      "height": 50.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 116,
+      "version": 1,
+      "versionNonce": 916,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "Frontend: Decode / Rate-Match\n2 lokale Stereoquellen",
+      "originalText": "Frontend: Decode / Rate-Match\n2 lokale Stereoquellen",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "radio_adapter",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "arrow",
+      "id": "in_radio",
+      "x": 395,
+      "y": 510.0,
+      "width": 60,
+      "height": 0.0,
+      "angle": 0,
+      "strokeColor": "#ffc078",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 117,
+      "version": 1,
+      "versionNonce": 917,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0.0
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "radio",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "radio_adapter",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "usb",
+      "x": 40,
+      "y": 610,
+      "width": 355,
+      "height": 110,
+      "angle": 0,
+      "strokeColor": "#74b9ff",
+      "backgroundColor": "#20283b",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 118,
+      "version": 1,
+      "versionNonce": 918,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_usb",
+          "type": "text"
+        },
+        {
+          "id": "in_usb",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_usb",
+      "x": 55,
+      "y": 640.0,
+      "width": 325,
+      "height": 50.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 119,
+      "version": 1,
+      "versionNonce": 919,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "PC / USB-Device OUT\nPakete != DSP-Blöcke",
+      "originalText": "PC / USB-Device OUT\nPakete != DSP-Blöcke",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "usb",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "usb_adapter",
+      "x": 455,
+      "y": 610,
+      "width": 445,
+      "height": 110,
+      "angle": 0,
+      "strokeColor": "#74b9ff",
+      "backgroundColor": "#20283b",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 120,
+      "version": 1,
+      "versionNonce": 920,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_usb_adapter",
+          "type": "text"
+        },
+        {
+          "id": "in_usb",
+          "type": "arrow"
+        },
+        {
+          "id": "collect_usb",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_usb_adapter",
+      "x": 470,
+      "y": 640.0,
+      "width": 415,
+      "height": 50.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 121,
+      "version": 1,
+      "versionNonce": 921,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "Paket-FIFO / Verbrauchsfeedback\n1 lokale Stereoquelle",
+      "originalText": "Paket-FIFO / Verbrauchsfeedback\n1 lokale Stereoquelle",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "usb_adapter",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "arrow",
+      "id": "in_usb",
+      "x": 395,
+      "y": 665.0,
+      "width": 60,
+      "height": 0.0,
+      "angle": 0,
+      "strokeColor": "#74b9ff",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 122,
+      "version": 1,
+      "versionNonce": 922,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          60,
+          0.0
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "usb",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "usb_adapter",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "source",
+      "x": 980,
+      "y": 145,
+      "width": 570,
+      "height": 160,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 123,
+      "version": 1,
+      "versionNonce": 923,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_source",
+          "type": "text"
+        },
+        {
+          "id": "source_matrix",
+          "type": "arrow"
+        },
+        {
+          "id": "collect_analog",
+          "type": "arrow"
+        },
+        {
+          "id": "collect_spdif",
+          "type": "arrow"
+        },
+        {
+          "id": "collect_radio",
+          "type": "arrow"
+        },
+        {
+          "id": "collect_usb",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_source",
+      "x": 995,
+      "y": 187.5,
+      "width": 540,
+      "height": 75.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 124,
+      "version": 1,
+      "versionNonce": 924,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "SOURCE-BANK / 7 STEREO\nFeste IDs, lokale Frame-Epoch\nVerfügbarkeit und geglättetes Gain/Mute",
+      "originalText": "SOURCE-BANK / 7 STEREO\nFeste IDs, lokale Frame-Epoch\nVerfügbarkeit und geglättetes Gain/Mute",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "source",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "text",
+      "id": "collection",
+      "x": 980,
+      "y": 335,
+      "width": 570,
+      "height": 75.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 125,
+      "version": 1,
+      "versionNonce": 925,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "Adapter liefern lokale 48-kHz-Blöcke.\nFehlende Quelle: Stille, kein Warten.\nClock-Abgleich pro Quelle (siehe Dokument).",
+      "originalText": "Adapter liefern lokale 48-kHz-Blöcke.\nFehlende Quelle: Stille, kein Warten.\nClock-Abgleich pro Quelle (siehe Dokument).",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "matrix",
+      "x": 980,
+      "y": 455,
+      "width": 570,
+      "height": 155,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 126,
+      "version": 1,
+      "versionNonce": 926,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_matrix",
+          "type": "text"
+        },
+        {
+          "id": "source_matrix",
+          "type": "arrow"
+        },
+        {
+          "id": "matrix_dsp",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_matrix",
+      "x": 995,
+      "y": 482.5,
+      "width": 540,
+      "height": 100.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 127,
+      "version": 1,
+      "versionNonce": 927,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "7 x 5 STEREO-ROUTING\nJe Ziel sieben gewichtete Quellen\nL/R gepaart, getrennte Samples\nSummen-Headroom explizit",
+      "originalText": "7 x 5 STEREO-ROUTING\nJe Ziel sieben gewichtete Quellen\nL/R gepaart, getrennte Samples\nSummen-Headroom explizit",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "matrix",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "arrow",
+      "id": "source_matrix",
+      "x": 1520,
+      "y": 305,
+      "width": 0,
+      "height": 150,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 128,
+      "version": 1,
+      "versionNonce": 928,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          150
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "source",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0.9473684210526315,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "matrix",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0.9473684210526315,
+          0
+        ]
+      }
+    },
+    {
+      "type": "rectangle",
+      "id": "dsp",
+      "x": 40,
+      "y": 800,
+      "width": 460,
+      "height": 160,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 129,
+      "version": 1,
+      "versionNonce": 929,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_dsp",
+          "type": "text"
+        },
+        {
+          "id": "matrix_dsp",
+          "type": "arrow"
+        },
+        {
+          "id": "dsp_pack",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_dsp",
+      "x": 55,
+      "y": 830.0,
+      "width": 430,
+      "height": 100.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 130,
+      "version": 1,
+      "versionNonce": 930,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "5 AUSGANGS-DSP-PFADE\nVorschlag: je 7-Band-PEQ\nPegel / Mute / Sättigung / Meter\nKeine gemeinsame DAC-Spiegelung",
+      "originalText": "5 AUSGANGS-DSP-PFADE\nVorschlag: je 7-Band-PEQ\nPegel / Mute / Sättigung / Meter\nKeine gemeinsame DAC-Spiegelung",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "dsp",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "pack",
+      "x": 570,
+      "y": 800,
+      "width": 360,
+      "height": 160,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 131,
+      "version": 1,
+      "versionNonce": 931,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_pack",
+          "type": "text"
+        },
+        {
+          "id": "dsp_pack",
+          "type": "arrow"
+        },
+        {
+          "id": "pack_out",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_pack",
+      "x": 585,
+      "y": 830.0,
+      "width": 330,
+      "height": 100.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 132,
+      "version": 1,
+      "versionNonce": 932,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "FORMAT + TX-BUFFER\nPCM-Alignment, Sättigung\nS/PDIF-Packing\nEigener Block je Ziel",
+      "originalText": "FORMAT + TX-BUFFER\nPCM-Alignment, Sättigung\nS/PDIF-Packing\nEigener Block je Ziel",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "pack",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "rectangle",
+      "id": "outputs",
+      "x": 1020,
+      "y": 800,
+      "width": 530,
+      "height": 160,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "#172b36",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": {
+        "type": 3
+      },
+      "seed": 133,
+      "version": 1,
+      "versionNonce": 933,
+      "isDeleted": false,
+      "boundElements": [
+        {
+          "id": "t_outputs",
+          "type": "text"
+        },
+        {
+          "id": "pack_out",
+          "type": "arrow"
+        }
+      ],
+      "updated": 1,
+      "link": null,
+      "locked": false
+    },
+    {
+      "type": "text",
+      "id": "t_outputs",
+      "x": 1035,
+      "y": 830.0,
+      "width": 500,
+      "height": 100.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 134,
+      "version": 1,
+      "versionNonce": 934,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "5 UNABHÄNGIGE ZIELE\nES9039Q2M #1 Stereo / #2 AUX\nES9039Q2M #3 Kopfhörer\nSAI TOSLINK / Classic-BT-Source",
+      "originalText": "5 UNABHÄNGIGE ZIELE\nES9039Q2M #1 Stereo / #2 AUX\nES9039Q2M #3 Kopfhörer\nSAI TOSLINK / Classic-BT-Source",
+      "fontSize": 20,
+      "fontFamily": 1,
+      "textAlign": "center",
+      "verticalAlign": "middle",
+      "containerId": "outputs",
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "arrow",
+      "id": "matrix_dsp",
+      "x": 1265,
+      "y": 610,
+      "width": 995,
+      "height": 190,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 135,
+      "version": 1,
+      "versionNonce": 935,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          0,
+          120
+        ],
+        [
+          -995,
+          120
+        ],
+        [
+          -995,
+          190
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "matrix",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0.5,
+          1
+        ]
+      },
+      "endBinding": {
+        "elementId": "dsp",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0.5,
+          0
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "dsp_pack",
+      "x": 500,
+      "y": 880.0,
+      "width": 70,
+      "height": 0.0,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 136,
+      "version": 1,
+      "versionNonce": 936,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          70,
+          0.0
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "dsp",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "pack",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "pack_out",
+      "x": 930,
+      "y": 880.0,
+      "width": 90,
+      "height": 0.0,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 137,
+      "version": 1,
+      "versionNonce": 937,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          90,
+          0.0
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "pack",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "outputs",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.5
+        ]
+      }
+    },
+    {
+      "type": "text",
+      "id": "note",
+      "x": 40,
+      "y": 1010,
+      "width": 1500,
+      "height": 45.0,
+      "angle": 0,
+      "strokeColor": "#e5e7eb",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 138,
+      "version": 1,
+      "versionNonce": 938,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "text": "Grüne Übergaben: lokale 48-kHz-Blöcke. BT und WiFi bleiben zwei eigenständige Stereoquellen.\nBT-TX besitzt zusätzliche Puffer-/Funklatenz. Blockperiode ist nicht Ende-zu-Ende-Latenz.",
+      "originalText": "Grüne Übergaben: lokale 48-kHz-Blöcke. BT und WiFi bleiben zwei eigenständige Stereoquellen.\nBT-TX besitzt zusätzliche Puffer-/Funklatenz. Blockperiode ist nicht Ende-zu-Ende-Latenz.",
+      "fontSize": 18,
+      "fontFamily": 1,
+      "textAlign": "left",
+      "verticalAlign": "top",
+      "containerId": null,
+      "autoResize": true,
+      "lineHeight": 1.25
+    },
+    {
+      "type": "arrow",
+      "id": "collect_analog",
+      "x": 900,
+      "y": 200,
+      "width": 80,
+      "height": 15,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 939,
+      "version": 1,
+      "versionNonce": 839,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          18,
+          0
+        ],
+        [
+          18,
+          -15
+        ],
+        [
+          80,
+          -15
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "analog_adapter",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "source",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.25
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "collect_spdif",
+      "x": 900,
+      "y": 355,
+      "width": 80,
+      "height": 140,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 940,
+      "version": 1,
+      "versionNonce": 840,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          33,
+          0
+        ],
+        [
+          33,
+          -140
+        ],
+        [
+          80,
+          -140
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "spdif_adapter",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "source",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.4375
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "collect_radio",
+      "x": 900,
+      "y": 510,
+      "width": 80,
+      "height": 265,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 941,
+      "version": 1,
+      "versionNonce": 841,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          48,
+          0
+        ],
+        [
+          48,
+          -265
+        ],
+        [
+          80,
+          -265
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "radio_adapter",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "source",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.625
+        ]
+      }
+    },
+    {
+      "type": "arrow",
+      "id": "collect_usb",
+      "x": 900,
+      "y": 665,
+      "width": 80,
+      "height": 390,
+      "angle": 0,
+      "strokeColor": "#69dbb0",
+      "backgroundColor": "transparent",
+      "fillStyle": "solid",
+      "strokeWidth": 2,
+      "strokeStyle": "solid",
+      "roughness": 1,
+      "opacity": 100,
+      "groupIds": [],
+      "frameId": null,
+      "roundness": null,
+      "seed": 942,
+      "version": 1,
+      "versionNonce": 842,
+      "isDeleted": false,
+      "boundElements": [],
+      "updated": 1,
+      "link": null,
+      "locked": false,
+      "points": [
+        [
+          0,
+          0
+        ],
+        [
+          63,
+          0
+        ],
+        [
+          63,
+          -390
+        ],
+        [
+          80,
+          -390
+        ]
+      ],
+      "startArrowhead": null,
+      "endArrowhead": "arrow",
+      "startBinding": {
+        "elementId": "usb_adapter",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          1,
+          0.5
+        ]
+      },
+      "endBinding": {
+        "elementId": "source",
+        "focus": 0,
+        "gap": 0,
+        "fixedPoint": [
+          0,
+          0.8125
+        ]
+      }
+    }
+  ],
+  "appState": {
+    "viewBackgroundColor": "#101722",
+    "gridSize": null
+  },
+  "files": {}
+}

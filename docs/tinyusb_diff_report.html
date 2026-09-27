@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>TinyUSB Diff Report</title>
+<style>
+  :root {
+    --bg: #1a1a2e; --panel: #16213e; --border: #0f3460;
+    --text: #e8e8e8; --muted: #8892b0;
+    --ok: #4ade80; --warn: #fbbf24; --info: #60a5fa; --muted2: #9ca3af;
+    --add: #22c55e; --rem: #ef4444;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    margin: 0; padding: 24px; font-size: 14px;
+  }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .subtitle { color: var(--muted); margin-bottom: 20px; }
+  .panel {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px; margin-bottom: 20px;
+  }
+  .panel h2 { font-size: 16px; margin: 0 0 12px; border-bottom: 1px solid var(--border); padding-bottom: 8px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-bottom: 12px; }
+  .stat {
+    background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    border-radius: 6px; padding: 10px 12px; text-align: center;
+  }
+  .stat .num { font-size: 26px; font-weight: 700; display: block; }
+  .stat .lbl { color: var(--muted); font-size: 12px; }
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; white-space: nowrap;
+  }
+  .b-ok    { background: rgba(74,222,128,.15); color: var(--ok);   border: 1px solid var(--ok); }
+  .b-warn  { background: rgba(251,191,36,.15); color: var(--warn); border: 1px solid var(--warn); }
+  .b-info  { background: rgba(96,165,250,.15); color: var(--info); border: 1px solid var(--info); }
+  .b-muted { background: rgba(156,163,175,.15);color: var(--muted2);border: 1px solid var(--muted2); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--border); }
+  th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  tr:hover td { background: rgba(255,255,255,.03); }
+  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .check {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.03); border: 1px solid var(--border);
+    border-radius: 5px; padding: 8px 12px; font-size: 13px;
+  }
+  .check .icon { font-size: 16px; }
+  .check .val  { margin-left: auto; font-weight: 600; font-family: monospace; font-size: 12px; }
+  /* Diff-Anzeige */
+  .diff-block {
+    background: #0d1117; border: 1px solid var(--border); border-radius: 6px;
+    padding: 10px; margin: 8px 0 16px; overflow-x: auto; max-height: 420px; overflow-y: auto;
+    font-family: 'Consolas', monospace; font-size: 12px; line-height: 1.5;
+  }
+  .diff-block div { white-space: pre; }
+  .diff-add { color: var(--add); }
+  .diff-rem { color: var(--rem); }
+  .diff-hdr { color: var(--info); font-weight: 600; }
+  .diff-met { color: var(--muted); margin: 4px 0 2px; font-size: 12px; }
+  .diff-met code { background: rgba(255,255,255,.06); padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+  .trunc-note { color: var(--warn); font-size: 11px; margin-top: 4px; }
+  .file-row { border-bottom: 1px solid var(--border); padding: 8px 0; }
+  .file-row:last-child { border-bottom: none; }
+  .empty-note { color: var(--muted); font-style: italic; padding: 8px 0; }
+  .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+  .progress-fill { height: 100%; background: var(--ok); }
+  .footer { color: var(--muted); font-size: 11px; margin-top: 20px; text-align: center; }
+  details { margin: 4px 0; }
+  summary { cursor: pointer; color: var(--info); font-size: 13px; }
+</style>
+</head>
+<body>
+
+
+<h1>TinyUSB Diff Report – Rhythm Projekt</h1>
+<div class="subtitle">
+  Rhythm-Vendoring: <code>C:\Users\Philipp\Projekte\rhythm\firmware\vendor\tusb\src</code><br>
+  Referenz-Repo: <code>C:\Users\Philipp\Projekte\Demo\tinyusb\src</code><br>
+  Erstellt: 14.09.2026 23:58:43
+</div>
+
+<div class="panel"><h2>📊 Statistik</h2>
+<div class="grid">
+<div class="stat"><span class="num" style="color:var(--text)">189</span><span class="lbl">Verglichen (C+H)</span></div>
+<div class="stat"><span class="num" style="color:var(--ok)">188</span><span class="lbl">Identisch</span></div>
+<div class="stat"><span class="num" style="color:var(--warn)">1</span><span class="lbl">Unterschiedlich</span></div>
+<div class="stat"><span class="num" style="color:var(--ok)">0</span><span class="lbl">Nur in Rhythm</span></div>
+<div class="stat"><span class="num" style="color:var(--ok)">0</span><span class="lbl">Nur im Repo</span></div>
+</div>
+<div style="font-size:12px;color:var(--muted);margin-bottom:4px">Identische Dateien: 99.5%</div>
+<div class="progress-bar"><div class="progress-fill" style="width:99.5%"></div></div>
+<div class="checks">
+<div class="check"><span class="icon">❓</span><span>TinyUSB-Version</span><span class="val">nicht erkannt</span></div>
+<div class="check"><span class="icon">🔀</span><span>Repo-Commit</span><span class="val">f206f1c2 (master)</span></div>
+<div class="check"><span class="icon">✅</span><span>Nur in Rhythm</span><span class="val">keine</span></div>
+<div class="check"><span class="icon">✅</span><span>Nur im Repo</span><span class="val">keine</span></div>
+<div class="check"><span class="icon">📝</span><span>Diff-Zeilen (Σ)</span><span class="val">+3 / −26</span></div>
+<div class="check"><span class="icon">✅</span><span>Lesefehler</span><span class="val">keine</span></div>
+</div></div>
+<div class="panel"><h2>🔍 Unterscheidende Dateien</h2>
+<div class="file-row">
+<div class="diff-met"><code>portable/synopsys/dwc2/dwc2_common.c</code><br><span class="badge b-warn">unterschiedlich</span> &nbsp; Größe: 9688 B → 9018 B (+670 B) &nbsp; Zeilen: 281 → 258 &nbsp; <span style="color:var(--add)">+3</span> / <span style="color:var(--rem)">−26</span></div>
+<div class="diff-block">
+<div class="diff-hdr">--- rhythm/portable/synopsys/dwc2/dwc2_common.c</div>
+<div class="diff-hdr">+++ repo/portable/synopsys/dwc2/dwc2_common.c</div>
+<div class="diff-hdr">@@ -17,12 +17,7 @@</div>
+<div> //--------------------------------------------------------------------</div>
+<div> static void reset_core(dwc2_regs_t* dwc2) {</div>
+<div>   // The software must check that bit 31 in this register is set to 1 (AHB Master is Idle) before starting any operation</div>
+<div class="diff-rem">-  uint32_t timeout = 100000; // ~100k cycles timeout to avoid infinite hang</div>
+<div>   while (!(dwc2-&gt;grstctl &amp; GRSTCTL_AHBIDL)) {</div>
+<div class="diff-rem">-    if (--timeout == 0) {</div>
+<div class="diff-rem">-      // AHB never went idle - likely clock/power issue</div>
+<div class="diff-rem">-      break;</div>
+<div class="diff-rem">-    }</div>
+<div>   }</div>
+<div> </div>
+<div>   const uint32_t gsnpsid = dwc2-&gt;gsnpsid; // preload gsnpsid which is not readable while resetting</div>
+<div class="diff-hdr">@@ -32,33 +27,15 @@</div>
+<div>     // prior v4.20a: CSRST is self-clearing, and the core clears this bit after all the necessary logic is reset in</div>
+<div>     // the core, which can take several clocks, depending on the current state of the core. Once this bit has been</div>
+<div>     // cleared, the software must wait at least 3 PHY clocks before accessing the PHY domain (synchronization delay).</div>
+<div class="diff-rem">-    timeout = 100000; // reset timeout counter</div>
+<div class="diff-rem">-    while (dwc2-&gt;grstctl &amp; GRSTCTL_CSRST) {</div>
+<div class="diff-rem">-      if (--timeout == 0) {</div>
+<div class="diff-rem">-        // Core reset never completed - likely PHY/clock issue</div>
+<div class="diff-rem">-        break;</div>
+<div class="diff-rem">-      }</div>
+<div class="diff-rem">-    }</div>
+<div class="diff-add">+    while (dwc2-&gt;grstctl &amp; GRSTCTL_CSRST) {}</div>
+<div>   } else {</div>
+<div>     // From v4.20a: CSRST bit is write only. The application must clear this bit after checking the bit 29 of this</div>
+<div>     // register i.e Core Soft Reset Done CSRT_DONE (w1c)</div>
+<div class="diff-rem">-    timeout = 100000; // reset timeout counter</div>
+<div class="diff-rem">-    while (!(dwc2-&gt;grstctl &amp; GRSTCTL_CSRST_DONE)) {</div>
+<div class="diff-rem">-      if (--timeout == 0) {</div>
+<div class="diff-rem">-        // Core soft reset never completed - likely PHY/clock issue</div>
+<div class="diff-rem">-        break;</div>
+<div class="diff-rem">-      }</div>
+<div class="diff-rem">-    }</div>
+<div class="diff-add">+    while (!(dwc2-&gt;grstctl &amp; GRSTCTL_CSRST_DONE)) {}</div>
+<div>     dwc2-&gt;grstctl = (dwc2-&gt;grstctl &amp; ~GRSTCTL_CSRST) | GRSTCTL_CSRST_DONE;</div>
+<div>   }</div>
+<div> </div>
+<div class="diff-rem">-  timeout = 100000; // reset timeout counter</div>
+<div class="diff-rem">-  while (!(dwc2-&gt;grstctl &amp; GRSTCTL_AHBIDL)) {</div>
+<div class="diff-rem">-    if (--timeout == 0) {</div>
+<div class="diff-rem">-      // AHB never went idle after reset - likely clock/power issue</div>
+<div class="diff-rem">-      break;</div>
+<div class="diff-rem">-    }</div>
+<div class="diff-rem">-  }</div>
+<div class="diff-add">+  while (!(dwc2-&gt;grstctl &amp; GRSTCTL_AHBIDL)) {} // wait for AHB master IDLE</div>
+<div> }</div>
+<div> </div>
+<div> // Dedicated FS PHY is internal with a clock 48Mhz.</div>
+</div>
+</div>
+</div>
+<div class="panel"><h2>📋 Alle verglichenen Dateien</h2>
+<table><thead><tr><th>Datei</th><th>Status</th><th>Größe (Rhythm)</th><th>Größe (Repo)</th></tr></thead><tbody>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/dwc2_common.c</td><td><span class="badge b-warn">unterschiedlich</span></td><td>9688 B</td><td>9018 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/audio/audio.h</td><td><span class="badge b-ok">identisch</span></td><td>68216 B</td><td>68216 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/audio/audio_device.c</td><td><span class="badge b-ok">identisch</span></td><td>77057 B</td><td>77057 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/audio/audio_device.h</td><td><span class="badge b-ok">identisch</span></td><td>19689 B</td><td>19689 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/audio/audio_host.c</td><td><span class="badge b-ok">identisch</span></td><td>113412 B</td><td>113412 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/audio/audio_host.h</td><td><span class="badge b-ok">identisch</span></td><td>17222 B</td><td>17222 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/bth/bth_device.c</td><td><span class="badge b-ok">identisch</span></td><td>11065 B</td><td>11065 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/bth/bth_device.h</td><td><span class="badge b-ok">identisch</span></td><td>3960 B</td><td>3960 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/cdc/cdc.h</td><td><span class="badge b-ok">identisch</span></td><td>25542 B</td><td>25542 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/cdc/cdc_device.c</td><td><span class="badge b-ok">identisch</span></td><td>17589 B</td><td>17589 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/cdc/cdc_device.h</td><td><span class="badge b-ok">identisch</span></td><td>10503 B</td><td>10503 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/cdc/cdc_host.c</td><td><span class="badge b-ok">identisch</span></td><td>96407 B</td><td>96407 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/cdc/cdc_host.h</td><td><span class="badge b-ok">identisch</span></td><td>10406 B</td><td>10406 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/cdc/cdc_rndis.h</td><td><span class="badge b-ok">identisch</span></td><td>19523 B</td><td>19523 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/cdc/serial/ch34x.h</td><td><span class="badge b-ok">identisch</span></td><td>2700 B</td><td>2700 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/cdc/serial/cp210x.h</td><td><span class="badge b-ok">identisch</span></td><td>3601 B</td><td>3601 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/cdc/serial/ftdi_sio.h</td><td><span class="badge b-ok">identisch</span></td><td>7309 B</td><td>7309 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/cdc/serial/pl2303.h</td><td><span class="badge b-ok">identisch</span></td><td>5094 B</td><td>5094 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/dfu/dfu.h</td><td><span class="badge b-ok">identisch</span></td><td>2682 B</td><td>2682 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/dfu/dfu_device.c</td><td><span class="badge b-ok">identisch</span></td><td>15186 B</td><td>15186 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/dfu/dfu_device.h</td><td><span class="badge b-ok">identisch</span></td><td>3503 B</td><td>3503 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/dfu/dfu_rt_device.c</td><td><span class="badge b-ok">identisch</span></td><td>3670 B</td><td>3670 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/dfu/dfu_rt_device.h</td><td><span class="badge b-ok">identisch</span></td><td>1242 B</td><td>1242 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/hid/hid.h</td><td><span class="badge b-ok">identisch</span></td><td>168339 B</td><td>168339 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/hid/hid_device.c</td><td><span class="badge b-ok">identisch</span></td><td>14278 B</td><td>14278 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/hid/hid_device.h</td><td><span class="badge b-ok">identisch</span></td><td>38938 B</td><td>38938 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/hid/hid_host.c</td><td><span class="badge b-ok">identisch</span></td><td>26715 B</td><td>26715 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/hid/hid_host.h</td><td><span class="badge b-ok">identisch</span></td><td>7513 B</td><td>7513 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/midi/midi.h</td><td><span class="badge b-ok">identisch</span></td><td>7048 B</td><td>7048 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/midi/midi2_device.c</td><td><span class="badge b-ok">identisch</span></td><td>38513 B</td><td>38513 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/midi/midi2_device.h</td><td><span class="badge b-ok">identisch</span></td><td>10305 B</td><td>10305 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/midi/midi2_host.c</td><td><span class="badge b-ok">identisch</span></td><td>21037 B</td><td>21037 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/midi/midi2_host.h</td><td><span class="badge b-ok">identisch</span></td><td>3577 B</td><td>3577 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/midi/midi_device.c</td><td><span class="badge b-ok">identisch</span></td><td>19425 B</td><td>19425 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/midi/midi_device.h</td><td><span class="badge b-ok">identisch</span></td><td>5029 B</td><td>5029 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/midi/midi_host.c</td><td><span class="badge b-ok">identisch</span></td><td>24933 B</td><td>24933 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/midi/midi_host.h</td><td><span class="badge b-ok">identisch</span></td><td>7459 B</td><td>7459 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/msc/msc.h</td><td><span class="badge b-ok">identisch</span></td><td>18183 B</td><td>18183 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/msc/msc_device.c</td><td><span class="badge b-ok">identisch</span></td><td>34928 B</td><td>34928 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/msc/msc_device.h</td><td><span class="badge b-ok">identisch</span></td><td>7251 B</td><td>7251 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/msc/msc_host.c</td><td><span class="badge b-ok">identisch</span></td><td>16401 B</td><td>16401 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/msc/msc_host.h</td><td><span class="badge b-ok">identisch</span></td><td>5203 B</td><td>5203 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/mtp/mtp.h</td><td><span class="badge b-ok">identisch</span></td><td>42491 B</td><td>42491 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/mtp/mtp_device.c</td><td><span class="badge b-ok">identisch</span></td><td>23042 B</td><td>23042 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/mtp/mtp_device.h</td><td><span class="badge b-ok">identisch</span></td><td>6260 B</td><td>6260 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/net/ecm_rndis_device.c</td><td><span class="badge b-ok">identisch</span></td><td>15219 B</td><td>15219 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/net/ncm.h</td><td><span class="badge b-ok">identisch</span></td><td>5121 B</td><td>5121 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/net/ncm_device.c</td><td><span class="badge b-ok">identisch</span></td><td>42703 B</td><td>42703 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/net/net_device.h</td><td><span class="badge b-ok">identisch</span></td><td>4171 B</td><td>4171 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/printer/printer.h</td><td><span class="badge b-ok">identisch</span></td><td>1264 B</td><td>1264 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/printer/printer_device.c</td><td><span class="badge b-ok">identisch</span></td><td>10064 B</td><td>10064 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/printer/printer_device.h</td><td><span class="badge b-ok">identisch</span></td><td>4558 B</td><td>4558 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/usbtmc/usbtmc.h</td><td><span class="badge b-ok">identisch</span></td><td>10017 B</td><td>10017 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/usbtmc/usbtmc_device.c</td><td><span class="badge b-ok">identisch</span></td><td>33686 B</td><td>33686 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/usbtmc/usbtmc_device.h</td><td><span class="badge b-ok">identisch</span></td><td>3856 B</td><td>3856 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/vendor/vendor_device.c</td><td><span class="badge b-ok">identisch</span></td><td>35688 B</td><td>35688 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/vendor/vendor_device.h</td><td><span class="badge b-ok">identisch</span></td><td>13342 B</td><td>13342 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/video/video.h</td><td><span class="badge b-ok">identisch</span></td><td>27726 B</td><td>27726 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/video/video_device.c</td><td><span class="badge b-ok">identisch</span></td><td>56089 B</td><td>56089 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">class/video/video_device.h</td><td><span class="badge b-ok">identisch</span></td><td>4283 B</td><td>4283 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">common/tusb_common.h</td><td><span class="badge b-ok">identisch</span></td><td>15654 B</td><td>15654 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">common/tusb_compiler.h</td><td><span class="badge b-ok">identisch</span></td><td>12485 B</td><td>12485 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">common/tusb_debug.h</td><td><span class="badge b-ok">identisch</span></td><td>4402 B</td><td>4402 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">common/tusb_fifo.c</td><td><span class="badge b-ok">identisch</span></td><td>28151 B</td><td>28151 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">common/tusb_fifo.h</td><td><span class="badge b-ok">identisch</span></td><td>13031 B</td><td>13031 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">common/tusb_mcu.h</td><td><span class="badge b-ok">identisch</span></td><td>27824 B</td><td>27824 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">common/tusb_private.h</td><td><span class="badge b-ok">identisch</span></td><td>6079 B</td><td>6079 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">common/tusb_types.h</td><td><span class="badge b-ok">identisch</span></td><td>22775 B</td><td>22775 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">common/tusb_verify.h</td><td><span class="badge b-ok">identisch</span></td><td>4947 B</td><td>4947 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">device/dcd.h</td><td><span class="badge b-ok">identisch</span></td><td>8952 B</td><td>8952 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">device/usbd.c</td><td><span class="badge b-ok">identisch</span></td><td>63576 B</td><td>63576 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">device/usbd.h</td><td><span class="badge b-ok">identisch</span></td><td>64122 B</td><td>64122 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">device/usbd_pvt.h</td><td><span class="badge b-ok">identisch</span></td><td>4620 B</td><td>4620 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">host/hcd.h</td><td><span class="badge b-ok">identisch</span></td><td>6701 B</td><td>6701 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">host/hub.c</td><td><span class="badge b-ok">identisch</span></td><td>17374 B</td><td>17374 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">host/hub.h</td><td><span class="badge b-ok">identisch</span></td><td>7948 B</td><td>7948 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">host/usbh.c</td><td><span class="badge b-ok">identisch</span></td><td>81727 B</td><td>81727 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">host/usbh.h</td><td><span class="badge b-ok">identisch</span></td><td>17029 B</td><td>17029 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">host/usbh_pvt.h</td><td><span class="badge b-ok">identisch</span></td><td>3447 B</td><td>3447 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">osal/osal.h</td><td><span class="badge b-ok">identisch</span></td><td>3161 B</td><td>3161 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">osal/osal_freertos.h</td><td><span class="badge b-ok">identisch</span></td><td>8880 B</td><td>8880 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">osal/osal_mynewt.h</td><td><span class="badge b-ok">identisch</span></td><td>6901 B</td><td>6901 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">osal/osal_none.h</td><td><span class="badge b-ok">identisch</span></td><td>7187 B</td><td>7187 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">osal/osal_pico.h</td><td><span class="badge b-ok">identisch</span></td><td>6012 B</td><td>6012 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">osal/osal_rtthread.h</td><td><span class="badge b-ok">identisch</span></td><td>5728 B</td><td>5728 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">osal/osal_rtx4.h</td><td><span class="badge b-ok">identisch</span></td><td>5673 B</td><td>5673 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">osal/osal_threadx.h</td><td><span class="badge b-ok">identisch</span></td><td>6238 B</td><td>6238 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">osal/osal_zephyr.h</td><td><span class="badge b-ok">identisch</span></td><td>4829 B</td><td>4829 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/analog/max3421/hcd_max3421.c</td><td><span class="badge b-ok">identisch</span></td><td>34218 B</td><td>34218 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/analog/max3421/hcd_max3421.h</td><td><span class="badge b-ok">identisch</span></td><td>1561 B</td><td>1561 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/bridgetek/ft9xx/dcd_ft9xx.c</td><td><span class="badge b-ok">identisch</span></td><td>38078 B</td><td>38078 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_fs/ci_fs_kinetis.h</td><td><span class="badge b-ok">identisch</span></td><td>672 B</td><td>672 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_fs/ci_fs_mcx.h</td><td><span class="badge b-ok">identisch</span></td><td>803 B</td><td>803 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_fs/ci_fs_type.h</td><td><span class="badge b-ok">identisch</span></td><td>6329 B</td><td>6329 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_fs/dcd_ci_fs.c</td><td><span class="badge b-ok">identisch</span></td><td>16374 B</td><td>16374 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_fs/hcd_ci_fs.c</td><td><span class="badge b-ok">identisch</span></td><td>21559 B</td><td>21559 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_hs/ci_hs_hpm.h</td><td><span class="badge b-ok">identisch</span></td><td>1013 B</td><td>1013 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_hs/ci_hs_imxrt.h</td><td><span class="badge b-ok">identisch</span></td><td>3579 B</td><td>3579 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_hs/ci_hs_lpc18_43.h</td><td><span class="badge b-ok">identisch</span></td><td>1285 B</td><td>1285 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_hs/ci_hs_mcx.h</td><td><span class="badge b-ok">identisch</span></td><td>1051 B</td><td>1051 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_hs/ci_hs_rw61x.h</td><td><span class="badge b-ok">identisch</span></td><td>891 B</td><td>891 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_hs/ci_hs_type.h</td><td><span class="badge b-ok">identisch</span></td><td>5572 B</td><td>5572 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_hs/dcd_ci_hs.c</td><td><span class="badge b-ok">identisch</span></td><td>32396 B</td><td>32396 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/chipidea/ci_hs/hcd_ci_hs.c</td><td><span class="badge b-ok">identisch</span></td><td>2846 B</td><td>2846 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/dialog/da146xx/dcd_da146xx.c</td><td><span class="badge b-ok">identisch</span></td><td>39090 B</td><td>39090 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/ehci/ehci.c</td><td><span class="badge b-ok">identisch</span></td><td>35995 B</td><td>35995 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/ehci/ehci.h</td><td><span class="badge b-ok">identisch</span></td><td>24993 B</td><td>24993 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/ehci/ehci_api.h</td><td><span class="badge b-ok">identisch</span></td><td>658 B</td><td>658 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/mentor/musb/dcd_musb.c</td><td><span class="badge b-ok">identisch</span></td><td>39034 B</td><td>39034 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/mentor/musb/hcd_musb.c</td><td><span class="badge b-ok">identisch</span></td><td>27029 B</td><td>27029 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/mentor/musb/musb_max32.h</td><td><span class="badge b-ok">identisch</span></td><td>4028 B</td><td>4028 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/mentor/musb/musb_py32.h</td><td><span class="badge b-ok">identisch</span></td><td>2698 B</td><td>2698 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/mentor/musb/musb_ti.h</td><td><span class="badge b-ok">identisch</span></td><td>1950 B</td><td>1950 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/mentor/musb/musb_type.h</td><td><span class="badge b-ok">identisch</span></td><td>34529 B</td><td>34529 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/microchip/pic/dcd_pic.c</td><td><span class="badge b-ok">identisch</span></td><td>23810 B</td><td>23810 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/microchip/pic32mz/dcd_pic32mz.c</td><td><span class="badge b-ok">identisch</span></td><td>20204 B</td><td>20204 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/microchip/pic32mz/usbhs_registers.h</td><td><span class="badge b-ok">identisch</span></td><td>21488 B</td><td>21488 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/microchip/samd/dcd_samd.c</td><td><span class="badge b-ok">identisch</span></td><td>16050 B</td><td>16050 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/microchip/samd/hcd_samd.c</td><td><span class="badge b-ok">identisch</span></td><td>25200 B</td><td>25200 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/microchip/samg/dcd_samg.c</td><td><span class="badge b-ok">identisch</span></td><td>14005 B</td><td>14005 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/microchip/samx7x/dcd_samx7x.c</td><td><span class="badge b-ok">identisch</span></td><td>20920 B</td><td>20920 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/microchip/samx7x/samx7x_common.h</td><td><span class="badge b-ok">identisch</span></td><td>235688 B</td><td>235688 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/mindmotion/mm32/dcd_mm32f327x_otg.c</td><td><span class="badge b-ok">identisch</span></td><td>15035 B</td><td>15035 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/nordic/nrf5x/dcd_nrf5x.c</td><td><span class="badge b-ok">identisch</span></td><td>38136 B</td><td>38136 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/nuvoton/nuc120/dcd_nuc120.c</td><td><span class="badge b-ok">identisch</span></td><td>14983 B</td><td>14983 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/nuvoton/nuc121/dcd_nuc121.c</td><td><span class="badge b-ok">identisch</span></td><td>16703 B</td><td>16703 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/nuvoton/nuc505/dcd_nuc505.c</td><td><span class="badge b-ok">identisch</span></td><td>23110 B</td><td>23110 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/nxp/lpc17_40/dcd_lpc17_40.c</td><td><span class="badge b-ok">identisch</span></td><td>26430 B</td><td>26430 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/nxp/lpc17_40/dcd_lpc17_40.h</td><td><span class="badge b-ok">identisch</span></td><td>4565 B</td><td>4565 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/nxp/lpc_ip3511/dcd_lpc_ip3511.c</td><td><span class="badge b-ok">identisch</span></td><td>29227 B</td><td>29227 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/nxp/lpc_ip3516/hcd_lpc_ip3516.c</td><td><span class="badge b-ok">identisch</span></td><td>29119 B</td><td>29119 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/nxp/lpc_ip3516/hcd_lpc_ip3516.h</td><td><span class="badge b-ok">identisch</span></td><td>4203 B</td><td>4203 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/ohci/ohci.c</td><td><span class="badge b-ok">identisch</span></td><td>28185 B</td><td>28185 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/ohci/ohci.h</td><td><span class="badge b-ok">identisch</span></td><td>11875 B</td><td>11875 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/ohci/ohci_nxp.h</td><td><span class="badge b-ok">identisch</span></td><td>1016 B</td><td>1016 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/raspberrypi/pio_usb/dcd_pio_usb.c</td><td><span class="badge b-ok">identisch</span></td><td>5625 B</td><td>5625 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/raspberrypi/pio_usb/hcd_pio_usb.c</td><td><span class="badge b-ok">identisch</span></td><td>6483 B</td><td>6483 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/raspberrypi/rp2040/dcd_rp2040.c</td><td><span class="badge b-ok">identisch</span></td><td>22652 B</td><td>22652 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/raspberrypi/rp2040/hcd_rp2040.c</td><td><span class="badge b-ok">identisch</span></td><td>24655 B</td><td>24655 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/raspberrypi/rp2040/rp2040_usb.c</td><td><span class="badge b-ok">identisch</span></td><td>17216 B</td><td>17216 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/raspberrypi/rp2040/rp2040_usb.h</td><td><span class="badge b-ok">identisch</span></td><td>6416 B</td><td>6416 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/renesas/rusb2/dcd_rusb2.c</td><td><span class="badge b-ok">identisch</span></td><td>35757 B</td><td>35757 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/renesas/rusb2/hcd_rusb2.c</td><td><span class="badge b-ok">identisch</span></td><td>25087 B</td><td>25087 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/renesas/rusb2/rusb2_common.c</td><td><span class="badge b-ok">identisch</span></td><td>2835 B</td><td>2835 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/renesas/rusb2/rusb2_common.h</td><td><span class="badge b-ok">identisch</span></td><td>1023 B</td><td>1023 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/renesas/rusb2/rusb2_ra.h</td><td><span class="badge b-ok">identisch</span></td><td>4448 B</td><td>4448 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/renesas/rusb2/rusb2_rx.h</td><td><span class="badge b-ok">identisch</span></td><td>1769 B</td><td>1769 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/renesas/rusb2/rusb2_type.h</td><td><span class="badge b-ok">identisch</span></td><td>99306 B</td><td>99306 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/sony/cxd56/dcd_cxd56.c</td><td><span class="badge b-ok">identisch</span></td><td>10947 B</td><td>10947 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/st/stm32_fsdev/dcd_stm32_fsdev.c</td><td><span class="badge b-ok">identisch</span></td><td>30794 B</td><td>30794 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/st/stm32_fsdev/fsdev_apm32.h</td><td><span class="badge b-ok">identisch</span></td><td>2586 B</td><td>2586 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/st/stm32_fsdev/fsdev_at32.h</td><td><span class="badge b-ok">identisch</span></td><td>3016 B</td><td>3016 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/st/stm32_fsdev/fsdev_ch32.h</td><td><span class="badge b-ok">identisch</span></td><td>2304 B</td><td>2304 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/st/stm32_fsdev/fsdev_common.c</td><td><span class="badge b-ok">identisch</span></td><td>3125 B</td><td>3125 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/st/stm32_fsdev/fsdev_common.h</td><td><span class="badge b-ok">identisch</span></td><td>16064 B</td><td>16064 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/st/stm32_fsdev/fsdev_stm32.h</td><td><span class="badge b-ok">identisch</span></td><td>10953 B</td><td>10953 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/st/stm32_fsdev/hcd_stm32_fsdev.c</td><td><span class="badge b-ok">identisch</span></td><td>27169 B</td><td>27169 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/st/typec/typec_stm32.c</td><td><span class="badge b-ok">identisch</span></td><td>15736 B</td><td>15736 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/sunxi/dcd_sunxi_musb.c</td><td><span class="badge b-ok">identisch</span></td><td>37218 B</td><td>37218 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/sunxi/musb_def.h</td><td><span class="badge b-ok">identisch</span></td><td>27322 B</td><td>27322 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/dcd_dwc2.c</td><td><span class="badge b-ok">identisch</span></td><td>46760 B</td><td>46760 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/dwc2_at32.h</td><td><span class="badge b-ok">identisch</span></td><td>4113 B</td><td>4113 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/dwc2_bcm.h</td><td><span class="badge b-ok">identisch</span></td><td>2049 B</td><td>2049 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/dwc2_common.h</td><td><span class="badge b-ok">identisch</span></td><td>3287 B</td><td>3287 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/dwc2_efm32.h</td><td><span class="badge b-ok">identisch</span></td><td>2165 B</td><td>2165 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/dwc2_esp32.h</td><td><span class="badge b-ok">identisch</span></td><td>6520 B</td><td>6520 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/dwc2_gd32.h</td><td><span class="badge b-ok">identisch</span></td><td>2414 B</td><td>2414 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/dwc2_nrf.h</td><td><span class="badge b-ok">identisch</span></td><td>4366 B</td><td>4366 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/dwc2_stm32.h</td><td><span class="badge b-ok">identisch</span></td><td>14922 B</td><td>14922 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/dwc2_type.h</td><td><span class="badge b-ok">identisch</span></td><td>156843 B</td><td>156843 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/dwc2_xmc.h</td><td><span class="badge b-ok">identisch</span></td><td>2079 B</td><td>2079 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/synopsys/dwc2/hcd_dwc2.c</td><td><span class="badge b-ok">identisch</span></td><td>69449 B</td><td>69449 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/template/dcd_template.c</td><td><span class="badge b-ok">identisch</span></td><td>3525 B</td><td>3525 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/template/hcd_template.c</td><td><span class="badge b-ok">identisch</span></td><td>4091 B</td><td>4091 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/ti/msp430x5xx/dcd_msp430x5xx.c</td><td><span class="badge b-ok">identisch</span></td><td>23329 B</td><td>23329 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/valentyusb/eptri/dcd_eptri.c</td><td><span class="badge b-ok">identisch</span></td><td>18263 B</td><td>18263 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/valentyusb/eptri/dcd_eptri.h</td><td><span class="badge b-ok">identisch</span></td><td>395 B</td><td>395 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/wch/ch32_usbfs_reg.h</td><td><span class="badge b-ok">identisch</span></td><td>11882 B</td><td>11882 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/wch/ch32_usbhs_reg.h</td><td><span class="badge b-ok">identisch</span></td><td>11249 B</td><td>11249 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/wch/dcd_ch32_usbfs.c</td><td><span class="badge b-ok">identisch</span></td><td>23855 B</td><td>23855 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/wch/dcd_ch32_usbhs.c</td><td><span class="badge b-ok">identisch</span></td><td>15338 B</td><td>15338 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">portable/wch/hcd_ch32_usbfs.c</td><td><span class="badge b-ok">identisch</span></td><td>22649 B</td><td>22649 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">tusb.c</td><td><span class="badge b-ok">identisch</span></td><td>16259 B</td><td>16259 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">tusb.h</td><td><span class="badge b-ok">identisch</span></td><td>4152 B</td><td>4152 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">tusb_option.h</td><td><span class="badge b-ok">identisch</span></td><td>33558 B</td><td>33558 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">typec/pd_types.h</td><td><span class="badge b-ok">identisch</span></td><td>9134 B</td><td>9134 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">typec/tcd.h</td><td><span class="badge b-ok">identisch</span></td><td>3239 B</td><td>3239 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">typec/usbc.c</td><td><span class="badge b-ok">identisch</span></td><td>7073 B</td><td>7073 B</td></tr>
+<tr><td style="font-family:monospace;font-size:12px">typec/usbc.h</td><td><span class="badge b-ok">identisch</span></td><td>2376 B</td><td>2376 B</td></tr>
+</tbody></table>
+</div>
+
+<div class="footer">
+  TinyUSB Diff Report · 14.09.2026 23:58:43 · 189 gemeinsame,
+  188 identisch, 1 unterschiedlich,
+  0 nur in Rhythm, 0 nur im Repo
+</div>
+</body></html>

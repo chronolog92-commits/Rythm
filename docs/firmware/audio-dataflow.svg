@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1080" viewBox="0 0 1600 1080">
+<defs>
+<marker id="audio" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#69dbb0"/></marker>
+<marker id="control" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#74b9ff"/></marker>
+<marker id="open" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#ffc078"/></marker>
+<marker id="neutral" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 0 L10 5 L0 10 Z" fill="#c4b5fd"/></marker>
+</defs>
+<rect x="0" y="0" width="1600" height="1080" rx="10" fill="#101722" stroke="transparent" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="32" text-anchor="start">
+<tspan x="40" y="57.0">RYTHM / AUDIODATENFLUSS</tspan>
+</text>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="18" text-anchor="start">
+<tspan x="40" y="93.0">7 Stereoquellen -&gt; 7 x 5 Matrix -&gt; 5 unabhängige Stereoziele | lokale DSP-Domäne: 48 kHz, Float32</tspan>
+</text>
+<rect x="40" y="145" width="355" height="110" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="217.5" y="195.0">ES9842PRO: Stereo 1 + 2</tspan>
+<tspan x="217.5" y="220.0">ES9822PRO: AUX</tspan>
+</text>
+<rect x="455" y="145" width="445" height="110" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="677.5" y="195.0">TDM4-Demux / I2S</tspan>
+<tspan x="677.5" y="220.0">3 lokale Stereoquellen</tspan>
+</text>
+<polyline points="395,200.0 455,200.0" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<rect x="40" y="300" width="355" height="110" rx="10" fill="#20283b" stroke="#ffc078" stroke-width="2" stroke-dasharray="8 6"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="217.5" y="350.0">TOSLINK / SPDIFRX</tspan>
+<tspan x="217.5" y="375.0">Fremde Sample-Clock</tspan>
+</text>
+<rect x="455" y="300" width="445" height="110" rx="10" fill="#20283b" stroke="#ffc078" stroke-width="2" stroke-dasharray="8 6"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="677.5" y="350.0">Lock + FIFO + adaptives SRC</tspan>
+<tspan x="677.5" y="375.0">1 lokale Stereoquelle</tspan>
+</text>
+<polyline points="395,355.0 455,355.0" fill="none" stroke="#ffc078" stroke-width="2" marker-end="url(#open)"/>
+<rect x="40" y="455" width="355" height="110" rx="10" fill="#20283b" stroke="#ffc078" stroke-width="2" stroke-dasharray="8 6"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="217.5" y="505.0">Classic-BT-Sink + WiFi</tspan>
+<tspan x="217.5" y="530.0">Getrennte PCM-Datenleitungen</tspan>
+</text>
+<rect x="455" y="455" width="445" height="110" rx="10" fill="#20283b" stroke="#ffc078" stroke-width="2" stroke-dasharray="8 6"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="677.5" y="505.0">Frontend: Decode / Rate-Match</tspan>
+<tspan x="677.5" y="530.0">2 lokale Stereoquellen</tspan>
+</text>
+<polyline points="395,510.0 455,510.0" fill="none" stroke="#ffc078" stroke-width="2" marker-end="url(#open)"/>
+<rect x="40" y="610" width="355" height="110" rx="10" fill="#20283b" stroke="#74b9ff" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="217.5" y="660.0">PC / USB-Device OUT</tspan>
+<tspan x="217.5" y="685.0">Pakete != DSP-Blöcke</tspan>
+</text>
+<rect x="455" y="610" width="445" height="110" rx="10" fill="#20283b" stroke="#74b9ff" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="677.5" y="660.0">Paket-FIFO / Verbrauchsfeedback</tspan>
+<tspan x="677.5" y="685.0">1 lokale Stereoquelle</tspan>
+</text>
+<polyline points="395,665.0 455,665.0" fill="none" stroke="#74b9ff" stroke-width="2" marker-end="url(#control)"/>
+<rect x="980" y="145" width="570" height="160" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="1265.0" y="207.5">SOURCE-BANK / 7 STEREO</tspan>
+<tspan x="1265.0" y="232.5">Feste IDs, lokale Frame-Epoch</tspan>
+<tspan x="1265.0" y="257.5">Verfügbarkeit und geglättetes Gain/Mute</tspan>
+</text>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="start">
+<tspan x="980" y="355.0">Adapter liefern lokale 48-kHz-Blöcke.</tspan>
+<tspan x="980" y="380.0">Fehlende Quelle: Stille, kein Warten.</tspan>
+<tspan x="980" y="405.0">Clock-Abgleich pro Quelle (siehe Dokument).</tspan>
+</text>
+<rect x="980" y="455" width="570" height="155" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="1265.0" y="502.5">7 x 5 STEREO-ROUTING</tspan>
+<tspan x="1265.0" y="527.5">Je Ziel sieben gewichtete Quellen</tspan>
+<tspan x="1265.0" y="552.5">L/R gepaart, getrennte Samples</tspan>
+<tspan x="1265.0" y="577.5">Summen-Headroom explizit</tspan>
+</text>
+<polyline points="1520,305 1520,455" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<rect x="40" y="800" width="460" height="160" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="270.0" y="850.0">5 AUSGANGS-DSP-PFADE</tspan>
+<tspan x="270.0" y="875.0">Vorschlag: je 7-Band-PEQ</tspan>
+<tspan x="270.0" y="900.0">Pegel / Mute / Sättigung / Meter</tspan>
+<tspan x="270.0" y="925.0">Keine gemeinsame DAC-Spiegelung</tspan>
+</text>
+<rect x="570" y="800" width="360" height="160" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="750.0" y="850.0">FORMAT + TX-BUFFER</tspan>
+<tspan x="750.0" y="875.0">PCM-Alignment, Sättigung</tspan>
+<tspan x="750.0" y="900.0">S/PDIF-Packing</tspan>
+<tspan x="750.0" y="925.0">Eigener Block je Ziel</tspan>
+</text>
+<rect x="1020" y="800" width="530" height="160" rx="10" fill="#172b36" stroke="#69dbb0" stroke-width="2"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="20" text-anchor="middle">
+<tspan x="1285.0" y="850.0">5 UNABHÄNGIGE ZIELE</tspan>
+<tspan x="1285.0" y="875.0">ES9039Q2M #1 Stereo / #2 AUX</tspan>
+<tspan x="1285.0" y="900.0">ES9039Q2M #3 Kopfhörer</tspan>
+<tspan x="1285.0" y="925.0">SAI TOSLINK / Classic-BT-Source</tspan>
+</text>
+<polyline points="1265,610 1265,730 270,730 270,800" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<polyline points="500,880.0 570,880.0" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<polyline points="930,880.0 1020,880.0" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<text fill="#e5e7eb" font-family="Segoe UI, Arial, sans-serif" font-size="18" text-anchor="start">
+<tspan x="40" y="1028.0">Grüne Übergaben: lokale 48-kHz-Blöcke. BT und WiFi bleiben zwei eigenständige Stereoquellen.</tspan>
+<tspan x="40" y="1050.5">BT-TX besitzt zusätzliche Puffer-/Funklatenz. Blockperiode ist nicht Ende-zu-Ende-Latenz.</tspan>
+</text>
+<polyline points="900,200 918,200 918,185 980,185" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<polyline points="900,355 933,355 933,215 980,215" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<polyline points="900,510 948,510 948,245 980,245" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+<polyline points="900,665 963,665 963,275 980,275" fill="none" stroke="#69dbb0" stroke-width="2" marker-end="url(#audio)"/>
+</svg>

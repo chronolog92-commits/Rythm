@@ -3,19 +3,19 @@
  *
  * System-Clock-Initialisierung für das MB1364-Dev-Board (STM32H753ZI).
  *
- * Ziel-Takt: 400 MHz (VOS1, OHNE Overdrive), HSI-basiert.
+ * Ziel-Takt: 480 MHz (VOS0, Overdrive), HSI-basiert.
  *
  * WICHTIG (Board-Realität, s. docs/clock-verification.md):
  *   - KEIN HSE auf dem Board (nur LSE 32,768 kHz). HSE darf NICHT als PLL1-Quelle
  *     konfiguriert werden — sonst Timeout/Hang.
  *   - Einzige praktikable PLL1-Eingangquelle: HSI (64 MHz, intern, ±1 %).
- *   - LSE ist zu langsam für einen CPU-PLL-Takt (RTC/STANDBY nur).
+ *   - LSE (32,768 kHz) wird für CRS-Sync und RTC verwendet.
  *
  * PLL1: HSI 64 MHz / M=4 -> 16 MHz (Range 3: 8–16 MHz)
- *       N=100, VCOSEL=WIDE  -> VCO 1600 MHz
- *       P=2 -> SYSCLK 400 MHz
- * Busse: HCLK /1 (400), APB3 /1 (400), APB1 /2 (200), APB2 /1 (400), APB4 /2 (200)
- * Flash: 7 Waitstates (konservativ für 400 MHz; kein Overdrive nötig).
+ *       N=60, VCOSEL=WIDE  -> VCO 960 MHz
+ *       P=2 -> SYSCLK 480 MHz
+ * Busse: HCLK /2 (240), APB3 /2 (240), APB1 /2 (240), APB2 /2 (240), APB4 /2 (240)
+ * Flash: 4 Waitstates (für 480 MHz mit Overdrive).
  *
  * Aufruf: board_clock_init() MUSS VOR der Peripherie-Initialisierung laufen
  * (in bsp_init() nach HAL_Init(), aber vor GPIO-Setup).
@@ -35,12 +35,12 @@ extern "C" {
 #endif
 
 /**
- * @brief  System-Clock auf 400 MHz (VOS1, HSI-PLL1) setzen.
+ * @brief  System-Clock auf 480 MHz (VOS0, HSI-PLL1) setzen.
  *
- * @retval 1  Erfolg: SYSCLK = 400 MHz, SystemCoreClock aktualisiert.
+ * @retval 1  Erfolg: SYSCLK = 480 MHz, SystemCoreClock aktualisiert.
  * @retval 0  Fehlschlag: Chip bleibt auf HSI 64 MHz (sicher). Ursache wird in
  *             g_board_clock_error kodiert (1=PLL1-Startup-Timeout, 2=VOS-Setup,
- *             3=SYSCLK-Switch-Timeout, 4=Flash-Latenz).
+ *             3=SYSCLK-Switch-Timeout, 4=Flash-Latenz, 5=HSI48-Timeout, 6=LSE-Timeout).
  *
  * @note   Muss nach HAL_Init() und VOR der Peripherie-Init (bsp_gpio_init) laufen.
  */

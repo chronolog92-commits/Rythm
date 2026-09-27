@@ -2,60 +2,46 @@
  * RHYTHM – Board Support Package (BSP)
  * Zentrale Pin-Map und Low-Level-Initialisierung.
  *
- * Pin-Map ist VORLÄUFIG und muss mit dem NUCLEO-H753ZI-Pinout abgeglichen werden.
- * Quelle: docs/architecture.md (Peripherie-Nutzung).
- * (Vor der H7-Umstellung galt der F767-Pinout PC13/LED5; die LED-Pins müssen
- *  für die H7 neu verifiziert werden – Boardtest erforderlich.)
+ * Phase 1: USB OTG_FS (interne FS-PHY, PA11/PA12) – entspricht CubeMX-Konfiguration.
+ * High Speed (480 Mbps) kommt später mit externem PHY.
  */
+#ifndef RHYTHM_BSP_H_
+#define RHYTHM_BSP_H_
 
-#ifndef RHYTHM_BSP_H
-#define RHYTHM_BSP_H
+#include "stm32h7xx_hal.h"
 
-#include "main.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-/* ---------- LED ---------- */
-/* MB1364-DevBoard (H753ZI): User-LEDs über NPN-Treiber, aktiv-high.
- *   LD1 grün  = PA5 (ARD_D13_LED)
- *   LD2 gelb  = PE1 (USER_LED2)  <- aktuell angesteuert
- *   LD3 rot   = PB14 (USER_LED3) */
-#define BSP_LED_PORT      GPIOE
-#define BSP_LED_PIN       GPIO_PIN_1    /* MB1364: LD2 gelb (USER_LED2), aktiv-high. */
+// --- LEDs -----------------------------------------------------------
+// NUCLEO-H753ZI / H743ZI:
+//   - PB7: blaue LED LD2 (User-LED, aktiv-high).
+#define BSP_LED_PORT     GPIOB
+#define BSP_LED_PIN      GPIO_PIN_7
 
+// --- USB OTG_FS – Full Speed (interne FS-PHY) -----------------------
+// PA11 = USB_DM, PA12 = USB_DP (USB_OTG_FS, AF10).
+#define BSP_USB_FS_PORT_DM    GPIOA
+#define BSP_USB_FS_PIN_DM     GPIO_PIN_11
+#define BSP_USB_FS_PORT_DP    GPIOA
+#define BSP_USB_FS_PIN_DP     GPIO_PIN_12
+#define BSP_USB_FS_GPIO_AF    GPIO_AF10_OTG1_FS
 
-/* ---------- TOSLINK ---------- */
-/* Eingang: PLR135/T → GPIO → SW-S/PDIF-Decoder (AN5073) */
-#define SPDIF_RX_PORT     GPIOD
-#define SPDIF_RX_PIN      GPIO_PIN_13
-/* Ausgang: GPIO → LED-Treiber → TOSLINK-LED */
-#define SPDIF_TX_PORT     GPIOD
-#define SPDIF_TX_PIN      GPIO_PIN_14
-
-/* ---------- UART (ESP32-S3) ---------- */
-#define ESP_UART          UART2
-#define ESP_UART_BAUD     115200
-/* TX: PD4 (USART2_TX), RX: PD5 (USART2_RX) */
-#define ESP_UART_TX_PORT  GPIOD
-#define ESP_UART_TX_PIN   GPIO_PIN_4
-#define ESP_UART_RX_PORT  GPIOD
-#define ESP_UART_RX_PIN   GPIO_PIN_5
-
-/* ---------- I2C (ADC-Konfiguration) ---------- */
-#define ADC_I2C           I2C1
-/* SCL: PB6, SDA: PB7 (NUCLEO-Standard) */
-
-/* ---------- I2S (Audio zu/von DAC/ADC, ESP32) ---------- */
-/* I2S2: BCLK PD12, LRCLK PD13, DOUT PD15, DIN PC1
- * Vorläufig – mit NUCLEO-Pinout abgleichen. */
-
-/* ---------- Encoder (Timer-Input-Capture) ---------- */
-/* EC11, A/B + Push. Vorläufige Timer-Zuordnung (siehe architecture.md):
- *   EQ 60Hz  → Timer2   EQ 150Hz → Timer3   EQ 400Hz → Timer4
- *   EQ 1kHz  → Timer5   EQ 2.5k  → Timer6   EQ 6kHz  → Timer7
- *   EQ 12kHz → TIM8_CH1 Volume   → Timer9 */
-
-/* ---------- API ---------- */
+// --- Initialisierung ------------------------------------------------
 void bsp_init(void);
+
+// USB OTG_FS – Full-Speed GPIO-Setup (PA11/PA12 als AF10).
+void bsp_usb_fs_init(void);
+
+// LEDs
 void bsp_toggle_led(void);
+
+// Blocking Delay (ms), SysTick-basiert.
 void bsp_delay_ms(uint32_t ms);
 
-#endif /* RHYTHM_BSP_H */
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* RHYTHM_BSP_H_ */

@@ -10,12 +10,22 @@
  * Control values are retained for the future SAI/DAC output stage.
  *
  * Data path (Phase 1): USB ISO OUT -> TinyUSB internal FIFO -> (audio_task)
- * -> audio_buffer (application ring buffer). No SAI/DAC yet (Phase 3).
+ * -> PCM byte ring -> 48-frame Float32 block queue. No SAI/DAC yet (Phase 3).
  */
 #include "tusb.h"
 #include "usb_audio.h"
 #include "audio_buffer.h"
+#include "audio_blocks.h"
 #include "common_types.h"
+#include "stm32h7xx.h"
+
+_Static_assert(CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX == AUDIO_BLOCK_CHANNELS,
+               "Block converter expects stereo");
+_Static_assert(CFG_TUD_AUDIO_FUNC_1_N_BYTES_PER_SAMPLE_RX == 2 &&
+               CFG_TUD_AUDIO_FUNC_1_RESOLUTION_RX == 16,
+               "Block converter expects PCM16 LE");
+_Static_assert(CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX <= AUDIO_BUFFER_DEPTH,
+               "Each USB read must fit in the byte ring");
 
 //--------------------------------------------------------------------
 // State
@@ -25,6 +35,23 @@ static bool      s_streaming     = false;
 static uint8_t   s_alt_setting   = 0;
 static uint8_t   s_mute[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];
 static int16_t   s_volume[CFG_TUD_AUDIO_FUNC_1_N_CHANNELS_RX + 1];
+
+static void reset_audio_path(void) {
+  /* The OUT FIFO is written by the USB ISR; exclude it while clearing both
+   * indices. Keep conversion/reset work outside this short critical section.
+   * In Phase 3, stop the consumer before resetting its borrowed buffers. */
+  uint32_t primask = __get_PRIMASK();
+  __disable_irq();
+  tud_audio_n_clear_ep_out_ff(0);
+  __set_PRIMASK(primask);
+  audio_blocks_reset(s_sample_rate);
+}
+
+void usb_audio_reset(void) {
+  s_streaming = false;
+  s_alt_setting = 0;
+  reset_audio_path();
+}
 
 enum {
   VOLUME_MIN = -100 * 256,  /* UAC1 volume uses signed 1/256 dB units. */
@@ -96,7 +123,10 @@ bool tud_audio_set_req_ep_cb(uint8_t rhport, tusb_control_request_t const *reque
   if (!valid_rate_request(request) || request->bRequest != AUDIO10_CS_REQ_SET_CUR) return false;
   uint32_t const rate = (uint32_t)data[0] | ((uint32_t)data[1] << 8) | ((uint32_t)data[2] << 16);
   if (rate != 44100 && rate != 48000) return false;
-  s_sample_rate = rate;
+  if (s_sample_rate != rate) {
+    s_sample_rate = rate;
+    reset_audio_path();
+  }
   return true;
 }
 
@@ -108,10 +138,10 @@ bool tud_audio_set_itf_cb(uint8_t rhport, tusb_control_request_t const *p_reques
   uint8_t const itf = tu_u16_low(p_request->wIndex);
   uint8_t const alt = tu_u16_low(p_request->wValue);
 
+  if (itf != ITF_NUM_AUDIO_STREAMING) return true;
+  reset_audio_path();
   s_alt_setting = alt;
-  if (itf == 1 && alt != 0) {
-    s_streaming = true;
-  }
+  s_streaming = alt != 0;
   return true;
 }
 
@@ -119,8 +149,8 @@ bool tud_audio_set_itf_close_ep_cb(uint8_t rhport, tusb_control_request_t const 
   (void) rhport;
   uint8_t const itf = tu_u16_low(p_request->wIndex);
   uint8_t const alt = tu_u16_low(p_request->wValue);
-  if (itf == 1 && alt == 0) {
-    s_streaming = false;
+  if (itf == ITF_NUM_AUDIO_STREAMING && alt == 0) {
+    usb_audio_reset();
   }
   return true;
 }
@@ -137,21 +167,25 @@ void tud_audio_feedback_params_cb(uint8_t func_id, uint8_t alt_itf, audio_feedba
 //--------------------------------------------------------------------
 // Audio task: pump data out of the TinyUSB RX FIFO into the ring buffer.
 // Called once per ms from the main loop (NOT from the isochronous ISR).
-// Reads the number of packets available and drains them into audio_buffer.
+// Drains bytes (not packet boundaries), then converts to complete Float32 blocks.
 //--------------------------------------------------------------------
 static uint8_t  s_rx_buf[CFG_TUD_AUDIO_FUNC_1_EP_OUT_SZ_MAX];
 
 void usb_audio_task(void) {
+  if (s_streaming && !tud_mounted()) {
+    usb_audio_reset();
+  }
   if (!s_streaming) {
     return;
   }
 
-  // Drain all currently-available packets from the TinyUSB FIFO.
+  // Process after each read so the byte ring stays drained even if the
+  // Float32 queue is full. Only complete Float32 blocks are dropped there.
   while (tud_audio_n_available(0) > 0) {
     uint16_t got = tud_audio_n_read(0, s_rx_buf, sizeof(s_rx_buf));
-    if (got > 0) {
-      audio_buffer_push(s_rx_buf, got);
-    }
+    if (got == 0) break;
+    audio_buffer_push(s_rx_buf, got);
+    audio_blocks_process();
   }
 }
 

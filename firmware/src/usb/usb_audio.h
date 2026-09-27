@@ -8,9 +8,11 @@ extern "C" {
 #include <stdint.h>
 #include <stdbool.h>
 
-// Pump data out of the TinyUSB RX FIFO into the application ring buffer.
+// Pump TinyUSB PCM bytes through the ring into the Float32 block queue.
 // Call once per millisecond from the main loop (not from the ISR).
 void     usb_audio_task(void);
+// Configuration/unmount reset; call in task context with consumer quiescent.
+void     usb_audio_reset(void);
 uint32_t usb_audio_sample_rate(void);
 bool     usb_audio_streaming(void);
 

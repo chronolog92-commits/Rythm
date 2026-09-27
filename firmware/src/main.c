@@ -19,6 +19,7 @@
 #include "periodic.h"
 #include "usb_audio.h"
 #include "audio_buffer.h"
+#include "audio_blocks.h"
 #include "tusb.h"
 #include "stm32h7xx.h"
 #include "common_types.h"
@@ -75,6 +76,21 @@ static void MPU_Config(void)
   MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
 
   HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+  /* Phase 2c Float32 queue: dedicated 4 KiB normal noncacheable SRAM window.
+   * TEX=1, C=0, B=0 selects normal noncacheable memory (not device memory).
+   * Linker assertions bound .audio_blocks to the same window. */
+  MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+  MPU_InitStruct.BaseAddress = 0x24001000U;
+  MPU_InitStruct.Size = MPU_REGION_SIZE_4KB;
+  MPU_InitStruct.SubRegionDisable = 0;
+  MPU_InitStruct.TypeExtField = MPU_TEX_LEVEL1;
+  MPU_InitStruct.AccessPermission = MPU_REGION_FULL_ACCESS;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_SHAREABLE;
+  MPU_InitStruct.IsCacheable = MPU_ACCESS_NOT_CACHEABLE;
+  MPU_InitStruct.IsBufferable = MPU_ACCESS_NOT_BUFFERABLE;
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
   /* Enables the MPU */
   HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
 }
@@ -112,7 +128,7 @@ int main(void)
 
     /* USB-Audio-Device (TinyUSB UAC1) initialisieren.
      * tusb_init() bringt den USB-Stack auf Rhport 0 (OTG_FS) hoch. */
-    audio_buffer_init();
+    audio_blocks_reset(usb_audio_sample_rate());
     tusb_rhport_init_t dev_init = {
         .role  = TUSB_ROLE_DEVICE,
         .speed = TUSB_SPEED_FULL
@@ -170,11 +186,13 @@ int main(void)
 // USB device callbacks (enumeration / reset / suspend / resume)
 //--------------------------------------------------------------------
 void tud_mount_cb(void) {
+  usb_audio_reset();
   s_usb_configured = true;
   printf("[USB] mounted (enumeration OK)\r\n");
 }
 
 void tud_umount_cb(void) {
+  usb_audio_reset();
   s_usb_configured = false;
   printf("[USB] unmounted\r\n");
 }

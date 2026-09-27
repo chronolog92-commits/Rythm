@@ -233,6 +233,20 @@ SECTIONS
     _eram_audio_buf = .;
   } >RAM_D1
 
+  /* MPU region 1: 4 KiB normal noncacheable window (see main.c).
+   * NOLOAD storage is explicitly initialized by audio_blocks_reset(). */
+  .audio_blocks 0x24001000 (NOLOAD) :
+  {
+    _saudio_blocks = .;
+    *(.audio_blocks)
+    *(.audio_blocks*)
+    . = ALIGN(32);
+    _eaudio_blocks = .;
+    . = _saudio_blocks + 0x1000;
+  } >RAM_D1
+  ASSERT(_eram_audio_buf <= 0x24001000, "Byte ring overlaps Float32 MPU window")
+  ASSERT(_eaudio_blocks <= 0x24002000, "Float32 blocks exceed MPU window")
+
   /* User_heap_stack section, used to check that there is enough RAM left */
   ._user_heap_stack (NOLOAD) :
   {
